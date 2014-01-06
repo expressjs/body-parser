@@ -1,0 +1,33 @@
+{
+  "name": "body-parser",
+  "description": "Connect's body parsing middleware",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "twitter": "https://twitter.com/jongleberry"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/expressjs/body-parser.git"
+  },
+  "bugs": {
+    "mail": "me@jongleberry.com",
+    "url": "https://github.com/expressjs/body-parser/issues"
+  },
+  "dependencies": {
+    "raw-body": "~1.1.2",
+    "qs": "~0.6.6"
+  },
+  "devDependencies": {
+    "connect": "*",
+    "mocha": "*",
+    "should": "*",
+    "supertest": "*"
+  },
+  "scripts": {
+    "test": "make test"
+  }
+}
