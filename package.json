@@ -18,8 +18,7 @@
     "url": "https://github.com/expressjs/body-parser/issues"
   },
   "dependencies": {
-    "raw-body": "~1.1.2",
-    "qs": "~0.6.6"
+    "raw-body": "~1.1.2"
   },
   "devDependencies": {
     "connect": "*",

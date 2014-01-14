@@ -31,7 +31,7 @@ Returns middleware that only parsers `json`. The options are:
 
 ### bodyParser.urlencoded([options])
 
-Returns middleware that only parses `urlencoded` with the [qs](https://github.com/visionmedia/node-querystring) module. The options are:
+Returns middleware that only parses `urlencoded` with the [querystring](http://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options) module. The options are:
 
 - `limit` <1mb> - maximum request body size
 
