@@ -1,6 +1,6 @@
 var getBody = require('raw-body');
 var http = require('http');
-var qs = require('qs');
+var querystring = require('querystring');
 
 exports = module.exports = bodyParser;
 exports.json = json;
@@ -86,7 +86,7 @@ function urlencoded(options){
 
       try {
         req.body = buf.length
-          ? qs.parse(buf)
+          ? querystring.parse(buf) // default maxKeys 1000
           : {};
       } catch (err){
         err.body = buf;
