@@ -19,11 +19,11 @@ app.use(function (req, res, next) {
 
 ### bodyParser([options])
 
-Returns middleware that parsers both `json` and `urlencoded`. The `options` are passed to both middleware.
+Returns middleware that parses both `json` and `urlencoded`. The `options` are passed to both middleware.
 
-### bodyparser.json([options])
+### bodyParser.json([options])
 
-Returns middleware that only parsers `json`. The options are:
+Returns middleware that only parses `json`. The options are:
 
 - `strict` <true> - only parse objects and arrays
 - `limit` <1mb> - maximum request body size
