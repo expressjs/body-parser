@@ -36,7 +36,7 @@ function json(options){
 
     // parse
     getBody(req, {
-      limit: options.limit || '1mb',
+      limit: options.limit || '100kb',
       length: req.headers['content-length'],
       encoding: 'utf8'
     }, function (err, buf) {
@@ -78,7 +78,7 @@ function urlencoded(options){
 
     // parse
     getBody(req, {
-      limit: options.limit || '1mb',
+      limit: options.limit || '100kb',
       length: req.headers['content-length'],
       encoding: 'utf8'
     }, function (err, buf) {
