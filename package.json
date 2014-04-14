@@ -9,15 +9,9 @@
     "twitter": "https://twitter.com/jongleberry"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/expressjs/body-parser.git"
-  },
-  "bugs": {
-    "mail": "me@jongleberry.com",
-    "url": "https://github.com/expressjs/body-parser/issues"
-  },
+  "repository": "expressjs/body-parser",
   "dependencies": {
+    "type-is": "~1.1.0",
     "raw-body": "~1.1.2",
     "qs": "~0.6.6"
   },

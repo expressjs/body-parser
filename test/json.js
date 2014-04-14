@@ -216,64 +216,31 @@ describe('bodyParser.json()', function(){
     .expect('å', done);
   })
 
-  describe('the default json mime type regular expression', function() {
-    var mimeRegExp = bodyParser.json.regexp;
-    it('should support the basic JSON mime type', function(){
-      mimeRegExp.test('application/json').should.eql(true);
-    })
+  it('should parse JSON with limit and after next tick', function(done){
+    var app = connect();
 
-    it('should not match incorrect mime type', function(){
-      mimeRegExp.test('zapplication/json').should.eql(false);
-    })
+    app.use(function(req, res, next) {
+      setTimeout(next, 10);
+    });
 
-    it('should be case insensitive', function(){
-      mimeRegExp.test('Application/JSON').should.eql(true);
-    })
+    app.use(bodyParser.json({ limit: '1mb' }));
 
-    it('should support suffix notation', function(){
-      mimeRegExp.test('application/vnd.organization.prog-type.org+json').should.eql(true);
-    })
+    app.use(function(req, res){
+      res.end(JSON.stringify(req.body));
+    });
 
-    it('should support specific special characters on mime subtype', function(){
-      mimeRegExp.test('application/vnd.organization.special_!#$%*`-^~.org+json').should.eql(true);
-    })
+    app.use(function(err, req, res, next){
+      res.statusCode = err.status;
+      res.end(err.message);
+    });
 
-    it('should not support other special characters on mime subtype', function(){
-      mimeRegExp.test('application/vnd.organization.special_()<>@,;:\\"/[]?={} \t.org+json').should.eql(false);
-    })
-
-    it('should not match malformed mime subtype suffix', function(){
-      mimeRegExp.test('application/vnd.test.org+json+xml').should.eql(false);
-    })
-  });
-
-  if (!connect.utils.brokenPause) {
-    it('should parse JSON with limit and after next tick', function(done){
-      var app = connect();
-
-      app.use(function(req, res, next) {
-        setTimeout(next, 10);
-      });
-
-      app.use(bodyParser.json({ limit: '1mb' }));
-
-      app.use(function(req, res){
-        res.end(JSON.stringify(req.body));
-      });
-
-      app.use(function(err, req, res, next){
-        res.statusCode = err.status;
-        res.end(err.message);
-      });
-
-      request(app)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('{"user":"tobi"}')
-      .end(function(err, res){
-        res.text.should.equal('{"user":"tobi"}');
-        done();
-      });
-    })
-  }
+    request(app)
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('{"user":"tobi"}')
+    .end(function(err, res){
+      res.text.should.equal('{"user":"tobi"}');
+      done();
+    });
+  })
 })

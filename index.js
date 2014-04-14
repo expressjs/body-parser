@@ -1,4 +1,6 @@
+
 var getBody = require('raw-body');
+var typeis = require('type-is');
 var http = require('http');
 var qs = require('qs');
 
@@ -26,10 +28,7 @@ function json(options){
     if (req._body) return next();
     req.body = req.body || {};
 
-    if (!hasBody(req)) return next();
-
-    // check Content-Type
-    if (!json.regexp.test(mime(req))) return next();
+    if (!typeis(req, 'json')) return next();
 
     // flag as parsed
     req._body = true;
@@ -68,10 +67,7 @@ function urlencoded(options){
     if (req._body) return next();
     req.body = req.body || {};
 
-    if (!hasBody(req)) return next();
-
-    // check Content-Type
-    if ('application/x-www-form-urlencoded' != mime(req)) return next();
+    if (!typeis(req, 'urlencoded')) return next();
 
     // flag as parsed
     req._body = true;
@@ -95,20 +91,6 @@ function urlencoded(options){
       next();
     })
   }
-}
-
-json.regexp = /^application\/([\w!#\$%&\*`\-\.\^~]*\+)?json$/i;
-
-function hasBody(req) {
-  var encoding = 'transfer-encoding' in req.headers;
-  var length = 'content-length' in req.headers && req.headers['content-length'] !== '0';
-  return encoding || length;
-}
-
-function mime(req) {
-  var str = req.headers['content-type'] || ''
-    , i = str.indexOf(';');
-  return ~i ? str.slice(0, i) : str;
 }
 
 function error(code, msg) {
