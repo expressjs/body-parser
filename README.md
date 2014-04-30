@@ -1,4 +1,4 @@
-# Body Parser [![Build Status](https://travis-ci.org/expressjs/body-parser.png)](https://travis-ci.org/expressjs/body-parser)
+# Body Parser [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser)
 
 Connect's body parsing middleware.
 
