@@ -237,32 +237,4 @@ describe('bodyParser.json()', function(){
     .send('{"test":"å"}')
     .expect('å', done);
   })
-
-  it('should parse JSON with limit and after next tick', function(done){
-    var app = connect();
-
-    app.use(function(req, res, next) {
-      setTimeout(next, 10);
-    });
-
-    app.use(bodyParser.json({ limit: '1mb' }));
-
-    app.use(function(req, res){
-      res.end(JSON.stringify(req.body));
-    });
-
-    app.use(function(err, req, res, next){
-      res.statusCode = err.status;
-      res.end(err.message);
-    });
-
-    request(app)
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .send('{"user":"tobi"}')
-    .end(function(err, res){
-      res.text.should.equal('{"user":"tobi"}');
-      done();
-    });
-  })
 })
