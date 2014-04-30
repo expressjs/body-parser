@@ -60,6 +60,25 @@ describe('bodyParser.json()', function(){
     });
   })
 
+  it('should handle no message-body', function(done){
+    var app = connect();
+    app.use(bodyParser.json());
+
+    app.use(function(req, res){
+      res.end(Object.keys(req.body).length ? '' : 'empty');
+    });
+
+    request(app)
+    .get('/')
+    .set('Content-Type', 'application/json')
+    .unset('Transfer-Encoding')
+    .end(function(err, res){
+      res.should.have.status(200);
+      res.text.should.equal('empty');
+      done();
+    });
+  })
+
   it('should 400 on malformed JSON', function(done){
     var app = connect();
     app.use(bodyParser.json());
@@ -86,6 +105,7 @@ describe('bodyParser.json()', function(){
     request(app)
     .post('/')
     .set('Content-Type', 'application/json')
+    .set('Transfer-Encoding', 'chunked')
     .end(function(err, res){
       res.should.have.status(400);
       res.text.should.include("invalid json, empty body");
