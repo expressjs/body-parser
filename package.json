@@ -22,6 +22,6 @@
     "supertest": "*"
   },
   "scripts": {
-    "test": "make test"
+    "test": "mocha --require should --reporter spec --bail"
   }
 }
