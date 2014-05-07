@@ -1,6 +1,6 @@
 # Body Parser [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser)
 
-Connect's body parsing middleware.
+Connect's body parsing middleware.  No longer supports enctype="multipart/form-data", for that purpose, please see: (https://github.com/expressjs/multer)
 
 ## API
 
