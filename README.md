@@ -1,6 +1,20 @@
 # body-parser [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser) [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
 
 Connect's body parsing middleware.
+This only handles `urlencoded` and `json` bodies.
+For multipart bodies, you may be interested in the following modules:
+
+- [busboy](https://github.com/mscdex/busboy) and [connect-busboy](https://github.com/mscdex/connect-busboy)
+- [multiparty](https://github.com/andrewrk/node-multiparty) and [connect-multiparty](https://github.com/andrewrk/connect-multiparty)
+- [formidable](https://github.com/felixge/node-formidable)
+- [multer](https://github.com/expressjs/multer)
+
+Other body parsers you might be interested in:
+
+- [body](https://github.com/raynos/body)
+- [co-body](https://github.com/visionmedia/co-body)
+
+## Installation
 
 `npm install body-parser`
 
@@ -22,9 +36,8 @@ app.use(function (req, res, next) {
 
 ### bodyParser(options)
 
-Returns middleware that parses both `json` and `urlencoded`. The `options` are passed to both middleware.
-
-Please see [multer](https://github.com/expressjs/multer) for `multipart/form-data` support.
+Returns middleware that parses both `json` and `urlencoded`. 
+The `options` are passed to both middleware.
 
 ### bodyParser.json(options)
 
