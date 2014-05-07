@@ -1,6 +1,6 @@
 # body-parser [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser) [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
 
-Connect's body parsing middleware.
+Connect's body parsing middleware.  No longer supports enctype="multipart/form-data", for that purpose, please see: (https://github.com/expressjs/multer)
 
 `npm install body-parser`
 
