@@ -1,49 +1,46 @@
 
-process.env.NODE_ENV = 'test';
-
-var connect = require('connect');
 var assert = require('assert');
+var http = require('http');
 var request = require('supertest');
 
 var bodyParser = require('..');
 
-var app = connect();
-
-app.use(bodyParser());
-
-app.use(function(req, res){
-  res.end(JSON.stringify(req.body));
-});
-
 describe('bodyParser()', function(){
+  var server;
+  before(function(){
+    server = createServer()
+  })
+
   it('should default to {}', function(done){
-    request(app)
+    request(server)
     .post('/')
-    .end(function(err, res){
-      res.text.should.equal('{}');
-      done();
-    })
+    .expect(200, '{}', done)
   })
 
   it('should parse JSON', function(done){
-    request(app)
+    request(server)
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{"user":"tobi"}')
-    .end(function(err, res){
-      res.text.should.equal('{"user":"tobi"}');
-      done();
-    });
+    .expect(200, '{"user":"tobi"}', done)
   })
 
   it('should parse x-www-form-urlencoded', function(done){
-    request(app)
+    request(server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send('user=tobi')
-    .end(function(err, res){
-      res.text.should.equal('{"user":"tobi"}');
-      done();
-    });
+    .expect(200, '{"user":"tobi"}', done)
   })
 })
+
+function createServer(){
+  var _bodyParser = bodyParser()
+
+  return http.createServer(function(req, res){
+    _bodyParser(req, res, function(err){
+      res.statusCode = err ? (err.status || 500) : 200;
+      res.end(err ? err.message : JSON.stringify(req.body));
+    })
+  })
+}

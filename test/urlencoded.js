@@ -1,41 +1,41 @@
 
-process.env.NODE_ENV = 'test';
-
-var connect = require('connect');
 var assert = require('assert');
+var http = require('http');
 var request = require('supertest');
 
 var bodyParser = require('..');
 
-var app = connect();
-
-app.use(bodyParser.urlencoded({ limit: '1mb' }));
-
-app.use(function(req, res){
-  res.end(JSON.stringify(req.body));
-});
-
 describe('bodyParser.urlencoded()', function(){
+  var server
+  before(function(){
+    server = createServer()
+  })
+
   it('should support all http methods', function(done){
-    request(app)
+    request(server)
     .get('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .set('Content-Length', 'user=tobi'.length)
     .send('user=tobi')
-    .end(function(err, res){
-      res.text.should.equal('{"user":"tobi"}');
-      done();
-    });
+    .expect(200, '{"user":"tobi"}', done)
   })
 
   it('should parse x-www-form-urlencoded', function(done){
-    request(app)
+    request(server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send('user=tobi')
-    .end(function(err, res){
-      res.text.should.equal('{"user":"tobi"}');
-      done();
-    });
+    .expect(200, '{"user":"tobi"}', done)
   })
 })
+
+function createServer(opts){
+  var _bodyParser = bodyParser.urlencoded(opts)
+
+  return http.createServer(function(req, res){
+    _bodyParser(req, res, function(err){
+      res.statusCode = err ? (err.status || 500) : 200;
+      res.end(err ? err.message : JSON.stringify(req.body));
+    })
+  })
+}
