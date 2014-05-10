@@ -2,6 +2,7 @@ HEAD
 ====
 
   * add `type` option
+  * deps: pin for safety and consistency
 
 1.0.1 / 2014-04-14
 ==================

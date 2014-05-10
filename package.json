@@ -11,14 +11,14 @@
   "license": "MIT",
   "repository": "expressjs/body-parser",
   "dependencies": {
-    "type-is": "~1.1.0",
-    "raw-body": "~1.1.2",
-    "qs": "~0.6.6"
+    "type-is": "1.1.0",
+    "raw-body": "1.1.4",
+    "qs": "0.6.6"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*",
-    "supertest": "*"
+    "mocha": "~1.18.2",
+    "should": "~3.3.1",
+    "supertest": "~0.12.1"
   },
   "engines": {
     "node": ">= 0.8"
