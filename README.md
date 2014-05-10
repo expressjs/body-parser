@@ -46,6 +46,7 @@ Returns middleware that only parses `json`. The options are:
 - `strict` - only parse objects and arrays. (default: `true`)
 - `limit` - maximum request body size. (default: `<1mb>`)
 - `reviver` - passed to `JSON.parse()`
+- `hook` - passes a hook `function (req, raw){}` (default: `null`) 
 
 ### bodyParser.urlencoded(options)
 

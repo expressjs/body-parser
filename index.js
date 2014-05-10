@@ -48,6 +48,12 @@ function json(options){
       }
 
       if (strict && '{' != first && '[' != first) return next(error(400, 'invalid json'));
+
+      // call hook
+      if (options.hook) {
+        options.hook(req, buf);
+      }
+      
       try {
         req.body = JSON.parse(buf, options.reviver);
       } catch (err){
