@@ -124,6 +124,29 @@ describe('bodyParser.json()', function(){
     })
   })
 
+  describe('with type option', function(){
+    var server;
+    before(function(){
+      server = createServer({ type: 'application/vnd.api+json' })
+    })
+
+    it('should parse JSON for custom type', function(done){
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/vnd.api+json')
+      .send('{"user":"tobi"}')
+      .expect(200, '{"user":"tobi"}', done)
+    })
+
+    it('should ignore standard type', function(done){
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user":"tobi"}')
+      .expect(200, '{}', done)
+    })
+  })
+
   it('should support utf-8', function(done){
     var server = createServer()
 

@@ -27,6 +27,29 @@ describe('bodyParser.urlencoded()', function(){
     .send('user=tobi')
     .expect(200, '{"user":"tobi"}', done)
   })
+
+  describe('with type option', function(){
+    var server;
+    before(function(){
+      server = createServer({ type: 'application/vnd+x-www-form-urlencoded' })
+    })
+
+    it('should parse for custom type', function(done){
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/vnd+x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '{"user":"tobi"}', done)
+    })
+
+    it('should ignore standard type', function(done){
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '{}', done)
+    })
+  })
 })
 
 function createServer(opts){

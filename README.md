@@ -26,7 +26,11 @@ var bodyParser = require('body-parser')
 
 var app = express()
 
+// parse application/json and application/x-www-form-urlencoded
 app.use(bodyParser())
+
+// parse application/vnd.api+json as json
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
 app.use(function (req, res, next) {
   console.log(req.body) // populated!
@@ -37,7 +41,7 @@ app.use(function (req, res, next) {
 ### bodyParser(options)
 
 Returns middleware that parses both `json` and `urlencoded`. 
-The `options` are passed to both middleware.
+The `options` are passed to both middleware, except `type`.
 
 ### bodyParser.json(options)
 
@@ -46,12 +50,14 @@ Returns middleware that only parses `json`. The options are:
 - `strict` - only parse objects and arrays. (default: `true`)
 - `limit` - maximum request body size. (default: `<1mb>`)
 - `reviver` - passed to `JSON.parse()`
+- `type` - request content-type to parse (default: `json`)
 
 ### bodyParser.urlencoded(options)
 
 Returns middleware that only parses `urlencoded` with the [qs](https://github.com/visionmedia/node-querystring) module. The options are:
 
 - `limit` - maximum request body size. (default: `<1mb>`)
+- `type` - request content-type to parse (default: `urlencoded`)
 
 ### req.body
 
