@@ -5,6 +5,8 @@ var typeis = require('type-is');
 var http = require('http');
 var qs = require('qs');
 
+var firstcharRegExp = /^\s*(.)/
+
 exports = module.exports = bodyParser;
 exports.json = json;
 exports.urlencoded = urlencoded;
@@ -55,20 +57,23 @@ function json(options){
       limit: limit,
       length: req.headers['content-length'],
       encoding: 'utf8'
-    }, function (err, buf) {
+    }, function (err, str) {
       if (err) return next(err);
 
-      var first = buf.trim()[0];
-
-      if (0 == buf.length) {
+      if (0 == str.length) {
         return next(error(400, 'invalid json, empty body'));
       }
 
-      if (strict && '{' != first && '[' != first) return next(error(400, 'invalid json'));
+      var first = firstchar(str)
+
+      if (strict && '{' != first && '[' != first) {
+        return next(error(400, 'invalid json'));
+      }
+
       try {
-        req.body = JSON.parse(buf, options.reviver);
+        req.body = JSON.parse(str, options.reviver);
       } catch (err){
-        err.body = buf;
+        err.body = str;
         err.status = 400;
         return next(err);
       }
@@ -119,4 +124,10 @@ function error(code, msg) {
   var err = new Error(msg || http.STATUS_CODES[code]);
   err.status = code;
   return err;
+}
+
+function firstchar(str) {
+  if (!str) return ''
+  var match = firstcharRegExp.exec(str)
+  return match ? match[1] : ''
 }

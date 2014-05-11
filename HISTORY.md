@@ -1,3 +1,8 @@
+HEAD
+====
+
+  * improve json parser speed
+
 1.1.1 / 2014-05-11
 ==================
 
