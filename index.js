@@ -1,6 +1,7 @@
 
 var bytes = require('bytes');
 var getBody = require('raw-body');
+var typer = require('media-typer');
 var typeis = require('type-is');
 var qs = require('qs');
 var querystring = require('querystring');
@@ -70,8 +71,14 @@ function json(options){
 
     if (!typeis(req, type)) return next();
 
+    var charset = typer.parse(req).parameters.charset || 'utf-8'
+    if (charset.substr(0, 4).toLowerCase() !== 'utf-') {
+      return next(error(415, 'unsupported charset'))
+    }
+
     // read
     read(req, res, next, parse, {
+      encoding: charset,
       limit: limit,
       verify: verify
     })
@@ -108,12 +115,24 @@ function urlencoded(options){
 
     if (!typeis(req, type)) return next();
 
+    var charset = typer.parse(req).parameters.charset || 'utf-8'
+    if (charset.toLowerCase() !== 'utf-8') {
+      return next(error(415, 'unsupported charset'))
+    }
+
     // read
     read(req, res, next, parse, {
+      encoding: charset,
       limit: limit,
       verify: verify
     })
   }
+}
+
+function error(code, msg) {
+  var err = new Error(msg || http.STATUS_CODES[code]);
+  err.status = code;
+  return err;
 }
 
 function firstchar(str) {

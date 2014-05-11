@@ -239,6 +239,42 @@ describe('bodyParser.urlencoded()', function(){
       .expect(200, '{"user":"tobi"}', done)
     })
   })
+
+  describe('charset', function(){
+    var server;
+    before(function(){
+      server = createServer()
+    })
+
+    it('should parse utf-8', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8')
+      test.write(new Buffer('6e616d653de8aeba', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should parse when content-length != char length', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8')
+      test.set('Content-Length', '7')
+      test.write(new Buffer('746573743dc3a5', 'hex'))
+      test.expect(200, '{"test":"å"}', done)
+    })
+
+    it('should default to utf-8', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(new Buffer('6e616d653de8aeba', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should fail on unknown charset', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded; charset=koi8-r')
+      test.write(new Buffer('6e616d653dcec5d4', 'hex'))
+      test.expect(415, 'unsupported charset', done)
+    })
+  })
 })
 
 function createServer(opts){

@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * check accepted charset in content-type (accepts utf-8)
   * deps: raw-body@1.2.1
     - Support all encodings from `iconv-lite`
 

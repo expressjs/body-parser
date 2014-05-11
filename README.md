@@ -55,7 +55,9 @@ The `options` are passed to both middleware, except `type`.
 
 ### bodyParser.json(options)
 
-Returns middleware that only parses `json`. The options are:
+Returns middleware that only parses `json`. This parser accepts any Unicode encoding of the body.
+
+The options are:
 
 - `strict` - only parse objects and arrays. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
@@ -71,7 +73,9 @@ The `reviver` argument is passed directly to `JSON.parse` as the second argument
 
 ### bodyParser.urlencoded(options)
 
-Returns middleware that only parses `urlencoded` bodies. The options are:
+Returns middleware that only parses `urlencoded` bodies. This parser accepts only UTF-8 encoding of the body.
+
+The options are:
 
 - `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
