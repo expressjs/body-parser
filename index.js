@@ -49,10 +49,12 @@ function json(options){
       throw new Error('invalid json, empty body')
     }
 
-    var first = firstchar(str)
+    if (strict) {
+      var first = firstchar(str)
 
-    if (strict && '{' !== first && '[' !== first) {
-      throw new Error('invalid json')
+      if (first !== '{' && first !== '[') {
+        throw new Error('invalid json')
+      }
     }
 
     return JSON.parse(str, reviver)
