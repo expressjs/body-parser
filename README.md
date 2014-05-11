@@ -48,7 +48,7 @@ The `options` are passed to both middleware, except `type`.
 Returns middleware that only parses `json`. The options are:
 
 - `strict` - only parse objects and arrays. (default: `true`)
-- `limit` - maximum request body size. (default: `<1mb>`)
+- `limit` - maximum request body size. (default: `<100kb>`)
 - `reviver` - passed to `JSON.parse()`
 - `type` - request content-type to parse (default: `json`)
 
@@ -56,7 +56,7 @@ Returns middleware that only parses `json`. The options are:
 
 Returns middleware that only parses `urlencoded` with the [qs](https://github.com/visionmedia/node-querystring) module. The options are:
 
-- `limit` - maximum request body size. (default: `<1mb>`)
+- `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
 
 ### req.body
