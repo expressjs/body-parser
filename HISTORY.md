@@ -1,5 +1,5 @@
-HEAD
-====
+1.1.1 / 2014-05-11
+==================
 
   * fix repeated limit parsing with every request
 
