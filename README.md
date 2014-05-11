@@ -64,11 +64,14 @@ The `reviver` argument is passed directly to `JSON.parse` as the second argument
 
 ### bodyParser.urlencoded(options)
 
-Returns middleware that only parses `urlencoded` with the [qs](https://github.com/visionmedia/node-querystring) module. The options are:
+Returns middleware that only parses `urlencoded` bodies. The options are:
 
+- `extended` - parse extended syntax with the [qs](https://github.com/visionmedia/node-querystring) module. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
+
+The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like exterience with urlencoded.
 
 The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
 

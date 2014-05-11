@@ -50,6 +50,46 @@ describe('bodyParser.urlencoded()', function(){
     .expect(200, '{}', done)
   })
 
+  it('should parse extended syntax', function(done){
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send('user[name][first]=Tobi')
+    .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+  })
+
+  describe('with extended option', function(){
+    describe('when false', function(){
+      var server;
+      before(function(){
+        server = createServer({ extended: false })
+      })
+
+      it('should not parse extended syntax', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user[name][first]=Tobi')
+        .expect(200, '{"user[name][first]":"Tobi"}', done)
+      })
+    })
+
+    describe('when true', function(){
+      var server;
+      before(function(){
+        server = createServer({ extended: true })
+      })
+
+      it('should parse extended syntax', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user[name][first]=Tobi')
+        .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+      })
+    })
+  })
+
   describe('with limit option', function(){
     it('should 413 when over limit with Content-Length', function(done){
       var buf = new Buffer(1024)

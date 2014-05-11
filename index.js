@@ -4,6 +4,7 @@ var getBody = require('raw-body');
 var typeis = require('type-is');
 var http = require('http');
 var qs = require('qs');
+var querystring = require('querystring');
 
 var firstcharRegExp = /^\s*(.)/
 
@@ -81,6 +82,7 @@ function json(options){
 function urlencoded(options){
   options = options || {};
 
+  var extended = options.extended !== false
   var limit = typeof options.limit !== 'number'
     ? bytes(options.limit || '100kb')
     : options.limit;
@@ -91,9 +93,13 @@ function urlencoded(options){
     throw new TypeError('option verify must be function')
   }
 
+  var queryparse = extended
+    ? qs.parse
+    : querystring.parse
+
   function parse(str) {
     return str.length
-      ? qs.parse(str)
+      ? queryparse(str)
       : {}
   }
 
