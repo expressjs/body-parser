@@ -124,6 +124,38 @@ describe('bodyParser.json()', function(){
     })
   })
 
+  describe('with limit option', function(){
+    var server;
+    var options;
+    before(function(){
+      options = { limit: '1kb' }
+      server = createServer(options)
+    })
+
+    it('should 413 when over limit', function(done){
+      var buf = new Buffer(1024)
+      buf.fill('.')
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send(JSON.stringify({ str: buf.toString() }))
+      .expect(413, done)
+    })
+
+    it('should not change when options altered', function(done){
+      var buf = new Buffer(1024)
+      buf.fill('.')
+      options.limit = '100kb'
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send(JSON.stringify({ str: buf.toString() }))
+      .expect(413, done)
+    })
+  })
+
   describe('with type option', function(){
     var server;
     before(function(){

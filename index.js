@@ -1,4 +1,5 @@
 
+var bytes = require('bytes');
 var getBody = require('raw-body');
 var typeis = require('type-is');
 var http = require('http');
@@ -34,6 +35,9 @@ function bodyParser(options){
 function json(options){
   options = options || {};
 
+  var limit = typeof options.limit !== 'number'
+    ? bytes(options.limit || '100kb')
+    : options.limit;
   var strict = options.strict !== false;
   var type = options.type || 'json';
 
@@ -48,7 +52,7 @@ function json(options){
 
     // parse
     getBody(req, {
-      limit: options.limit || '100kb',
+      limit: limit,
       length: req.headers['content-length'],
       encoding: 'utf8'
     }, function (err, buf) {
@@ -76,6 +80,9 @@ function json(options){
 function urlencoded(options){
   options = options || {};
 
+  var limit = typeof options.limit !== 'number'
+    ? bytes(options.limit || '100kb')
+    : options.limit;
   var type = options.type || 'urlencoded';
 
   return function urlencodedParser(req, res, next) {
@@ -89,7 +96,7 @@ function urlencoded(options){
 
     // parse
     getBody(req, {
-      limit: options.limit || '100kb',
+      limit: limit,
       length: req.headers['content-length'],
       encoding: 'utf8'
     }, function (err, buf) {
