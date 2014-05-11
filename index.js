@@ -66,7 +66,7 @@ function json(options){
 
   return function jsonParser(req, res, next) {
     if (req._body) return next();
-    req.body = req.body || {} // TODO: move this after type check in next major
+    req.body = req.body || {}
 
     if (!typeis(req, type)) return next();
 
@@ -99,7 +99,7 @@ function urlencoded(options){
 
   return function urlencodedParser(req, res, next) {
     if (req._body) return next();
-    req.body = req.body || {} // TODO: move this after type check in next major
+    req.body = req.body || {}
 
     if (!typeis(req, type)) return next();
 
