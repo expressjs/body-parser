@@ -55,12 +55,16 @@ Returns middleware that only parses `json`. The options are:
 - `reviver` - passed to `JSON.parse()`
 - `type` - request content-type to parse (default: `json`)
 
+The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/json`).
+
 ### bodyParser.urlencoded(options)
 
 Returns middleware that only parses `urlencoded` with the [qs](https://github.com/visionmedia/node-querystring) module. The options are:
 
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
+
+The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
 
 ### req.body
 
