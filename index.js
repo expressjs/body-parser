@@ -40,46 +40,35 @@ function json(options){
   var limit = typeof options.limit !== 'number'
     ? bytes(options.limit || '100kb')
     : options.limit;
+  var reviver = options.reviver
   var strict = options.strict !== false;
   var type = options.type || 'json';
 
+  function parse(str) {
+    if (0 === str.length) {
+      throw new Error('invalid json, empty body')
+    }
+
+    var first = firstchar(str)
+
+    if (strict && '{' !== first && '[' !== first) {
+      throw new Error('invalid json')
+    }
+
+    return JSON.parse(str, reviver)
+  }
+
   return function jsonParser(req, res, next) {
     if (req._body) return next();
-    req.body = req.body || {};
+    req.body = req.body || {} // TODO: move this after type check in next major
 
     if (!typeis(req, type)) return next();
 
-    // flag as parsed
-    req._body = true;
-
-    // parse
-    getBody(req, {
-      limit: limit,
-      length: req.headers['content-length'],
-      encoding: 'utf8'
-    }, function (err, str) {
-      if (err) return next(err);
-
-      if (0 == str.length) {
-        return next(error(400, 'invalid json, empty body'));
-      }
-
-      var first = firstchar(str)
-
-      if (strict && '{' != first && '[' != first) {
-        return next(error(400, 'invalid json'));
-      }
-
-      try {
-        req.body = JSON.parse(str, options.reviver);
-      } catch (err){
-        err.body = str;
-        err.status = 400;
-        return next(err);
-      }
-      next();
+    // read
+    read(req, res, next, parse, {
+      limit: limit
     })
-  };
+  }
 }
 
 function urlencoded(options){
@@ -90,44 +79,54 @@ function urlencoded(options){
     : options.limit;
   var type = options.type || 'urlencoded';
 
+  function parse(str) {
+    return str.length
+      ? qs.parse(str)
+      : {}
+  }
+
   return function urlencodedParser(req, res, next) {
     if (req._body) return next();
-    req.body = req.body || {};
+    req.body = req.body || {} // TODO: move this after type check in next major
 
     if (!typeis(req, type)) return next();
 
-    // flag as parsed
-    req._body = true;
-
-    // parse
-    getBody(req, {
-      limit: limit,
-      length: req.headers['content-length'],
-      encoding: 'utf8'
-    }, function (err, buf) {
-      if (err) return next(err);
-
-      try {
-        req.body = buf.length
-          ? qs.parse(buf)
-          : {};
-      } catch (err){
-        err.body = buf;
-        return next(err);
-      }
-      next();
+    // read
+    read(req, res, next, parse, {
+      limit: limit
     })
   }
-}
-
-function error(code, msg) {
-  var err = new Error(msg || http.STATUS_CODES[code]);
-  err.status = code;
-  return err;
 }
 
 function firstchar(str) {
   if (!str) return ''
   var match = firstcharRegExp.exec(str)
   return match ? match[1] : ''
+}
+
+function read(req, res, next, parse, options) {
+  var length = req.headers['content-length']
+
+  // flag as parsed
+  req._body = true
+
+  options = options || {}
+  options.encoding = 'utf8'
+  options.length = length
+
+  // read body
+  getBody(req, options, function (err, str) {
+    if (err) return next(err)
+
+    // parse
+    try {
+      req.body = parse(str)
+    } catch (err){
+      err.body = str
+      err.status = 400
+      return next(err)
+    }
+
+    next()
+  })
 }
