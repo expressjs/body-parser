@@ -1,5 +1,5 @@
-HEAD
-====
+1.1.0 / 2014-05-10
+==================
 
   * add `type` option
   * deps: pin for safety and consistency

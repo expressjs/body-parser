@@ -1,7 +1,7 @@
 {
   "name": "body-parser",
   "description": "Connect's body parsing middleware",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": {
     "name": "Jonathan Ong",
     "email": "me@jongleberry.com",
