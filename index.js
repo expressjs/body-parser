@@ -43,12 +43,16 @@ function json(options){
   var reviver = options.reviver
   var strict = options.strict !== false;
   var type = options.type || 'json';
+  var verify = options.verify || false
+
+  if (verify !== false && typeof verify !== 'function') {
+    throw new TypeError('option verify must be function')
+  }
 
   function parse(str) {
     if (0 === str.length) {
       throw new Error('invalid json, empty body')
     }
-
     if (strict) {
       var first = firstchar(str)
 
@@ -68,7 +72,8 @@ function json(options){
 
     // read
     read(req, res, next, parse, {
-      limit: limit
+      limit: limit,
+      verify: verify
     })
   }
 }
@@ -80,6 +85,11 @@ function urlencoded(options){
     ? bytes(options.limit || '100kb')
     : options.limit;
   var type = options.type || 'urlencoded';
+  var verify = options.verify || false;
+
+  if (verify !== false && typeof verify !== 'function') {
+    throw new TypeError('option verify must be function')
+  }
 
   function parse(str) {
     return str.length
@@ -95,7 +105,8 @@ function urlencoded(options){
 
     // read
     read(req, res, next, parse, {
-      limit: limit
+      limit: limit,
+      verify: verify
     })
   }
 }
@@ -113,15 +124,35 @@ function read(req, res, next, parse, options) {
   req._body = true
 
   options = options || {}
-  options.encoding = 'utf8'
   options.length = length
 
+  var encoding = options.encoding || 'utf-8'
+  var verify = options.verify
+
+  options.encoding = verify
+    ? null
+    : encoding
+
   // read body
-  getBody(req, options, function (err, str) {
+  getBody(req, options, function (err, body) {
     if (err) return next(err)
+    var str
+
+    // verify
+    if (verify) {
+      try {
+        verify(req, res, body, encoding)
+      } catch (err) {
+        if (!err.status) err.status = 403
+        return next(err)
+      }
+    }
 
     // parse
     try {
+      str = typeof body !== 'string'
+        ? body.toString(encoding)
+        : body
       req.body = parse(str)
     } catch (err){
       err.body = str

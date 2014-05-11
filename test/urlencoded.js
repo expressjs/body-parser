@@ -82,6 +82,23 @@ describe('bodyParser.urlencoded()', function(){
       .expect(200, '{}', done)
     })
   })
+
+  describe('with verify option', function(){
+    var server;
+    before(function(){
+      server = createServer({verify: function(req, res, buf){
+        if (buf[0] === 0x20) throw new Error('no leading space')
+      }})
+    })
+
+    it('should error from verify', function(done){
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send(' user=tobi')
+      .expect(403, 'no leading space', done)
+    })
+  })
 })
 
 function createServer(opts){

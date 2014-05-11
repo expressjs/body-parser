@@ -179,6 +179,23 @@ describe('bodyParser.json()', function(){
     })
   })
 
+  describe('with verify option', function(){
+    var server;
+    before(function(){
+      server = createServer({verify: function(req, res, buf){
+        if (buf[0] === 0x5b) throw new Error('no arrays')
+      }})
+    })
+
+    it('should error from verify', function(done){
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('["tobi"]')
+      .expect(403, 'no arrays', done)
+    })
+  })
+
   it('should support utf-8', function(done){
     var server = createServer()
 

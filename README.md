@@ -54,8 +54,11 @@ Returns middleware that only parses `json`. The options are:
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `reviver` - passed to `JSON.parse()`
 - `type` - request content-type to parse (default: `json`)
+- `verify` - function to verify body content
 
 The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/json`).
+
+The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
 The `reviver` argument is passed directly to `JSON.parse` as the second argument. You can find more information on this argument [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
 
@@ -65,8 +68,11 @@ Returns middleware that only parses `urlencoded` with the [qs](https://github.co
 
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
+- `verify` - function to verify body content
 
 The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
+
+The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
 ### req.body
 
