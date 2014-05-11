@@ -1,6 +1,7 @@
 # body-parser [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser) [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
 
-Connect's body parsing middleware.
+Node.js body parsing middleware.
+
 This only handles `urlencoded` and `json` bodies.
 For multipart bodies, you may be interested in the following modules:
 
@@ -16,7 +17,9 @@ Other body parsers you might be interested in:
 
 ## Installation
 
-`npm install body-parser`
+```sh
+$ npm install body-parser
+```
 
 ## API
 
@@ -40,7 +43,7 @@ app.use(function (req, res, next) {
 
 ### bodyParser(options)
 
-Returns middleware that parses both `json` and `urlencoded`. 
+Returns middleware that parses both `json` and `urlencoded`.
 The `options` are passed to both middleware, except `type`.
 
 ### bodyParser.json(options)
