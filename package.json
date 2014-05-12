@@ -18,7 +18,7 @@
   "repository": "expressjs/body-parser",
   "dependencies": {
     "bytes": "1.0.0",
-    "type-is": "1.1.0",
+    "type-is": "1.2.0",
     "raw-body": "1.1.4",
     "qs": "0.6.6"
   },

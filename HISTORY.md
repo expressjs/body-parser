@@ -2,6 +2,8 @@ unreleased
 ==========
 
   * add `verify` option
+  * deps: type-is@1.2.0
+    - support suffix matching
 
 1.1.2 / 2014-05-11
 ==================
