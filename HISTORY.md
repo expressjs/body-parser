@@ -1,5 +1,5 @@
-unreleased
-==========
+1.2.0 / 2014-05-11
+==================
 
   * add `verify` option
   * deps: type-is@1.2.0
