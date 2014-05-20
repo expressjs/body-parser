@@ -4,6 +4,7 @@ var getBody = require('raw-body');
 var typeis = require('type-is');
 var http = require('http');
 var qs = require('qs');
+var zlib = require('zlib');
 
 var firstcharRegExp = /^\s*(.)/
 
@@ -133,8 +134,29 @@ function read(req, res, next, parse, options) {
     ? null
     : encoding
 
+  var stream;
+  switch (req.headers['content-encoding'] || 'identity') {
+    case 'gzip':
+      stream = req.pipe(zlib.createGunzip())
+      delete options.length
+      delete options.encoding
+      break
+    case 'deflate': 
+      stream = req.pipe(zlib.createInflate())
+      delete options.length
+      delete options.encoding
+      break
+    case 'identity': 
+      break
+    default:
+      var err = new Error('encoding not supported')
+      err.status = 415
+      next(err)
+      return
+  }
+
   // read body
-  getBody(req, options, function (err, body) {
+  getBody(stream || req, options, function (err, body) {
     if (err) return next(err)
     var str
 
