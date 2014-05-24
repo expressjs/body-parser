@@ -139,14 +139,13 @@ function read(req, res, next, parse, options) {
     case 'gzip':
       stream = req.pipe(zlib.createGunzip())
       delete options.length
-      delete options.encoding
       break
-    case 'deflate': 
+    case 'deflate':
       stream = req.pipe(zlib.createInflate())
       delete options.length
-      delete options.encoding
       break
-    case 'identity': 
+    case 'identity':
+      stream = req
       break
     default:
       var err = new Error('encoding not supported')
@@ -156,7 +155,7 @@ function read(req, res, next, parse, options) {
   }
 
   // read body
-  getBody(stream || req, options, function (err, body) {
+  getBody(stream, options, function (err, body) {
     if (err) return next(err)
     var str
 
