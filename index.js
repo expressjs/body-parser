@@ -145,11 +145,11 @@ function read(req, res, next, parse, options) {
       stream = req.pipe(zlib.createGunzip())
       delete options.length
       break
-    case 'deflate': 
+    case 'deflate':
       stream = req.pipe(zlib.createInflate())
       delete options.length
       break
-    case 'identity': 
+    case 'identity':
       stream = req
       break
     default:
