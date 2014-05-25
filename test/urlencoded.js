@@ -58,6 +58,19 @@ describe('bodyParser.urlencoded()', function(){
       .send('str=' + buf.toString())
       .expect(413, done)
     })
+
+    it('should not hang response', function(done){
+      var buf = new Buffer(1024 * 10)
+      buf.fill('.')
+
+      var server = createServer({ limit: '8kb' })
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(buf)
+      test.write(buf)
+      test.write(buf)
+      test.expect(413, done)
+    })
   })
 
   describe('with type option', function(){

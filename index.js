@@ -119,6 +119,7 @@ function firstchar(str) {
 
 function read(req, res, next, parse, options) {
   var length = req.headers['content-length']
+  var waitend = true
 
   // flag as parsed
   req._body = true
@@ -133,9 +134,26 @@ function read(req, res, next, parse, options) {
     ? null
     : encoding
 
+  req.on('aborted', cleanup)
+  req.on('end', cleanup)
+  req.on('error', cleanup)
+
   // read body
   getBody(req, options, function (err, body) {
-    if (err) return next(err)
+    if (err && waitend && req.readable) {
+      // read off entire request
+      req.resume()
+      req.once('end', function onEnd() {
+        next(err)
+      })
+      return
+    }
+
+    if (err) {
+      next(err)
+      return
+    }
+
     var str
 
     // verify
@@ -162,4 +180,11 @@ function read(req, res, next, parse, options) {
 
     next()
   })
+
+  function cleanup() {
+    waitend = false
+    req.removeListener('aborted', cleanup)
+    req.removeListener('end', cleanup)
+    req.removeListener('error', cleanup)
+  }
 }
