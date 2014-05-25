@@ -139,15 +139,51 @@ function read(req, res, next, parse, options) {
   req.on('end', cleanup)
   req.on('error', cleanup)
 
+  var compressedReceived = 0;
+  function onCompressedData(chunk) {
+    compressedReceived += chunk.length;
+  }
+  function onCompressedEnd() {
+    if (compressedReceived < length) {
+      err = new Error('compressed stream too short')
+      err.status = 400
+      next(err)
+      return
+    } else if (compressedReceived > length) {
+      err = new Error('compressed stream too long')
+      err.status = 400
+      next(err)
+      return
+    }
+  }
+  function setupCompressedStream() {
+    // streams2+: assert the stream encoding is buffer.
+    var state = req._readableState
+    if (state && state.encoding !== null) {
+      err = new Error('stream encoding should not be set')
+      err.status = 500
+      next(err)
+      return
+    }
+    // delete length and setup expected-zipped-data-length check
+    delete options.length
+    delete req.headers['content-length']
+    if (length !== null && !isNaN(length)) {
+      length = parseInt(length, 10)
+      req.on('data', onCompressedData)
+      req.on('end', onCompressedEnd)
+    }
+  }
+
   var stream;
   switch (req.headers['content-encoding'] || 'identity') {
     case 'gzip':
       stream = req.pipe(zlib.createGunzip())
-      delete options.length
+      setupCompressedStream()
       break
     case 'deflate':
       stream = req.pipe(zlib.createInflate())
-      delete options.length
+      setupCompressedStream()
       break
     case 'identity':
       stream = req
