@@ -10,42 +10,41 @@ describe('bodyParser()', function(){
 
   var server;
   before(function(){
-    server = createServer();
+    server = createServer()
   })
 
   it('should support gzip', function(done){
-    var data = '{"user":"tobi"}';
+    var data = '{"user":"tobi"}'
     zlib.gzip(data, function(err, compressedBuf) {
       var test = request(server)
         .post('/')
         .set('Content-Encoding', 'gzip')
-        .set('Content-Type', 'application/json');
-      test.write(compressedBuf);
-      test.expect(200, data, done);
-    });
-  });
+        .set('Content-Type', 'application/json')
+      test.write(compressedBuf)
+      test.expect(200, data, done)
+    })
+  })
 
   it('should support deflate', function(done){
-    var data = '{"user":"tobi"}';
+    var data = '{"user":"tobi"}'
     zlib.deflate(data, function(err, compressedBuf) {
       var test = request(server)
         .post('/')
         .set('Content-Encoding', 'deflate')
-        .set('Content-Type', 'application/json');
-      test.write(compressedBuf);
-      test.expect(200, data, done);
-    });
-  });
+        .set('Content-Type', 'application/json')
+      test.write(compressedBuf)
+      test.expect(200, data, done)
+    })
+  })
 
   it('should handle bad gzip', function(done){
-    var data = '{"user":"tobi"}';
     var test = request(server)
       .post('/')
       .set('Content-Encoding', 'gzip')
-      .set('Content-Type', 'application/json');
-    test.write(data);
-    test.expect(500, 'incorrect header check', done);
-  });
+      .set('Content-Type', 'application/json')
+    test.write('BOGUS_ZIP_DATA')
+    test.expect(500, 'incorrect header check', done)
+  })
 
   it('should default to {}', function(done){
     request(server)

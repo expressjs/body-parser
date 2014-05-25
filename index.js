@@ -175,6 +175,8 @@ function read(req, res, next, parse, options) {
       return
     }
 
+    var str
+
     // verify
     if (verify) {
       try {
@@ -186,7 +188,6 @@ function read(req, res, next, parse, options) {
     }
 
     // parse
-    var str
     try {
       str = typeof body !== 'string'
         ? body.toString(encoding)
