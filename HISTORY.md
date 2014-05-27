@@ -1,3 +1,11 @@
+unreleased
+==========
+
+  * deps: raw-body@1.1.6
+    - assert stream encoding on node.js 0.8
+    - assert stream encoding on node.js < 0.10.6
+    - deps: bytes@1
+
 1.2.1 / 2014-05-26
 ==================
 

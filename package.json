@@ -18,9 +18,9 @@
   "repository": "expressjs/body-parser",
   "dependencies": {
     "bytes": "1.0.0",
-    "type-is": "1.2.0",
-    "raw-body": "1.1.4",
-    "qs": "0.6.6"
+    "qs": "0.6.6",
+    "raw-body": "1.1.6",
+    "type-is": "1.2.0"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
