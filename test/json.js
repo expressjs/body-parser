@@ -256,6 +256,33 @@ describe('bodyParser.json()', function(){
       .send('["tobi"]')
       .expect(403, 'no arrays', done)
     })
+
+    it('should allow custom codes', function(done){
+      var server = createServer({verify: function(req, res, buf){
+        if (buf[0] !== 0x5b) return
+        var err = new Error('no arrays')
+        err.status = 400
+        throw err
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('["tobi"]')
+      .expect(400, 'no arrays', done)
+    })
+
+    it('should allow pass-through', function(done){
+      var server = createServer({verify: function(req, res, buf){
+        if (buf[0] === 0x5b) throw new Error('no arrays')
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user":"tobi"}')
+      .expect(200, '{"user":"tobi"}', done)
+    })
   })
 
   it('should support utf-8', function(done){

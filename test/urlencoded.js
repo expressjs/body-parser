@@ -39,6 +39,17 @@ describe('bodyParser.urlencoded()', function(){
     test.expect(400, /content length/, done)
   })
 
+  it('should handle empty message-body', function(done){
+    var server = createServer({ limit: '1kb' })
+
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .set('Transfer-Encoding', 'chunked')
+    .send('')
+    .expect(200, '{}', done)
+  })
+
   describe('with limit option', function(){
     it('should 413 when over limit with Content-Length', function(done){
       var buf = new Buffer(1024)
@@ -159,6 +170,33 @@ describe('bodyParser.urlencoded()', function(){
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send(' user=tobi')
       .expect(403, 'no leading space', done)
+    })
+
+    it('should allow custom codes', function(done){
+      var server = createServer({verify: function(req, res, buf){
+        if (buf[0] !== 0x20) return
+        var err = new Error('no leading space')
+        err.status = 400
+        throw err
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send(' user=tobi')
+      .expect(400, 'no leading space', done)
+    })
+
+    it('should allow pass-through', function(done){
+      var server = createServer({verify: function(req, res, buf){
+        if (buf[0] === 0x5b) throw new Error('no arrays')
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '{"user":"tobi"}', done)
     })
   })
 })
