@@ -1,4 +1,4 @@
-# body-parser [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser) [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
+# body-parser [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser) [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser) [![Coverage Status](https://img.shields.io/coveralls/expressjs/body-parser.svg?branch=master)](https://coveralls.io/r/expressjs/body-parser)
 
 Node.js body parsing middleware.
 
