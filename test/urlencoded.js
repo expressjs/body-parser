@@ -28,16 +28,50 @@ describe('bodyParser.urlencoded()', function(){
     .expect(200, '{"user":"tobi"}', done)
   })
 
+  it('should 400 when invalid content-length', function(done){
+    var server = createServer({ limit: '1kb' })
+
+    var test = request(server).post('/')
+    test.set('Content-Type', 'application/x-www-form-urlencoded')
+    test.set('Content-Length', '20')
+    test.set('Transfer-Encoding', 'chunked')
+    test.write('str=')
+    test.expect(400, /content length/, done)
+  })
+
   describe('with limit option', function(){
-    var server;
-    var options;
-    before(function(){
-      options = { limit: '1kb' }
-      server = createServer(options)
+    it('should 413 when over limit with Content-Length', function(done){
+      var buf = new Buffer(1024)
+      var server = createServer({ limit: '1kb' })
+
+      buf.fill('.')
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Content-Length', '1028')
+      .send('str=' + buf.toString())
+      .expect(413, done)
     })
 
-    it('should 413 when over limit', function(done){
+    it('should 413 when over limit with chunked encoding', function(done){
       var buf = new Buffer(1024)
+      var server = createServer({ limit: '1kb' })
+
+      buf.fill('.')
+
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.set('Transfer-Encoding', 'chunked')
+      test.write('str=')
+      test.write(buf.toString())
+      test.expect(413, done)
+    })
+
+    it('should accept number of bytes', function(done){
+      var buf = new Buffer(1024)
+      var server = createServer({ limit: 1024 })
+
       buf.fill('.')
 
       request(server)
@@ -49,6 +83,9 @@ describe('bodyParser.urlencoded()', function(){
 
     it('should not change when options altered', function(done){
       var buf = new Buffer(1024)
+      var options = { limit: '1kb' }
+      var server = createServer(options)
+
       buf.fill('.')
       options.limit = '100kb'
 
@@ -61,6 +98,8 @@ describe('bodyParser.urlencoded()', function(){
 
     it('should not hang response', function(done){
       var buf = new Buffer(1024 * 10)
+      var server = createServer({ limit: '1kb' })
+
       buf.fill('.')
 
       var server = createServer({ limit: '8kb' })
@@ -97,14 +136,24 @@ describe('bodyParser.urlencoded()', function(){
   })
 
   describe('with verify option', function(){
-    var server;
-    before(function(){
-      server = createServer({verify: function(req, res, buf){
-        if (buf[0] === 0x20) throw new Error('no leading space')
-      }})
+    it('should assert value if function', function(){
+      var err;
+
+      try {
+        var server = createServer({ verify: 'lol' })
+      } catch (e) {
+        err = e;
+      }
+
+      assert.ok(err);
+      assert.equal(err.name, 'TypeError');
     })
 
     it('should error from verify', function(done){
+      var server = createServer({verify: function(req, res, buf){
+        if (buf[0] === 0x20) throw new Error('no leading space')
+      }})
+
       request(server)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
