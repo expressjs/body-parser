@@ -158,7 +158,8 @@ function read(req, res, next, parse, options) {
   }
   function setupCompressedStream() {
     // assert the stream encoding is buffer.
-    if (req._decoder || (req._readableState && req._readableState.encoding !== null)) {
+    var state = req._readableState;
+    if (req._decoder || (state && (state.encoding || state.decoder))) {
       err = new Error('stream encoding should not be set')
       err.status = 500
       next(err)
