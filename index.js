@@ -4,6 +4,7 @@ var getBody = require('raw-body');
 var typeis = require('type-is');
 var http = require('http');
 var qs = require('qs');
+var zlib = require('zlib');
 
 var firstcharRegExp = /^\s*(.)/
 
@@ -138,8 +139,64 @@ function read(req, res, next, parse, options) {
   req.on('end', cleanup)
   req.on('error', cleanup)
 
+  var compressedReceived = 0;
+  function onCompressedData(chunk) {
+    compressedReceived += chunk.length;
+  }
+  function onCompressedEnd() {
+    if (compressedReceived < length) {
+      err = new Error('compressed stream too short')
+      err.status = 400
+      next(err)
+      return
+    } else if (compressedReceived > length) {
+      err = new Error('compressed stream too long')
+      err.status = 400
+      next(err)
+      return
+    }
+  }
+  function setupCompressedStream() {
+    // assert the stream encoding is buffer.
+    var state = req._readableState;
+    if (req._decoder || (state && (state.encoding || state.decoder))) {
+      err = new Error('stream encoding should not be set')
+      err.status = 500
+      next(err)
+      return
+    }
+    // delete length and setup expected-zipped-data-length check
+    delete options.length
+    delete req.headers['content-length']
+    if (length !== null && !isNaN(length)) {
+      length = parseInt(length, 10)
+      req.on('data', onCompressedData)
+      req.on('end', onCompressedEnd)
+    }
+  }
+
+  var stream;
+  switch (req.headers['content-encoding'] || 'identity') {
+    case 'gzip':
+      stream = req.pipe(zlib.createGunzip())
+      setupCompressedStream()
+      break
+    case 'deflate':
+      stream = req.pipe(zlib.createInflate())
+      setupCompressedStream()
+      break
+    case 'identity':
+      stream = req
+      break
+    default:
+      var err = new Error('encoding not supported')
+      err.status = 415
+      next(err)
+      return
+  }
+
   // read body
-  getBody(req, options, function (err, body) {
+  getBody(stream, options, function (err, body) {
     if (err && waitend && req.readable) {
       // read off entire request
       req.resume()
