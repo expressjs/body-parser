@@ -1,5 +1,5 @@
-unreleased
-==========
+1.2.2 / 2014-05-27
+==================
 
   * deps: raw-body@1.1.6
     - assert stream encoding on node.js 0.8
