@@ -1,5 +1,5 @@
-unreleased
-==========
+1.2.1 / 2014-05-26
+==================
 
   * invoke `next(err)` after request fully read
     - prevents hung responses and socket hang ups
