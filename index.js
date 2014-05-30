@@ -170,7 +170,8 @@ function read(req, res, next, parse, options) {
     try {
       str = typeof body !== 'string'
         ? body.toString(encoding)
-        : body
+        : body;
+      req.rawBody = str;
       req.body = parse(str)
     } catch (err){
       err.body = str
