@@ -1,19 +1,23 @@
-# body-parser [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser) [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser) [![Coverage Status](https://img.shields.io/coveralls/expressjs/body-parser.svg?branch=master)](https://coveralls.io/r/expressjs/body-parser)
+# body-parser
+
+[![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
+[![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser)
+[![Coverage Status](https://img.shields.io/coveralls/expressjs/body-parser.svg?branch=master)](https://coveralls.io/r/expressjs/body-parser)
 
 Node.js body parsing middleware.
 
 This only handles `urlencoded` and `json` bodies.
 For multipart bodies, you may be interested in the following modules:
 
-- [busboy](https://github.com/mscdex/busboy) and [connect-busboy](https://github.com/mscdex/connect-busboy)
-- [multiparty](https://github.com/andrewrk/node-multiparty) and [connect-multiparty](https://github.com/andrewrk/connect-multiparty)
-- [formidable](https://github.com/felixge/node-formidable)
-- [multer](https://github.com/expressjs/multer)
+- [busboy](https://www.npmjs.org/package/busboy#readme) and [connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)
+- [multiparty](https://www.npmjs.org/package/multiparty#readme) and [connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)
+- [formidable](https://www.npmjs.org/package/formidable#readme)
+- [multer](https://www.npmjs.org/package/multer#readme)
 
 Other body parsers you might be interested in:
 
-- [body](https://github.com/raynos/body)
-- [co-body](https://github.com/visionmedia/co-body)
+- [body](https://www.npmjs.org/package/body#readme)
+- [co-body](https://www.npmjs.org/package/co-body#readme)
 
 ## Installation
 
@@ -56,7 +60,7 @@ Returns middleware that only parses `json`. The options are:
 - `type` - request content-type to parse (default: `json`)
 - `verify` - function to verify body content
 
-The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/json`).
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/json`).
 
 The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
@@ -66,14 +70,14 @@ The `reviver` argument is passed directly to `JSON.parse` as the second argument
 
 Returns middleware that only parses `urlencoded` bodies. The options are:
 
-- `extended` - parse extended syntax with the [qs](https://github.com/visionmedia/node-querystring) module. (default: `true`)
+- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
 
-The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like exterience with urlencoded.
+The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like exterience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
 
-The `type` argument is passed directly to the [type-is](https://github.com/expressjs/type-is) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
 
 The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
