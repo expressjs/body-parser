@@ -2,7 +2,6 @@
 var bytes = require('bytes');
 var getBody = require('raw-body');
 var typeis = require('type-is');
-var http = require('http');
 var qs = require('qs');
 var querystring = require('querystring');
 
