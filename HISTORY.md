@@ -1,5 +1,5 @@
-unreleased
-==========
+1.3.1 / 2014-06-11
+==================
 
   * deps: type-is@1.2.1
     - Switch dependency from mime to mime-types@1.0.0
