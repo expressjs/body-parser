@@ -33,8 +33,11 @@ var bodyParser = require('body-parser')
 
 var app = express()
 
-// parse application/json and application/x-www-form-urlencoded
-app.use(bodyParser())
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded())
+
+// parse application/json
+app.use(bodyParser.json())
 
 // parse application/vnd.api+json as json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
