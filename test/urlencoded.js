@@ -275,6 +275,36 @@ describe('bodyParser.urlencoded()', function(){
       test.expect(415, 'unsupported charset', done)
     })
   })
+
+  describe('encoding', function(){
+    var server;
+    before(function(){
+      server = createServer()
+    })
+
+    it('should parse without encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(new Buffer('6e616d653de8aeba', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should parse with identity encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'identity')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(new Buffer('6e616d653de8aeba', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should fail on unknown encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'nulls')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(new Buffer('000000000000', 'hex'))
+      test.expect(415, 'unsupported content encoding', done)
+    })
+  })
 })
 
 function createServer(opts){

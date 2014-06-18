@@ -142,11 +142,17 @@ function firstchar(str) {
 }
 
 function read(req, res, next, parse, options) {
+  var contentencoding = req.headers['content-encoding'] || 'identity'
   var length = req.headers['content-length']
   var waitend = true
 
   // flag as parsed
   req._body = true
+
+  // only identity content-encoding supported
+  if (contentencoding !== 'identity') {
+    return next(error(415, 'unsupported content encoding'))
+  }
 
   options = options || {}
   options.length = length
