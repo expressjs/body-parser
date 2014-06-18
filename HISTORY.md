@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: raw-body@1.2.1
+    - Support all encodings from `iconv-lite`
+
 1.3.1 / 2014-06-11
 ==================
 
