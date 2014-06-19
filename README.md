@@ -65,6 +65,20 @@ The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding
 
 The `reviver` argument is passed directly to `JSON.parse` as the second argument. You can find more information on this argument [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
 
+### bodyParser.raw(options)
+
+Returns middleware that parses all bodies as a `Buffer`. This parser supports automatic inflation of `gzip` and `deflate` encodings.
+
+The options are:
+
+- `limit` - maximum request body size. (default: `<100kb>`)
+- `type` - request content-type to parse (default: `application/octet-stream`)
+- `verify` - function to verify body content
+
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `bin`), a mime type (like `application/octet-stream`), or a mime time with a wildcard (like `application/*`).
+
+The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+
 ### bodyParser.urlencoded(options)
 
 Returns middleware that only parses `urlencoded` bodies. This parser accepts only UTF-8 encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.

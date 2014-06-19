@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * add `raw` parser
   * check accepted charset in content-type (accepts utf-8)
   * check accepted encoding in content-encoding (accepts identity)
   * deprecate `bodyParser()` middleware; use `.json()` and `.urlencoded()` as needed
