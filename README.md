@@ -47,11 +47,6 @@ app.use(function (req, res, next) {
 })
 ```
 
-### bodyParser(options)
-
-Returns middleware that parses both `json` and `urlencoded`.
-The `options` are passed to both middleware, except `type`.
-
 ### bodyParser.json(options)
 
 Returns middleware that only parses `json`. This parser accepts any Unicode encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.

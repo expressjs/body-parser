@@ -1,5 +1,6 @@
 
 var bytes = require('bytes');
+var deprecate = require('depd')('body-parser')
 var getBody = require('raw-body');
 var typer = require('media-typer');
 var typeis = require('type-is');
@@ -9,7 +10,8 @@ var zlib = require('zlib');
 
 var firstcharRegExp = /^\s*(.)/
 
-exports = module.exports = bodyParser;
+exports = module.exports = deprecate.function(bodyParser,
+  'bodyParser: use individual json/urlencoded middlewares')
 exports.json = json;
 exports.urlencoded = urlencoded;
 
