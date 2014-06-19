@@ -1,19 +1,63 @@
+/*!
+ * body-parser
+ * MIT Licensed
+ */
 
-var bytes = require('bytes');
+/**
+ * Module dependencies.
+ */
+
 var deprecate = require('depd')('body-parser')
-var getBody = require('raw-body');
-var typer = require('media-typer');
-var typeis = require('type-is');
-var qs = require('qs');
-var querystring = require('querystring');
-var zlib = require('zlib');
+var fs = require('fs')
+var path = require('path')
 
-var firstcharRegExp = /^\s*(.)/
+/**
+ * Module exports.
+ */
 
 exports = module.exports = deprecate.function(bodyParser,
   'bodyParser: use individual json/urlencoded middlewares')
-exports.json = json;
-exports.urlencoded = urlencoded;
+
+/**
+ * Path to the parser modules.
+ */
+
+var parsersDir = path.join(__dirname, 'lib', 'types')
+
+/**
+ * Auto-load bundled parsers with getters.
+ */
+
+fs.readdirSync(parsersDir).forEach(function onfilename(filename) {
+  if (!/\.js$/.test(filename)) return
+
+  var loc = path.resolve(parsersDir, filename)
+  var mod
+  var name = path.basename(filename, '.js')
+
+  function load() {
+    if (mod) {
+      return mod
+    }
+
+    return mod = require(loc)
+  }
+
+  Object.defineProperty(exports, name, {
+    configurable: true,
+    enumerable: true,
+    get: load
+  })
+})
+
+/**
+ * Create a middleware to parse json and urlencoded bodies.
+ *
+ * @param {object} [options]
+ * @return {function}
+ * @deprecated
+ * @api public
+ */
 
 function bodyParser(options){
   var opts = {}
@@ -27,8 +71,8 @@ function bodyParser(options){
     }
   }
 
-  var _urlencoded = urlencoded(opts)
-  var _json = json(opts)
+  var _urlencoded = exports.urlencoded(opts)
+  var _json = exports.json(opts)
 
   return function bodyParser(req, res, next) {
     _json(req, res, function(err){
@@ -36,217 +80,4 @@ function bodyParser(options){
       _urlencoded(req, res, next);
     });
   }
-}
-
-function json(options){
-  options = options || {};
-
-  var limit = typeof options.limit !== 'number'
-    ? bytes(options.limit || '100kb')
-    : options.limit;
-  var reviver = options.reviver
-  var strict = options.strict !== false;
-  var type = options.type || 'json';
-  var verify = options.verify || false
-
-  if (verify !== false && typeof verify !== 'function') {
-    throw new TypeError('option verify must be function')
-  }
-
-  function parse(str) {
-    if (0 === str.length) {
-      throw new Error('invalid json, empty body')
-    }
-    if (strict) {
-      var first = firstchar(str)
-
-      if (first !== '{' && first !== '[') {
-        throw new Error('invalid json')
-      }
-    }
-
-    return JSON.parse(str, reviver)
-  }
-
-  return function jsonParser(req, res, next) {
-    if (req._body) return next();
-    req.body = req.body || {}
-
-    if (!typeis(req, type)) return next();
-
-    var charset = typer.parse(req).parameters.charset || 'utf-8'
-    if (charset.substr(0, 4).toLowerCase() !== 'utf-') {
-      return next(error(415, 'unsupported charset'))
-    }
-
-    // read
-    read(req, res, next, parse, {
-      encoding: charset,
-      limit: limit,
-      verify: verify
-    })
-  }
-}
-
-function urlencoded(options){
-  options = options || {};
-
-  var extended = options.extended !== false
-  var limit = typeof options.limit !== 'number'
-    ? bytes(options.limit || '100kb')
-    : options.limit;
-  var type = options.type || 'urlencoded';
-  var verify = options.verify || false;
-
-  if (verify !== false && typeof verify !== 'function') {
-    throw new TypeError('option verify must be function')
-  }
-
-  var queryparse = extended
-    ? qs.parse
-    : querystring.parse
-
-  function parse(str) {
-    return str.length
-      ? queryparse(str)
-      : {}
-  }
-
-  return function urlencodedParser(req, res, next) {
-    if (req._body) return next();
-    req.body = req.body || {}
-
-    if (!typeis(req, type)) return next();
-
-    var charset = typer.parse(req).parameters.charset || 'utf-8'
-    if (charset.toLowerCase() !== 'utf-8') {
-      return next(error(415, 'unsupported charset'))
-    }
-
-    // read
-    read(req, res, next, parse, {
-      encoding: charset,
-      limit: limit,
-      verify: verify
-    })
-  }
-}
-
-function error(code, msg) {
-  var err = new Error(msg || http.STATUS_CODES[code]);
-  err.status = code;
-  return err;
-}
-
-function firstchar(str) {
-  if (!str) return ''
-  var match = firstcharRegExp.exec(str)
-  return match ? match[1] : ''
-}
-
-function read(req, res, next, parse, options) {
-  var length
-  var stream
-  var waitend = true
-
-  // flag as parsed
-  req._body = true
-
-  try {
-    stream = contentstream(req)
-    length = stream.length
-    delete stream.length
-  } catch (err) {
-    return next(err)
-  }
-
-  options = options || {}
-  options.length = length
-
-  var encoding = options.encoding || 'utf-8'
-  var verify = options.verify
-
-  options.encoding = verify
-    ? null
-    : encoding
-
-  req.on('aborted', cleanup)
-  req.on('end', cleanup)
-  req.on('error', cleanup)
-
-  // read body
-  getBody(stream, options, function (err, body) {
-    if (err && waitend && req.readable) {
-      // read off entire request
-      req.resume()
-      req.once('end', function onEnd() {
-        next(err)
-      })
-      return
-    }
-
-    if (err) {
-      if (!err.status) err.status = 400
-      next(err)
-      return
-    }
-
-    var str
-
-    // verify
-    if (verify) {
-      try {
-        verify(req, res, body, encoding)
-      } catch (err) {
-        if (!err.status) err.status = 403
-        return next(err)
-      }
-    }
-
-    // parse
-    try {
-      str = typeof body !== 'string'
-        ? body.toString(encoding)
-        : body
-      req.body = parse(str)
-    } catch (err){
-      err.body = str
-      err.status = 400
-      return next(err)
-    }
-
-    next()
-  })
-
-  function cleanup() {
-    waitend = false
-    req.removeListener('aborted', cleanup)
-    req.removeListener('end', cleanup)
-    req.removeListener('error', cleanup)
-  }
-}
-
-function contentstream(req) {
-  var encoding = req.headers['content-encoding'] || 'identity'
-  var length = req.headers['content-length']
-  var stream
-
-  switch (encoding) {
-    case 'deflate':
-      stream = zlib.createInflate()
-      req.pipe(stream)
-      break
-    case 'gzip':
-      stream = zlib.createGunzip()
-      req.pipe(stream)
-      break
-    case 'identity':
-      stream = req
-      stream.length = length
-      break
-    default:
-      throw error(415, 'unsupported content encoding')
-  }
-
-  return stream
 }

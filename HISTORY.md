@@ -4,6 +4,7 @@ unreleased
   * check accepted charset in content-type (accepts utf-8)
   * check accepted encoding in content-encoding (accepts identity)
   * deprecate `bodyParser()` middleware; use `.json()` and `.urlencoded()` as needed
+  * parsers split into files for reduced mem usage
   * support gzip and deflate bodies
   * deps: raw-body@1.2.1
     - Support all encodings from `iconv-lite`
