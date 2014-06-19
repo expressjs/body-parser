@@ -1,6 +1,4 @@
 
-process.env.NO_DEPRECATION = 'body-parser'
-
 var assert = require('assert');
 var http = require('http');
 var request = require('supertest');
