@@ -7,6 +7,7 @@ unreleased
   * check accepted encoding in content-encoding (accepts identity)
   * deprecate `bodyParser()` middleware; use `.json()` and `.urlencoded()` as needed
   * deprecate `urlencoded()` without provided `extended` option
+  * lazy-load urlencoded parsers
   * parsers split into files for reduced mem usage
   * support gzip and deflate bodies
     - set `inflate: false` to turn off
