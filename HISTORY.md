@@ -1,3 +1,8 @@
+unreleased
+==========
+
+  * fix urlencoded extended deprecation message
+
 1.4.0 / 2014-06-19
 ==================
 
