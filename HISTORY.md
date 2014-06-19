@@ -1,5 +1,5 @@
-unreleased
-==========
+1.4.0 / 2014-06-19
+==================
 
   * add `text` parser
   * add `raw` parser
