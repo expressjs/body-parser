@@ -54,6 +54,7 @@ Returns middleware that only parses `json`. This parser accepts any Unicode enco
 The options are:
 
 - `strict` - only parse objects and arrays. (default: `true`)
+- `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `reviver` - passed to `JSON.parse()`
 - `type` - request content-type to parse (default: `json`)
@@ -71,6 +72,7 @@ Returns middleware that parses all bodies as a `Buffer`. This parser supports au
 
 The options are:
 
+- `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `application/octet-stream`)
 - `verify` - function to verify body content
@@ -86,6 +88,7 @@ Returns middleware that parses all bodies as a string. This parser supports auto
 The options are:
 
 - `defaultCharset` - the default charset to parse as, if not specified in content-type. (default: `utf-8`)
+- `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `text/plain`)
 - `verify` - function to verify body content
@@ -101,6 +104,7 @@ Returns middleware that only parses `urlencoded` bodies. This parser accepts onl
 The options are:
 
 - `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
+- `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content

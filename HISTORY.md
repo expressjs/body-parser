@@ -9,6 +9,7 @@ unreleased
   * deprecate `urlencoded()` without provided `extended` option
   * parsers split into files for reduced mem usage
   * support gzip and deflate bodies
+    - set `inflate: false` to turn off
   * deps: raw-body@1.2.2
     - Support all encodings from `iconv-lite`
 

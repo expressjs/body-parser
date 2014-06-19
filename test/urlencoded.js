@@ -90,6 +90,38 @@ describe('bodyParser.urlencoded()', function(){
     })
   })
 
+  describe('with inflate option', function(){
+    describe('when false', function(){
+      var server;
+      before(function(){
+        server = createServer({ inflate: false })
+      })
+
+      it('should not accept content-encoding', function(done){
+        var test = request(server).post('/')
+        test.set('Content-Encoding', 'gzip')
+        test.set('Content-Type', 'application/x-www-form-urlencoded')
+        test.write(new Buffer('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+        test.expect(415, 'content encoding unsupported', done)
+      })
+    })
+
+    describe('when true', function(){
+      var server;
+      before(function(){
+        server = createServer({ inflate: true })
+      })
+
+      it('should accept content-encoding', function(done){
+        var test = request(server).post('/')
+        test.set('Content-Encoding', 'gzip')
+        test.set('Content-Type', 'application/x-www-form-urlencoded')
+        test.write(new Buffer('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+        test.expect(200, '{"name":"论"}', done)
+      })
+    })
+  })
+
   describe('with limit option', function(){
     it('should 413 when over limit with Content-Length', function(done){
       var buf = new Buffer(1024)

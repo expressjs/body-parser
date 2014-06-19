@@ -208,6 +208,38 @@ describe('bodyParser.json()', function(){
     })
   })
 
+  describe('with inflate option', function(){
+    describe('when false', function(){
+      var server;
+      before(function(){
+        server = createServer({ inflate: false })
+      })
+
+      it('should not accept content-encoding', function(done){
+        var test = request(server).post('/')
+        test.set('Content-Encoding', 'gzip')
+        test.set('Content-Type', 'application/json')
+        test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+        test.expect(415, 'content encoding unsupported', done)
+      })
+    })
+
+    describe('when true', function(){
+      var server;
+      before(function(){
+        server = createServer({ inflate: true })
+      })
+
+      it('should accept content-encoding', function(done){
+        var test = request(server).post('/')
+        test.set('Content-Encoding', 'gzip')
+        test.set('Content-Type', 'application/json')
+        test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+        test.expect(200, '{"name":"论"}', done)
+      })
+    })
+  })
+
   describe('with type option', function(){
     var server;
     before(function(){

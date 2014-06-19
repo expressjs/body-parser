@@ -108,6 +108,38 @@ describe('bodyParser.raw()', function(){
     })
   })
 
+  describe('with inflate option', function(){
+    describe('when false', function(){
+      var server;
+      before(function(){
+        server = createServer({ inflate: false })
+      })
+
+      it('should not accept content-encoding', function(done){
+        var test = request(server).post('/')
+        test.set('Content-Encoding', 'gzip')
+        test.set('Content-Type', 'application/octet-stream')
+        test.write(new Buffer('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+        test.expect(415, 'content encoding unsupported', done)
+      })
+    })
+
+    describe('when true', function(){
+      var server;
+      before(function(){
+        server = createServer({ inflate: true })
+      })
+
+      it('should accept content-encoding', function(done){
+        var test = request(server).post('/')
+        test.set('Content-Encoding', 'gzip')
+        test.set('Content-Type', 'application/octet-stream')
+        test.write(new Buffer('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+        test.expect(200, 'buf:6e616d653de8aeba', done)
+      })
+    })
+  })
+
   describe('with type option', function(){
     var server;
     before(function(){
