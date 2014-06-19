@@ -11,6 +11,7 @@
   "dependencies": {
     "bytes": "1.0.0",
     "depd": "0.3.0",
+    "iconv-lite": "0.4.3",
     "media-typer": "0.2.0",
     "qs": "0.6.6",
     "raw-body": "1.2.1",

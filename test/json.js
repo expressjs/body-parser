@@ -283,6 +283,18 @@ describe('bodyParser.json()', function(){
       .send('{"user":"tobi"}')
       .expect(200, '{"user":"tobi"}', done)
     })
+
+    it('should work with different charsets', function(done){
+      var server = createServer({verify: function(req, res, buf){
+        if (buf[0] === 0x5b) throw new Error('no arrays')
+      }})
+
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/json; charset=utf-16')
+      test.write(new Buffer('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
   })
 
   describe('charset', function(){
