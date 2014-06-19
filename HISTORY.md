@@ -1,5 +1,5 @@
-unreleased
-==========
+1.4.1 / 2014-06-19
+==================
 
   * fix urlencoded extended deprecation message
 
