@@ -79,6 +79,21 @@ The `type` argument is passed directly to the [type-is](https://www.npmjs.org/pa
 
 The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
+### bodyParser.text(options)
+
+Returns middleware that parses all bodies as a string. This parser supports automatic inflation of `gzip` and `deflate` encodings.
+
+The options are:
+
+- `defaultCharset` - the default charset to parse as, if not specified in content-type. (default: `utf-8`)
+- `limit` - maximum request body size. (default: `<100kb>`)
+- `type` - request content-type to parse (default: `text/plain`)
+- `verify` - function to verify body content
+
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `txt`), a mime type (like `text/plain`), or a mime time with a wildcard (like `text/*`).
+
+The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+
 ### bodyParser.urlencoded(options)
 
 Returns middleware that only parses `urlencoded` bodies. This parser accepts only UTF-8 encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.

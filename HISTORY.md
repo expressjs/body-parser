@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * add `text` parser
   * add `raw` parser
   * check accepted charset in content-type (accepts utf-8)
   * check accepted encoding in content-encoding (accepts identity)
