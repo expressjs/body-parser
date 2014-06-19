@@ -331,7 +331,7 @@ describe('bodyParser.json()', function(){
   describe('encoding', function(){
     var server;
     before(function(){
-      server = createServer()
+      server = createServer({ limit: '1kb' })
     })
 
     it('should parse without encoding', function(done){
@@ -341,7 +341,7 @@ describe('bodyParser.json()', function(){
       test.expect(200, '{"name":"论"}', done)
     })
 
-    it('should parse with identity encoding', function(done){
+    it('should support identity encoding', function(done){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'application/json')
@@ -349,12 +349,57 @@ describe('bodyParser.json()', function(){
       test.expect(200, '{"name":"论"}', done)
     })
 
-    it('should fail on unknown encoding', function(done){
+    it('should support gzip encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should support deflate encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'deflate')
+      test.set('Content-Type', 'application/json')
+      test.write(new Buffer('789cab56ca4bcc4d55b2527ab16e97522d00274505ac', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should check content-length correctly', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Length', '49')
+      test.set('Content-Type', 'application/json')
+      test.set('Transfer-Encoding', 'chunked')
+      test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should 415 on unknown encoding', function(done){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/json')
       test.write(new Buffer('000000000000', 'hex'))
       test.expect(415, 'unsupported content encoding', done)
+    })
+
+    it('should 400 on malformed encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(new Buffer('1f8b080000000000000bab56cc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.expect(400, done)
+    })
+
+    it('should 413 when inflated value exceeds limit', function(done){
+      // gzip'd data exceeds 1kb, but deflated below 1kb
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(new Buffer('1f8b080000000000000bedc1010d000000c2a0f74f6d0f071400000000000000', 'hex'))
+      test.write(new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex'))
+      test.write(new Buffer('0000000000000000004f0625b3b71650c30000', 'hex'))
+      test.expect(413, done)
     })
   })
 })

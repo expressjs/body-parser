@@ -5,6 +5,7 @@ var typer = require('media-typer');
 var typeis = require('type-is');
 var qs = require('qs');
 var querystring = require('querystring');
+var zlib = require('zlib');
 
 var firstcharRegExp = /^\s*(.)/
 
@@ -142,16 +143,19 @@ function firstchar(str) {
 }
 
 function read(req, res, next, parse, options) {
-  var contentencoding = req.headers['content-encoding'] || 'identity'
-  var length = req.headers['content-length']
+  var length
+  var stream
   var waitend = true
 
   // flag as parsed
   req._body = true
 
-  // only identity content-encoding supported
-  if (contentencoding !== 'identity') {
-    return next(error(415, 'unsupported content encoding'))
+  try {
+    stream = contentstream(req)
+    length = stream.length
+    delete stream.length
+  } catch (err) {
+    return next(err)
   }
 
   options = options || {}
@@ -169,7 +173,7 @@ function read(req, res, next, parse, options) {
   req.on('error', cleanup)
 
   // read body
-  getBody(req, options, function (err, body) {
+  getBody(stream, options, function (err, body) {
     if (err && waitend && req.readable) {
       // read off entire request
       req.resume()
@@ -180,6 +184,7 @@ function read(req, res, next, parse, options) {
     }
 
     if (err) {
+      if (!err.status) err.status = 400
       next(err)
       return
     }
@@ -217,4 +222,29 @@ function read(req, res, next, parse, options) {
     req.removeListener('end', cleanup)
     req.removeListener('error', cleanup)
   }
+}
+
+function contentstream(req) {
+  var encoding = req.headers['content-encoding'] || 'identity'
+  var length = req.headers['content-length']
+  var stream
+
+  switch (encoding) {
+    case 'deflate':
+      stream = zlib.createInflate()
+      req.pipe(stream)
+      break
+    case 'gzip':
+      stream = zlib.createGunzip()
+      req.pipe(stream)
+      break
+    case 'identity':
+      stream = req
+      stream.length = length
+      break
+    default:
+      throw error(415, 'unsupported content encoding')
+  }
+
+  return stream
 }

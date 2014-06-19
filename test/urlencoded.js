@@ -279,7 +279,7 @@ describe('bodyParser.urlencoded()', function(){
   describe('encoding', function(){
     var server;
     before(function(){
-      server = createServer()
+      server = createServer({ limit: '10kb' })
     })
 
     it('should parse without encoding', function(done){
@@ -289,11 +289,27 @@ describe('bodyParser.urlencoded()', function(){
       test.expect(200, '{"name":"论"}', done)
     })
 
-    it('should parse with identity encoding', function(done){
+    it('should support identity encoding', function(done){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(new Buffer('6e616d653de8aeba', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should support gzip encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(new Buffer('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should support deflate encoding', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'deflate')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(new Buffer('789ccb4bcc4db57db16e17001068042f', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 

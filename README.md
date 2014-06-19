@@ -6,8 +6,7 @@
 
 Node.js body parsing middleware.
 
-This only handles `urlencoded` and `json` bodies.
-For multipart bodies, you may be interested in the following modules:
+This does not handle multipart bodies, due to their complex and typically large nature. For multipart bodies, you may be interested in the following modules:
 
 - [busboy](https://www.npmjs.org/package/busboy#readme) and [connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)
 - [multiparty](https://www.npmjs.org/package/multiparty#readme) and [connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)
@@ -55,7 +54,7 @@ The `options` are passed to both middleware, except `type`.
 
 ### bodyParser.json(options)
 
-Returns middleware that only parses `json`. This parser accepts any Unicode encoding of the body.
+Returns middleware that only parses `json`. This parser accepts any Unicode encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.
 
 The options are:
 
@@ -73,7 +72,7 @@ The `reviver` argument is passed directly to `JSON.parse` as the second argument
 
 ### bodyParser.urlencoded(options)
 
-Returns middleware that only parses `urlencoded` bodies. This parser accepts only UTF-8 encoding of the body.
+Returns middleware that only parses `urlencoded` bodies. This parser accepts only UTF-8 encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.
 
 The options are:
 
