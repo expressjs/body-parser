@@ -7,7 +7,7 @@ unreleased
   * deprecate `bodyParser()` middleware; use `.json()` and `.urlencoded()` as needed
   * parsers split into files for reduced mem usage
   * support gzip and deflate bodies
-  * deps: raw-body@1.2.1
+  * deps: raw-body@1.2.2
     - Support all encodings from `iconv-lite`
 
 1.3.1 / 2014-06-11
