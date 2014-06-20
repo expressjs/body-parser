@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: type-is@1.3.0
+    - improve type parsing
+
 1.4.1 / 2014-06-19
 ==================
 
