@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: type-is@1.3.1
+    - fix global variable leak
+
 1.4.2 / 2014-06-19
 ==================
 
