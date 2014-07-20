@@ -1,6 +1,11 @@
 unreleased
 ==========
 
+  * deps: depd@0.4.2
+    - Add `TRACE_DEPRECATION` environment variable
+    - Remove non-standard grey color from color output
+    - Support `--no-deprecation` argument
+    - Support `--trace-deprecation` argument
   * deps: type-is@~1.3.2
 
 1.4.3 / 2014-06-19
