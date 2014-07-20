@@ -14,7 +14,7 @@
     "iconv-lite": "0.4.4",
     "media-typer": "0.2.0",
     "qs": "0.6.6",
-    "raw-body": "1.2.2",
+    "raw-body": "1.3.0",
     "type-is": "~1.3.2"
   },
   "devDependencies": {

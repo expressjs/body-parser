@@ -8,6 +8,10 @@ unreleased
     - Support `--trace-deprecation` argument
   * deps: iconv-lite@0.4.4
     - Added encoding UTF-7
+  * deps: raw-body@1.3.0
+    - deps: iconv-lite@0.4.4
+    - Added encoding UTF-7
+    - Fix `Cannot switch to old mode now` error on Node.js 0.10+
   * deps: type-is@~1.3.2
 
 1.4.3 / 2014-06-19
