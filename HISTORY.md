@@ -6,6 +6,8 @@ unreleased
     - Remove non-standard grey color from color output
     - Support `--no-deprecation` argument
     - Support `--trace-deprecation` argument
+  * deps: iconv-lite@0.4.4
+    - Added encoding UTF-7
   * deps: type-is@~1.3.2
 
 1.4.3 / 2014-06-19
