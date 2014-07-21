@@ -1,5 +1,5 @@
-unreleased
-==========
+1.5.0 / 2014-07-20
+==================
 
   * deps: depd@0.4.2
     - Add `TRACE_DEPRECATION` environment variable
