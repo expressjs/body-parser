@@ -1,5 +1,5 @@
-unreleased
-==========
+1.6.1 / 2014-08-06
+==================
 
   * deps: qs@1.1.0
     - Accept urlencoded square brackets
