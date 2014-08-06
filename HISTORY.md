@@ -1,5 +1,5 @@
-unreleased
-==========
+1.6.0 / 2014-08-05
+==================
 
   * deps: qs@1.0.2
     - Complete rewrite
