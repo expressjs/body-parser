@@ -87,6 +87,14 @@ describe('bodyParser.urlencoded()', function(){
         .send('user[name][first]=Tobi')
         .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
       })
+
+      it('should parse fully-encoded extended syntax', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user%5Bname%5D%5Bfirst%5D=Tobi')
+        .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+      })
     })
   })
 

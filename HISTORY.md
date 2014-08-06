@@ -1,3 +1,10 @@
+unreleased
+==========
+
+  * deps: qs@1.1.0
+    - Accept urlencoded square brackets
+    - Accept empty values in implicit array notation
+
 1.6.0 / 2014-08-05
 ==================
 
