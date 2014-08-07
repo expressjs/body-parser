@@ -95,6 +95,14 @@ describe('bodyParser.urlencoded()', function(){
         .send('user%5Bname%5D%5Bfirst%5D=Tobi')
         .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
       })
+
+      it('should parse array of objects syntax', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('foo[0][bar]=baz&foo[0][fizz]=buzz')
+        .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"}]}', done)
+      })
     })
   })
 
