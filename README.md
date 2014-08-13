@@ -41,6 +41,9 @@ app.use(bodyParser.json())
 // parse application/vnd.api+json as json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
+// parse application/json into req.json
+app.use(bodyParser.json({ into: 'json' }))
+
 app.use(function (req, res, next) {
   console.log(req.body) // populated!
   next()
@@ -59,6 +62,7 @@ The options are:
 - `reviver` - passed to `JSON.parse()`
 - `type` - request content-type to parse (default: `json`)
 - `verify` - function to verify body content
+- `into` - the name of the property to create on `req`
 
 The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/json`).
 
@@ -76,6 +80,7 @@ The options are:
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `application/octet-stream`)
 - `verify` - function to verify body content
+- `into` - the name of the property to create on `req`
 
 The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `bin`), a mime type (like `application/octet-stream`), or a mime time with a wildcard (like `application/*`).
 
@@ -92,6 +97,7 @@ The options are:
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `text/plain`)
 - `verify` - function to verify body content
+- `into` - the name of the property to create on `req`
 
 The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `txt`), a mime type (like `text/plain`), or a mime time with a wildcard (like `text/*`).
 
@@ -108,6 +114,7 @@ The options are:
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
+- `into` - the name of the property to create on `req`
 
 The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like experience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
 
@@ -117,7 +124,7 @@ The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding
 
 ### req.body
 
-A new `body` object containing the parsed data is populated on the `request` object after the middleware.
+A new `body` object containing the parsed data is populated on the `request` object after the middleware by default, unless the `into` option is set in which case `request[into]` is populated with the parsed data.
 
 ## License
 
