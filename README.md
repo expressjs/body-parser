@@ -3,6 +3,7 @@
 [![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
 [![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser)
 [![Coverage Status](https://img.shields.io/coveralls/expressjs/body-parser.svg?branch=master)](https://coveralls.io/r/expressjs/body-parser)
+[![Gittip](http://img.shields.io/gittip/dougwilson.svg)](https://www.gittip.com/dougwilson/)
 
 Node.js body parsing middleware.
 
