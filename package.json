@@ -13,6 +13,7 @@
     "depd": "0.4.4",
     "iconv-lite": "0.4.4",
     "media-typer": "0.2.0",
+    "on-finished": "2.1.0",
     "qs": "1.2.2",
     "raw-body": "1.3.0",
     "type-is": "~1.3.2"
