@@ -1,9 +1,10 @@
 # body-parser
 
-[![NPM version](https://badge.fury.io/js/body-parser.svg)](https://badge.fury.io/js/body-parser)
-[![Build Status](https://travis-ci.org/expressjs/body-parser.svg?branch=master)](https://travis-ci.org/expressjs/body-parser)
-[![Coverage Status](https://img.shields.io/coveralls/expressjs/body-parser.svg?branch=master)](https://coveralls.io/r/expressjs/body-parser)
-[![Gittip](http://img.shields.io/gittip/dougwilson.svg)](https://www.gittip.com/dougwilson/)
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![Build Status][travis-image]][travis-url]
+[![Test Coverage][coveralls-image]][coveralls-url]
+[![Gittip][gittip-image]][gittip-url]
 
 Node.js body parsing middleware.
 
@@ -123,3 +124,14 @@ A new `body` object containing the parsed data is populated on the `request` obj
 ## License
 
 [MIT](LICENSE)
+
+[npm-image]: https://img.shields.io/npm/v/body-parser.svg?style=flat
+[npm-url]: https://npmjs.org/package/body-parser
+[travis-image]: https://img.shields.io/travis/expressjs/body-parser.svg?style=flat
+[travis-url]: https://travis-ci.org/expressjs/body-parser
+[coveralls-image]: https://img.shields.io/coveralls/expressjs/body-parser.svg?style=flat
+[coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
+[downloads-image]: http://img.shields.io/npm/dm/body-parser.svg?style=flat
+[downloads-url]: https://npmjs.org/package/body-parser
+[gittip-image]: https://img.shields.io/gittip/dougwilson.svg?style=flat
+[gittip-url]: https://www.gittip.com/dougwilson/
