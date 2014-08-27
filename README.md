@@ -108,10 +108,13 @@ The options are:
 - `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
 - `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
+- `parameterLimit` - maximum number of parameters. (default: `1000`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
 
 The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like experience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
+
+The `parameterLimit` argument controls the maximum number of parameters that are allowed in the urlencoded data. If a request contains more parameters than this value, a 415 will be returned to the client.
 
 The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
 

@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * add `parameterLimit` option to `urlencoded` parser
+  * respond with 415 when over `parameterLimit` in `urlencoded`
+
 1.6.7 / 2014-08-29
 ==================
 
