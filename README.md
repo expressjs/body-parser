@@ -131,7 +131,7 @@ A new `body` object containing the parsed data is populated on the `request` obj
 [travis-url]: https://travis-ci.org/expressjs/body-parser
 [coveralls-image]: https://img.shields.io/coveralls/expressjs/body-parser.svg?style=flat
 [coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
-[downloads-image]: http://img.shields.io/npm/dm/body-parser.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/body-parser.svg?style=flat
 [downloads-url]: https://npmjs.org/package/body-parser
 [gittip-image]: https://img.shields.io/gittip/dougwilson.svg?style=flat
 [gittip-url]: https://www.gittip.com/dougwilson/
