@@ -1,5 +1,5 @@
-unreleased
-==========
+1.6.7 / 2014-08-29
+==================
 
   * deps: qs@2.2.2
     - Remove unnecessary cloning
