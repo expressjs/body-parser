@@ -1,5 +1,5 @@
-unreleased
-==========
+1.7.0 / 2014-09-01
+==================
 
   * add `parameterLimit` option to `urlencoded` parser
   * change `urlencoded` extended array limit to 100
