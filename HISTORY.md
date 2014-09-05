@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@2.2.3
+    - Fix issue where first empty value in array is discarded
+
 1.7.0 / 2014-09-01
 ==================
 
