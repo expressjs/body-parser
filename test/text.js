@@ -30,6 +30,16 @@ describe('bodyParser.text()', function(){
     test.expect(400, /content length/, done)
   })
 
+  it('should handle Content-Length: 0', function(done){
+    var server = createServer({ limit: '1kb' })
+
+    request(server)
+    .post('/')
+    .set('Content-Type', 'text/plain')
+    .set('Content-Length', '0')
+    .expect(200, '""', done)
+  })
+
   it('should handle empty message-body', function(done){
     var server = createServer({ limit: '1kb' })
 

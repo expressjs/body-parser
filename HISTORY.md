@@ -1,8 +1,15 @@
 unreleased
 ==========
 
+  * make empty-body-handling consistent between chunked requests
+    - empty `json` produces `{}`
+    - empty `raw` produces `new Buffer(0)`
+    - empty `text` produces `''`
+    - empty `urlencoded` produces `{}`
   * deps: qs@2.2.3
     - Fix issue where first empty value in array is discarded
+  * deps: type-is@~1.5.0
+    - fix `hasbody` to be true for `content-length: 0`
 
 1.7.0 / 2014-09-01
 ==================

@@ -30,6 +30,14 @@ describe('bodyParser.raw()', function(){
     test.expect(400, /content length/, done)
   })
 
+  it('should handle Content-Length: 0', function(done){
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/octet-stream')
+    .set('Content-Length', '0')
+    .expect(200, 'buf:', done)
+  })
+
   it('should handle empty message-body', function(done){
     request(server)
     .post('/')

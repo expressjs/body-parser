@@ -36,6 +36,16 @@ describe('bodyParser.json()', function(){
     .expect(200, '{}', done)
   })
 
+  it('should handle empty message-body', function(done){
+    var server = createServer()
+
+    request(server)
+    .get('/')
+    .set('Content-Type', 'application/json')
+    .set('Transfer-Encoding', 'chunked')
+    .expect(200, '{}', done)
+  })
+
   it('should handle no message-body', function(done){
     var server = createServer()
 
@@ -54,16 +64,6 @@ describe('bodyParser.json()', function(){
     .set('Content-Type', 'application/json')
     .send('{"foo')
     .expect(400, done);
-  })
-
-  it('should 400 when no body is given', function(done){
-    var server = createServer()
-
-    request(server)
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .set('Transfer-Encoding', 'chunked')
-    .expect(400, 'invalid json, empty body', done)
   })
 
   it('should 400 when invalid content-length', function(done){

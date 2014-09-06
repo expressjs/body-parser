@@ -39,6 +39,15 @@ describe('bodyParser.urlencoded()', function(){
     test.expect(400, /content length/, done)
   })
 
+  it('should handle Content-Length: 0', function(done){
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .set('Content-Length', '0')
+    .send('')
+    .expect(200, '{}', done)
+  })
+
   it('should handle empty message-body', function(done){
     var server = createServer({ limit: '1kb' })
 
