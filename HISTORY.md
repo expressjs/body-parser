@@ -1,5 +1,5 @@
-unreleased
-==========
+1.8.0 / 2014-09-05
+==================
 
   * make empty-body-handling consistent between chunked requests
     - empty `json` produces `{}`
