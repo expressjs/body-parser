@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: media-typer@0.3.0
   * deps: type-is@~1.5.1
 
 1.8.0 / 2014-09-05
