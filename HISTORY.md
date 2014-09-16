@@ -1,3 +1,8 @@
+2.x
+===
+
+  * `urlencoded` parser now defaults `extended` to `false`
+
 1.9.2 / 2014-10-27
 ==================
 

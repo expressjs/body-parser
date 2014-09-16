@@ -88,7 +88,7 @@ Returns middleware that only parses `urlencoded` bodies. This parser accepts onl
 
 The options are:
 
-- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
+- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `false`)
 - `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `parameterLimit` - maximum number of parameters. (default: `1000`)
@@ -120,7 +120,7 @@ var bodyParser = require('body-parser')
 var app = express()
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded())
 
 // parse application/json
 app.use(bodyParser.json())
@@ -128,7 +128,7 @@ app.use(bodyParser.json())
 app.use(function (req, res) {
   res.setHeader('Content-Type', 'text/plain')
   res.write('you posted:\n')
-  res.end(JSON.stringify(req.body, null, 2))
+  res.end(req.body ? JSON.stringify(req.body, null, 2) : 'nothing')
 })
 ```
 
@@ -146,7 +146,7 @@ var app = express()
 var jsonParser = bodyParser.json()
 
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded()
 
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
