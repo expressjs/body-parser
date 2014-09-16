@@ -220,6 +220,20 @@ describe('bodyParser.raw()', function(){
     })
   })
 
+  describe('charset', function(){
+    var server;
+    before(function(){
+      server = createServer()
+    })
+
+    it('should ignore charset', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Type', 'application/octet-stream; charset=utf-8')
+      test.write(new Buffer('6e616d6520697320e8aeba', 'hex'))
+      test.expect(200, 'buf:6e616d6520697320e8aeba', done)
+    })
+  })
+
   describe('encoding', function(){
     var server;
     before(function(){

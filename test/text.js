@@ -51,6 +51,24 @@ describe('bodyParser.text()', function(){
     .expect(200, '""', done)
   })
 
+  describe('with defaultCharser option', function () {
+    it('should change default charset', function(done){
+      var server = createServer({ defaultCharset: 'koi8-r' })
+      var test = request(server).post('/')
+      test.set('Content-Type', 'text/plain')
+      test.write(new Buffer('6e616d6520697320cec5d4', 'hex'))
+      test.expect(200, '"name is нет"', done)
+    })
+
+    it('should honor content-type charset', function(done){
+      var server = createServer({ defaultCharset: 'koi8-r' })
+      var test = request(server).post('/')
+      test.set('Content-Type', 'text/plain; charset=utf-8')
+      test.write(new Buffer('6e616d6520697320e8aeba', 'hex'))
+      test.expect(200, '"name is 论"', done)
+    })
+  })
+
   describe('with limit option', function(){
     it('should 413 when over limit with Content-Length', function(done){
       var buf = new Buffer(1028)
