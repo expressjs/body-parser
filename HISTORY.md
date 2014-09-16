@@ -2,6 +2,7 @@
 ===
 
   * `urlencoded` parser now defaults `extended` to `false`
+  * Use `on-finished` to determine when body read
 
 1.9.2 / 2014-10-27
 ==================
