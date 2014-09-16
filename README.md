@@ -105,7 +105,7 @@ The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding
 
 ### req.body
 
-A new `body` object containing the parsed data is populated on the `request` object after the middleware.
+A new `body` object containing the parsed data is populated on the `request` object after the middleware. If there was no body to parse or the request was of a type there was no parser for, then `req.body` will just be `undefined`.
 
 ## Examples
 

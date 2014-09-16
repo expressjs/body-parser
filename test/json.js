@@ -53,7 +53,7 @@ describe('bodyParser.json()', function(){
     .get('/')
     .set('Content-Type', 'application/json')
     .unset('Transfer-Encoding')
-    .expect(200, '{}', done)
+    .expect(200, 'undefined', done)
   })
 
   it('should 400 on malformed JSON', function(done){
@@ -259,7 +259,7 @@ describe('bodyParser.json()', function(){
       .post('/')
       .set('Content-Type', 'application/json')
       .send('{"user":"tobi"}')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
     })
   })
 
@@ -460,9 +460,14 @@ function createServer(opts){
   var _bodyParser = bodyParser.json(opts)
 
   return http.createServer(function(req, res){
-    _bodyParser(req, res, function(err){
-      res.statusCode = err ? (err.status || 500) : 200;
-      res.end(err ? err.message : JSON.stringify(req.body));
+    _bodyParser(req, res, function (err) {
+      if (err) {
+        res.statusCode = err.status || 500
+        res.end(err.message)
+      }
+
+      res.statusCode = 200;
+      res.end(JSON.stringify(req.body) || typeof req.body);
     })
   })
 }

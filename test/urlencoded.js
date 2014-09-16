@@ -347,7 +347,7 @@ describe('bodyParser.urlencoded()', function(){
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user=tobi')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
     })
   })
 
@@ -517,9 +517,14 @@ function createServer(opts){
   var _bodyParser = bodyParser.urlencoded(opts)
 
   return http.createServer(function(req, res){
-    _bodyParser(req, res, function(err){
-      res.statusCode = err ? (err.status || 500) : 200;
-      res.end(err ? err.message : JSON.stringify(req.body));
+    _bodyParser(req, res, function (err) {
+      if (err) {
+        res.statusCode = err.status || 500
+        res.end(err.message)
+      }
+
+      res.statusCode = 200;
+      res.end(JSON.stringify(req.body) || typeof req.body);
     })
   })
 }
