@@ -435,7 +435,7 @@ describe('bodyParser.urlencoded()', function () {
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
           .send('user=tobi')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -467,7 +467,7 @@ describe('bodyParser.urlencoded()', function () {
           .post('/')
           .set('Content-Type', 'application/x-foo')
           .send('user=tobi')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -728,7 +728,7 @@ function createServer (opts) {
         res.end(err[req.headers['x-error-property'] || 'message'])
       } else {
         res.statusCode = 200
-        res.end(JSON.stringify(req.body))
+        res.end(JSON.stringify(req.body) || typeof req.body)
       }
     })
   })

@@ -36,7 +36,7 @@ describe('bodyParser.json()', function () {
       .get('/')
       .set('Content-Type', 'application/json')
       .unset('Transfer-Encoding')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -306,7 +306,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('{"user":"tobi"}')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -338,7 +338,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/x-json')
           .send('{"user":"tobi"}')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -653,7 +653,7 @@ function createServer (opts) {
         res.end(err[req.headers['x-error-property'] || 'message'])
       } else {
         res.statusCode = 200
-        res.end(JSON.stringify(req.body))
+        res.end(JSON.stringify(req.body) || typeof req.body)
       }
     })
   })

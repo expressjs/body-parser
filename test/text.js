@@ -189,7 +189,7 @@ describe('bodyParser.text()', function () {
           .post('/')
           .set('Content-Type', 'text/plain')
           .send('user is tobi')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -219,7 +219,7 @@ describe('bodyParser.text()', function () {
           .post('/')
           .set('Content-Type', 'text/xml')
           .send('<user>tobi</user>')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -433,7 +433,7 @@ function createServer (opts) {
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
       res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : JSON.stringify(req.body))
+      res.end(err ? err.message : (JSON.stringify(req.body) || typeof req.body))
     })
   })
 }

@@ -10,10 +10,10 @@ describe('bodyParser()', function () {
     this.server = createServer()
   })
 
-  it('should default to {}', function (done) {
+  it('should default req.body to undefined', function (done) {
     request(this.server)
       .post('/')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
   })
 
   it('should parse JSON', function (done) {
@@ -149,7 +149,7 @@ function createServer (opts) {
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
       res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : JSON.stringify(req.body))
+      res.end(err ? err.message : (JSON.stringify(req.body) || typeof req.body))
     })
   })
 }

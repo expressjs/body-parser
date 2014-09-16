@@ -386,7 +386,7 @@ app.use(bodyParser.json())
 app.use(function (req, res) {
   res.setHeader('Content-Type', 'text/plain')
   res.write('you posted:\n')
-  res.end(JSON.stringify(req.body, null, 2))
+  res.end(String(JSON.stringify(req.body, null, 2)))
 })
 ```
 
@@ -410,11 +410,13 @@ var urlencodedParser = bodyParser.urlencoded()
 
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
+  if (!req.body || !req.body.username) res.sendStatus(400)
   res.send('welcome, ' + req.body.username)
 })
 
 // POST /api/users gets JSON bodies
 app.post('/api/users', jsonParser, function (req, res) {
+  if (!req.body) res.sendStatus(400)
   // create user in req.body
 })
 ```
