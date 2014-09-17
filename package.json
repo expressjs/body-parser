@@ -16,7 +16,8 @@
     "on-finished": "~2.1.1",
     "qs": "2.3.2",
     "raw-body": "1.3.0",
-    "type-is": "~1.5.2"
+    "type-is": "~1.5.2",
+    "utils-merge": "1.0.0"
   },
   "devDependencies": {
     "istanbul": "0.3.2",

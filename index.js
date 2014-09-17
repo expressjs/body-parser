@@ -8,7 +8,7 @@
  * Module dependencies.
  */
 
-var deprecate = require('depd')('body-parser')
+var bodyParser = require('./lib/body-parser')
 var fs = require('fs')
 var path = require('path')
 
@@ -26,8 +26,7 @@ var path = require('path')
  * @type {Parsers}
  */
 
-exports = module.exports = deprecate.function(bodyParser,
-  'bodyParser: use individual json/urlencoded middlewares')
+module.exports = bodyParser
 
 /**
  * Path to the parser modules.
@@ -54,41 +53,9 @@ fs.readdirSync(parsersDir).forEach(function onfilename(filename) {
     return mod = require(loc)
   }
 
-  Object.defineProperty(exports, name, {
+  Object.defineProperty(module.exports, name, {
     configurable: true,
     enumerable: true,
     get: load
   })
 })
-
-/**
- * Create a middleware to parse json and urlencoded bodies.
- *
- * @param {object} [options]
- * @return {function}
- * @deprecated
- * @api public
- */
-
-function bodyParser(options){
-  var opts = {}
-
-  options = options || {}
-
-  // exclude type option
-  for (var prop in options) {
-    if ('type' !== prop) {
-      opts[prop] = options[prop]
-    }
-  }
-
-  var _urlencoded = exports.urlencoded(opts)
-  var _json = exports.json(opts)
-
-  return function bodyParser(req, res, next) {
-    _json(req, res, function(err){
-      if (err) return next(err);
-      _urlencoded(req, res, next);
-    });
-  }
-}
