@@ -4,7 +4,7 @@
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Build Status][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
-[![Gittip][gittip-image]][gittip-url]
+[![Gratipay][gratipay-image]][gratipay-url]
 
 Node.js body parsing middleware.
 
@@ -136,5 +136,5 @@ A new `body` object containing the parsed data is populated on the `request` obj
 [coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
 [downloads-image]: https://img.shields.io/npm/dm/body-parser.svg?style=flat
 [downloads-url]: https://npmjs.org/package/body-parser
-[gittip-image]: https://img.shields.io/gittip/dougwilson.svg?style=flat
-[gittip-url]: https://www.gittip.com/dougwilson/
+[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg?style=flat
+[gratipay-url]: https://www.gratipay.com/dougwilson/
