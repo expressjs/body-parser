@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@2.2.4
+    - Fix issue with object keys starting with numbers truncated
+
 1.8.2 / 2014-09-15
 ==================
 
