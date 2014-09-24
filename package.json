@@ -10,7 +10,7 @@
   "repository": "expressjs/body-parser",
   "dependencies": {
     "bytes": "1.0.0",
-    "depd": "0.4.5",
+    "depd": "~1.0.0",
     "iconv-lite": "0.4.4",
     "media-typer": "0.3.0",
     "on-finished": "2.1.0",
