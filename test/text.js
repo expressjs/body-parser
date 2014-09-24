@@ -289,7 +289,7 @@ describe('bodyParser.text()', function(){
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(new Buffer('00000000', 'hex'))
-      test.expect(415, /encoding/, done)
+      test.expect(415, 'unsupported charset "X-BOGUS"', done)
     })
   })
 

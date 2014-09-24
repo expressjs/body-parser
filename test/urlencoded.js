@@ -437,7 +437,7 @@ describe('bodyParser.urlencoded()', function(){
       var test = request(server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=koi8-r')
       test.write(new Buffer('6e616d653dcec5d4', 'hex'))
-      test.expect(415, 'unsupported charset', done)
+      test.expect(415, 'unsupported charset "KOI8-R"', done)
     })
   })
 
