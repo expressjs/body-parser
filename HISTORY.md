@@ -1,5 +1,5 @@
-unreleased
-==========
+1.9.0 / 2014-09-24
+==================
 
   * include the charset in "unsupported charset" error message
   * include the encoding in "unsupported content encoding" error message
