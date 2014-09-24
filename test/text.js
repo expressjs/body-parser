@@ -330,6 +330,14 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is 论"', done)
     })
 
+    it('should be case-insensitive', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'GZIP')
+      test.set('Content-Type', 'text/plain')
+      test.write(new Buffer('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
+      test.expect(200, '"name is 论"', done)
+    })
+
     it('should fail on unknown encoding', function(done){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'nulls')

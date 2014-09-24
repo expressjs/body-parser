@@ -271,6 +271,14 @@ describe('bodyParser.raw()', function(){
       test.expect(200, 'buf:6e616d653de8aeba', done)
     })
 
+    it('should be case-insensitive', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'GZIP')
+      test.set('Content-Type', 'application/octet-stream')
+      test.write(new Buffer('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+      test.expect(200, 'buf:6e616d653de8aeba', done)
+    })
+
     it('should fail on unknown encoding', function(done){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'nulls')

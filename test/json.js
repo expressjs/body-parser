@@ -409,6 +409,14 @@ describe('bodyParser.json()', function(){
       test.expect(200, '{"name":"论"}', done)
     })
 
+    it('should be case-insensitive', function(done){
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'GZIP')
+      test.set('Content-Type', 'application/json')
+      test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
     it('should check content-length correctly', function(done){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')

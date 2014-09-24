@@ -1,3 +1,8 @@
+unreleased
+==========
+
+  * fix content encoding to be case-insensitive
+
 1.8.3 / 2014-09-19
 ==================
 
