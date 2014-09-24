@@ -432,7 +432,7 @@ describe('bodyParser.json()', function(){
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/json')
       test.write(new Buffer('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding', done)
+      test.expect(415, 'unsupported content encoding "nulls"', done)
     })
 
     it('should 400 on malformed encoding', function(done){

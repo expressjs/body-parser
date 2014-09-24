@@ -491,7 +491,7 @@ describe('bodyParser.urlencoded()', function(){
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(new Buffer('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding', done)
+      test.expect(415, 'unsupported content encoding "nulls"', done)
     })
   })
 })

@@ -2,6 +2,7 @@ unreleased
 ==========
 
   * include the charset in "unsupported charset" error message
+  * include the encoding in "unsupported content encoding" error message
   * deps: depd@~1.0.0
 
 1.8.4 / 2014-09-23

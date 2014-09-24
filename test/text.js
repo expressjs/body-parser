@@ -343,7 +343,7 @@ describe('bodyParser.text()', function(){
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'text/plain')
       test.write(new Buffer('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding', done)
+      test.expect(415, 'unsupported content encoding "nulls"', done)
     })
   })
 })
