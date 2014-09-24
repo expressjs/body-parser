@@ -1,5 +1,5 @@
-unreleased
-==========
+1.8.4 / 2014-09-23
+==================
 
   * fix content encoding to be case-insensitive
 
