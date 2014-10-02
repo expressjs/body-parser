@@ -15,7 +15,10 @@ var path = require('path')
 /**
  * Module exports.
  */
-
+ 
+/**
+ * @type {{json: function, urlencoded: function}}
+ */
 exports = module.exports = deprecate.function(bodyParser,
   'bodyParser: use individual json/urlencoded middlewares')
 
