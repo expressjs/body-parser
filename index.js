@@ -13,7 +13,17 @@ var fs = require('fs')
 var path = require('path')
 
 /**
+ * @typedef Parsers
+ * @type {function}
+ * @property {function} json
+ * @property {function} raw
+ * @property {function} text
+ * @property {function} urlencoded
+ */
+
+/**
  * Module exports.
+ * @type {Parsers}
  */
 
 exports = module.exports = deprecate.function(bodyParser,
