@@ -223,11 +223,11 @@ describe('bodyParser.urlencoded()', function(){
   describe('with arrayLimit option', function () {
     describe('with extended: true', function () {
       it('should reject 0', function () {
-        assert.throws(createServer.bind(null, { extended: true, arrayLimit: 0 }), /option parameterLimit/)
+        assert.throws(createServer.bind(null, { extended: true, arrayLimit: 0 }), /option arrayLimit/)
       })
 
       it('should reject string', function () {
-        assert.throws(createServer.bind(null, { extended: true, arrayLimit: 'beep' }), /option parameterLimit/)
+        assert.throws(createServer.bind(null, { extended: true, arrayLimit: 'beep' }), /option arrayLimit/)
       })
 
       it('should be array when below limit', function (done) {
