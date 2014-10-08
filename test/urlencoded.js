@@ -220,6 +220,40 @@ describe('bodyParser.urlencoded()', function(){
     })
   })
 
+  describe('with arrayLimit option', function () {
+    describe('with extended: true', function () {
+      it('should reject 0', function () {
+        assert.throws(createServer.bind(null, { extended: true, arrayLimit: 0 }), /option parameterLimit/)
+      })
+
+      it('should reject string', function () {
+        assert.throws(createServer.bind(null, { extended: true, arrayLimit: 'beep' }), /option parameterLimit/)
+      })
+
+      it('should be array when below limit', function (done) {
+        request(createServer({ extended: true, arrayLimit: 10 }))
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(createArrayWithLength(9))
+        .expect(function(res) {
+          assert.ok(Array.isArray(JSON.parse(res.text).foo));
+        })
+        .expect(200, done)
+      });
+
+      it('should not be an array when above limit', function (done) {
+        request(createServer({ extended: true, arrayLimit: 10 }))
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(createArrayWithLength(10, 10))
+        .expect(function(res) {
+          assert.ok(!Array.isArray(JSON.parse(res.text).foo));
+        })
+        .expect(200, done)
+      });
+    });
+  });
+
   describe('with parameterLimit option', function () {
     describe('with extended: false', function () {
       it('should reject 0', function () {
@@ -495,6 +529,27 @@ describe('bodyParser.urlencoded()', function(){
     })
   })
 })
+
+function createArrayWithLength(length, start) {
+  var str = ''
+  start = start || 0
+
+  if (length === 0) {
+    return str
+  }
+
+  str += getArrayKey(start) +'=' + 0
+
+  for (var i = 1; i < length; i++) {
+    str += '&' + getArrayKey(start + i) + '=' + i
+  }
+
+  return str
+}
+
+function getArrayKey(index) {
+  return 'foo%5B' + index + '%5D'
+}
 
 function createManyParams(count) {
   var str = ''
