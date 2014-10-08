@@ -92,6 +92,7 @@ The options are:
 - `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `parameterLimit` - maximum number of parameters. (default: `1000`)
+- `arrayLimit` - Any array members with an index of greater than `arrayLimit` will instead be converted to an object with the index as the key (default: `100`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
 
