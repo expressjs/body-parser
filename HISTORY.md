@@ -51,7 +51,7 @@ unreleased
 
   * add `parameterLimit` option to `urlencoded` parser
   * change `urlencoded` extended array limit to 100
-  * respond with 415 when over `parameterLimit` in `urlencoded`
+  * respond with 413 when over `parameterLimit` in `urlencoded`
 
 1.6.7 / 2014-08-29
 ==================

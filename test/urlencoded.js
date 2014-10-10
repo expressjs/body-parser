@@ -230,7 +230,7 @@ describe('bodyParser.urlencoded()', function(){
         assert.throws(createServer.bind(null, { extended: false, parameterLimit: 'beep' }), /option parameterLimit/)
       })
 
-      it('should 415 if over limit', function (done) {
+      it('should 413 if over limit', function (done) {
         request(createServer({ extended: false, parameterLimit: 10 }))
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -283,7 +283,7 @@ describe('bodyParser.urlencoded()', function(){
         assert.throws(createServer.bind(null, { extended: true, parameterLimit: 'beep' }), /option parameterLimit/)
       })
 
-      it('should 415 if over limit', function (done) {
+      it('should 413 if over limit', function (done) {
         request(createServer({ extended: true, parameterLimit: 10 }))
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
