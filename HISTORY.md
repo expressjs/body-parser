@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: on-finished@~2.1.1
+    - Fix handling of pipelined requests
   * deps: type-is@~1.5.2
     - deps: mime-types@~2.0.2
 
