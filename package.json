@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "istanbul": "0.3.2",
-    "mocha": "~1.21.4",
+    "mocha": "~2.0.0",
     "should": "~4.0.4",
     "supertest": "~0.14.0"
   },
