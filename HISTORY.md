@@ -3,6 +3,8 @@ unreleased
 
   * deps: on-finished@~2.1.1
     - Fix handling of pipelined requests
+  * deps: qs@2.3.0
+    - Fix parsing of mixed implicit and explicit arrays
   * deps: type-is@~1.5.2
     - deps: mime-types@~2.0.2
 
