@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@2.3.2
+    - Fix parsing of mixed objects and values
+
 1.9.1 / 2014-10-22
 ==================
 
