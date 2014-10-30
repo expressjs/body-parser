@@ -81,12 +81,28 @@ describe('bodyParser.urlencoded()', function(){
         .send('user[name][first]=Tobi')
         .expect(200, '{"user[name][first]":"Tobi"}', done)
       })
+
+      it('should parse multiple key instances', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user=Tobi&user=Loki')
+        .expect(200, '{"user":["Tobi","Loki"]}', done)
+      })
     })
 
     describe('when true', function(){
       var server;
       before(function(){
         server = createServer({ extended: true })
+      })
+
+      it('should parse multiple key instances', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user=Tobi&user=Loki')
+        .expect(200, '{"user":["Tobi","Loki"]}', done)
       })
 
       it('should parse extended syntax', function(done){
