@@ -1,3 +1,11 @@
+2.x
+===
+
+  * `req.body` is no longer always initialized to `{}`
+    - it is left `undefined` unless a body is parsed
+  * `urlencoded` parser now defaults `extended` to `false`
+  * Use `on-finished` to determine when body read
+
 1.9.2 / 2014-10-27
 ==================
 

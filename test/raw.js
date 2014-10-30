@@ -165,7 +165,7 @@ describe('bodyParser.raw()', function(){
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(new Buffer('000102', 'hex'))
-      test.expect(200, '{}', done)
+      test.expect(200, 'undefined', done)
     })
   })
 
@@ -305,7 +305,7 @@ function createServer(opts){
         return
       }
 
-      res.end(JSON.stringify(req.body))
+      res.end(JSON.stringify(req.body) || typeof req.body)
     })
   })
 }

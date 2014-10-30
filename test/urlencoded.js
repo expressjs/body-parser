@@ -59,12 +59,12 @@ describe('bodyParser.urlencoded()', function(){
     .expect(200, '{}', done)
   })
 
-  it('should parse extended syntax', function(done){
+  it('should not parse extended syntax', function(done){
     request(server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send('user[name][first]=Tobi')
-    .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+    .expect(200, '{"user[name][first]":"Tobi"}', done)
   })
 
   describe('with extended option', function(){
@@ -347,7 +347,7 @@ describe('bodyParser.urlencoded()', function(){
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user=tobi')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
     })
   })
 
@@ -517,9 +517,14 @@ function createServer(opts){
   var _bodyParser = bodyParser.urlencoded(opts)
 
   return http.createServer(function(req, res){
-    _bodyParser(req, res, function(err){
-      res.statusCode = err ? (err.status || 500) : 200;
-      res.end(err ? err.message : JSON.stringify(req.body));
+    _bodyParser(req, res, function (err) {
+      if (err) {
+        res.statusCode = err.status || 500
+        res.end(err.message)
+      }
+
+      res.statusCode = 200;
+      res.end(JSON.stringify(req.body) || typeof req.body);
     })
   })
 }
