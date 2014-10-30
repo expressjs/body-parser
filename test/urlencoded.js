@@ -121,6 +121,34 @@ describe('bodyParser.urlencoded()', function(){
         .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
       })
 
+      it('should parse array index notation', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('foo[0]=bar&foo[1]=baz')
+        .expect(200, '{"foo":["bar","baz"]}', done)
+      })
+
+      it('should parse array index notation with large array', function(done){
+        var str = 'f[0]=0'
+
+        for (var i = 1; i < 500; i++) {
+          str += '&f[' + i + ']=' + i.toString(16)
+        }
+
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(str)
+        .expect(function (res) {
+          var obj = JSON.parse(res.text)
+          assert.equal(Object.keys(obj).length, 1)
+          assert.equal(Array.isArray(obj.f), true)
+          assert.equal(obj.f.length, 500)
+        })
+        .expect(200, done)
+      })
+
       it('should parse array of objects syntax', function(done){
         request(server)
         .post('/')
