@@ -88,12 +88,14 @@ Returns middleware that only parses `urlencoded` bodies. This parser accepts onl
 
 The options are:
 
-- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
+- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)*
 - `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `parameterLimit` - maximum number of parameters. (default: `1000`)
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
+
+\* - "default: `true`" will be deprecated in the next major. We encourage to add it in new code.
 
 The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like experience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
 
