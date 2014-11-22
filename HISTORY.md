@@ -7,6 +7,8 @@ unreleased
     - Fix `arrayLimit` behavior
   * deps: raw-body@1.3.1
     - deps: iconv-lite@0.4.5
+  * deps: type-is@~1.5.3
+    - deps: mime-types@~2.0.3
 
 1.9.2 / 2014-10-27
 ==================
