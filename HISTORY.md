@@ -5,6 +5,8 @@ unreleased
     - Fix Windows-31J and X-SJIS encoding support
   * deps: qs@2.3.3
     - Fix `arrayLimit` behavior
+  * deps: raw-body@1.3.1
+    - deps: iconv-lite@0.4.5
 
 1.9.2 / 2014-10-27
 ==================
