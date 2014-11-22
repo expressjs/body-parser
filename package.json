@@ -1,7 +1,7 @@
 {
   "name": "body-parser",
   "description": "Node.js body parsing middleware",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
     "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)"

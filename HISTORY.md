@@ -1,5 +1,5 @@
-unreleased
-==========
+1.9.3 / 2014-11-21
+==================
 
   * deps: iconv-lite@0.4.5
     - Fix Windows-31J and X-SJIS encoding support
