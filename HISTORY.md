@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: iconv-lite@0.4.5
+    - Fix Windows-31J and X-SJIS encoding support
   * deps: qs@2.3.3
     - Fix `arrayLimit` behavior
 
