@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@2.3.3
+    - Fix `arrayLimit` behavior
+
 1.9.2 / 2014-10-27
 ==================
 
