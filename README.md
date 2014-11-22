@@ -88,7 +88,7 @@ Returns middleware that only parses `urlencoded` bodies. This parser accepts onl
 
 The options are:
 
-- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`)
+- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`, but using the default has been deprecated. Please research into the difference between `qs` and `querystring` and choose the appropriate setting)
 - `inflate` - if deflated bodies will be inflated. (default: `true`)
 - `limit` - maximum request body size. (default: `<100kb>`)
 - `parameterLimit` - maximum number of parameters. (default: `1000`)
