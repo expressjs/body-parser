@@ -1,6 +1,7 @@
 
 var assert = require('assert');
 var http = require('http');
+var methods = require('methods');
 var request = require('supertest');
 
 var bodyParser = require('..');
@@ -49,6 +50,44 @@ describe('bodyParser()', function(){
     .set('Content-Type', 'application/json')
     .send('{"user":"tobi"}')
     .expect(200, '{"user":"tobi"}', done)
+  })
+
+  describe('http methods', function () {
+    var server
+
+    before(function () {
+      var _bodyParser = bodyParser()
+
+      server = http.createServer(function (req, res) {
+        _bodyParser(req, res, function (err) {
+          if (err) {
+            res.statusCode = 500
+            res.end(err.message)
+            return
+          }
+
+          res.statusCode = req.body.user === 'tobi'
+            ? 201
+            : 400
+          res.end()
+        })
+      })
+    })
+
+    methods.slice().sort().forEach(function (method) {
+      if (method === 'connect') {
+        // except CONNECT
+        return
+      }
+
+      it('should support ' + method.toUpperCase() + ' requests', function (done) {
+        request(server)
+        [method]('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(201, done)
+      })
+    })
   })
 
   describe('with type option', function(){
