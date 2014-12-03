@@ -151,7 +151,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
-  res.send('welcome, ' + res.body.username)
+  res.send('welcome, ' + req.body.username)
 })
 
 // POST /api/users gets JSON bodies
