@@ -1,5 +1,5 @@
-unreleased
-==========
+1.10.0 / 2014-12-02
+===================
 
   * make internal `extended: true` array limit dynamic
 
