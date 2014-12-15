@@ -279,6 +279,13 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+##### defaultCharset
+
+The default charset to parse as, if not specified in content-type. Must be
+either `utf-8` or `iso-8859-1`. The latter is only supported in `extended`
+mode. Defaults to `utf-8`.
+
+
 ## Errors
 
 The middlewares provided by this module create errors depending on the error
