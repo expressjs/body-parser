@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: on-finished@~2.2.0
   * deps: type-is@~1.5.5
     - deps: mime-types@~2.0.7
 
