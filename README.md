@@ -95,7 +95,7 @@ The options are:
 - `type` - request content-type to parse (default: `urlencoded`)
 - `verify` - function to verify body content
 
-The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like experience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
+The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects (like nested JSON objects) and arrays to be encoded into the urlencoded format, allowing for a JSON-like experience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
 
 The `parameterLimit` argument controls the maximum number of parameters that are allowed in the urlencoded data. If a request contains more parameters than this value, a 413 will be returned to the client.
 
