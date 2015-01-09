@@ -291,6 +291,11 @@ Whether to let the value of the `utf8` parameter take precedence as the charset
 selector. It requires the form to contain a parameter named `utf8` with a value
 of `✓`. Only supported in `extended` mode. Defaults to `false`.
 
+##### interpretNumericEntities
+
+Whether to decode numeric entities such as `&#9786;` when parsing an iso-8859-1
+form. Only supported in `extended` mode. Defaults to `false`.
+
 
 ## Errors
 
