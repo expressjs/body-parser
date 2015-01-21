@@ -3,6 +3,8 @@ unreleased
 
   * deps: iconv-lite@0.4.6
     - Fix rare aliases of single-byte encodings
+  * deps: raw-body@1.3.2
+    - deps: iconv-lite@0.4.6
 
 1.10.1 / 2015-01-01
 ===================
