@@ -1,5 +1,5 @@
-unreleased
-==========
+1.10.2 / 2015-01-20
+===================
 
   * deps: iconv-lite@0.4.6
     - Fix rare aliases of single-byte encodings
