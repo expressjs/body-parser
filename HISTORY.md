@@ -1,5 +1,5 @@
-unreleased
-==========
+1.11.0 / 2015-01-30
+===================
 
   * make internal `extended: true` depth limit infinity
   * deps: type-is@~1.5.6
