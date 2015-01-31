@@ -156,6 +156,32 @@ describe('bodyParser.urlencoded()', function(){
         .send('foo[0][bar]=baz&foo[0][fizz]=buzz')
         .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"}]}', done)
       })
+
+      it('should parse deep object', function (done) {
+        var str = 'foo'
+
+        for (var i = 0; i < 500; i++) {
+          str += '[p]'
+        }
+
+        str += '=bar'
+
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(str)
+        .expect(function (res) {
+          var obj = JSON.parse(res.text)
+          assert.equal(Object.keys(obj).length, 1)
+          assert.equal(typeof obj.foo, 'object')
+
+          var depth = 0
+          var ref = obj.foo
+          while (ref = ref.p) { depth++ }
+          assert.equal(depth, 500)
+        })
+        .expect(200, done)
+      })
     })
   })
 
