@@ -8,12 +8,16 @@
 
 Node.js body parsing middleware.
 
-This does not handle multipart bodies, due to their complex and typically large nature. For multipart bodies, you may be interested in the following modules:
+_This does not handle multipart bodies_, due to their complex and typically
+large nature. For multipart bodies, you may be interested in the following
+modules:
 
-- [busboy](https://www.npmjs.org/package/busboy#readme) and [connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)
-- [multiparty](https://www.npmjs.org/package/multiparty#readme) and [connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)
-- [formidable](https://www.npmjs.org/package/formidable#readme)
-- [multer](https://www.npmjs.org/package/multer#readme)
+  * [busboy](https://www.npmjs.org/package/busboy#readme) and
+    [connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)
+  * [multiparty](https://www.npmjs.org/package/multiparty#readme) and
+    [connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)
+  * [formidable](https://www.npmjs.org/package/formidable#readme)
+  * [multer](https://www.npmjs.org/package/multer#readme)
 
 This module provides the following parsers:
 
@@ -41,84 +45,204 @@ var bodyParser = require('body-parser')
 
 ### bodyParser.json(options)
 
-Returns middleware that only parses `json`. This parser accepts any Unicode encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.
+Returns middleware that only parses `json`. This parser accepts any Unicode
+encoding of the body and supports automatic inflation of `gzip` and `deflate`
+encodings.
 
-The options are:
+A new `body` object containing the parsed data is populated on the `request`
+object after the middleware (i.e. `req.body`).
 
-- `strict` - only parse objects and arrays. (default: `true`)
-- `inflate` - if deflated bodies will be inflated. (default: `true`)
-- `limit` - maximum request body size. (default: `<100kb>`)
-- `reviver` - passed to `JSON.parse()`
-- `type` - request content-type to parse (default: `json`)
-- `verify` - function to verify body content
+#### Options
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/*` or `*/json`).
+The `json` function takes an option `options` object that may contain any of
+the following keys:
 
-The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+##### inflate
 
-The `reviver` argument is passed directly to `JSON.parse` as the second argument. You can find more information on this argument [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
+When set to `true`, then deflated (compressed) bodies will be inflated; when
+`false`, deflated bodies are rejected. Defaults to `true`.
+
+##### limit
+
+Controls the maximum request body size. If this is a number, then the value
+specifies the number of bytes; if it is a string, the value is passed to the
+[bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
+to `'100kb'`.
+
+##### reviver
+
+The `reviver` option is passed directly to `JSON.parse` as the second
+argument. You can find more information on this argument
+[in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
+
+##### strict
+
+When set to `true`, will only accept arrays and objects; when `false` will
+accept anything `JSON.parse` accepts. Defaults to `true`.
+
+##### type
+
+The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library. This can be an extension name (like `json`), a mime type (like
+`application/json`), or a mime time with a wildcard (like `*/*` or
+`*/json`). Defaults to `json`.
+
+##### verify
+
+The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
+where `buf` is a `Buffer` of the raw request body and `encoding` is the
+encoding of the request. The parsing can be aborted by throwing an error.
 
 ### bodyParser.raw(options)
 
-Returns middleware that parses all bodies as a `Buffer`. This parser supports automatic inflation of `gzip` and `deflate` encodings.
+Returns middleware that parses all bodies as a `Buffer`. This parser
+supports automatic inflation of `gzip` and `deflate` encodings.
 
-The options are:
+A new `body` object containing the parsed data is populated on the `request`
+object after the middleware (i.e. `req.body`). This will be a `Buffer` object
+of the body.
 
-- `inflate` - if deflated bodies will be inflated. (default: `true`)
-- `limit` - maximum request body size. (default: `<100kb>`)
-- `type` - request content-type to parse (default: `application/octet-stream`)
-- `verify` - function to verify body content
+#### Options
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `bin`), a mime type (like `application/octet-stream`), or a mime time with a wildcard (like `*/*` or `application/*`).
+The `raw` function takes an option `options` object that may contain any of
+the following keys:
 
-The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+##### inflate
+
+When set to `true`, then deflated (compressed) bodies will be inflated; when
+`false`, deflated bodies are rejected. Defaults to `true`.
+
+##### limit
+
+Controls the maximum request body size. If this is a number, then the value
+specifies the number of bytes; if it is a string, the value is passed to the
+[bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
+to `'100kb'`.
+
+##### type
+
+The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library. This can be an extension name (like `bin`), a mime type (like
+`application/octet-stream`), or a mime time with a wildcard (like `*/*` or
+`application/*`). Defaults to `application/octet-stream`.
+
+##### verify
+
+The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
+where `buf` is a `Buffer` of the raw request body and `encoding` is the
+encoding of the request. The parsing can be aborted by throwing an error.
 
 ### bodyParser.text(options)
 
-Returns middleware that parses all bodies as a string. This parser supports automatic inflation of `gzip` and `deflate` encodings.
+Returns middleware that parses all bodies as a string. This parser supports
+automatic inflation of `gzip` and `deflate` encodings.
 
-The options are:
+A new `body` string containing the parsed data is populated on the `request`
+object after the middleware (i.e. `req.body`). This will be a string of the
+body.
 
-- `defaultCharset` - the default charset to parse as, if not specified in content-type. (default: `utf-8`)
-- `inflate` - if deflated bodies will be inflated. (default: `true`)
-- `limit` - maximum request body size. (default: `<100kb>`)
-- `type` - request content-type to parse (default: `text/plain`)
-- `verify` - function to verify body content
+#### Options
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `txt`), a mime type (like `text/plain`), or a mime time with a wildcard (like `*/*` or `text/*`).
+The `text` function takes an option `options` object that may contain any of
+the following keys:
 
-The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+##### defaultCharset
+
+Specify the default character set for the text content if the charset is not
+specified in the `Content-Type` header of the request. Defaults to `utf-8`.
+
+##### inflate
+
+When set to `true`, then deflated (compressed) bodies will be inflated; when
+`false`, deflated bodies are rejected. Defaults to `true`.
+
+##### limit
+
+Controls the maximum request body size. If this is a number, then the value
+specifies the number of bytes; if it is a string, the value is passed to the
+[bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
+to `'100kb'`.
+
+##### type
+
+The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library. This can be an extension name (like `txt`), a mime type (like
+`text/plain`), or a mime time with a wildcard (like `*/*` or `text/*`).
+Defaults to `text/plain`.
+
+##### verify
+
+The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
+where `buf` is a `Buffer` of the raw request body and `encoding` is the
+encoding of the request. The parsing can be aborted by throwing an error.
 
 ### bodyParser.urlencoded(options)
 
-Returns middleware that only parses `urlencoded` bodies. This parser accepts only UTF-8 encoding of the body and supports automatic inflation of `gzip` and `deflate` encodings.
+Returns middleware that only parses `urlencoded` bodies. This parser accepts
+only UTF-8 encoding of the body and supports automatic inflation of `gzip`
+and `deflate` encodings.
 
-The options are:
+A new `body` object containing the parsed data is populated on the `request`
+object after the middleware (i.e. `req.body`). This object will contain
+key-value pairs, where the value can be a string or array (when `extended` is
+`false`), or any type (when `extended` is `true`).
 
-- `extended` - parse extended syntax with the [qs](https://www.npmjs.org/package/qs#readme) module. (default: `true`, but using the default has been deprecated. Please research into the difference between `qs` and `querystring` and choose the appropriate setting)
-- `inflate` - if deflated bodies will be inflated. (default: `true`)
-- `limit` - maximum request body size. (default: `<100kb>`)
-- `parameterLimit` - maximum number of parameters. (default: `1000`)
-- `type` - request content-type to parse (default: `urlencoded`)
-- `verify` - function to verify body content
+#### Options
 
-The `extended` argument allows to choose between parsing the urlencoded data with the `querystring` library (when `false`) or the `qs` library (when `true`). The "extended" syntax allows for rich objects and arrays to be encoded into the urlencoded format, allowing for a JSON-like experience with urlencoded. For more information, please [see the qs library](https://www.npmjs.org/package/qs#readme).
+The `urlencoded` function takes an option `options` object that may contain
+any of the following keys:
 
-The `parameterLimit` argument controls the maximum number of parameters that are allowed in the urlencoded data. If a request contains more parameters than this value, a 413 will be returned to the client.
+##### extended
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `urlencoded`), a mime type (like `application/x-www-form-urlencoded`), or a mime time with a wildcard (like `*/x-www-form-urlencoded`).
+The `extended` option allows to choose between parsing the URL-encoded data
+with the `querystring` library (when `false`) or the `qs` library (when
+`true`). The "extended" syntax allows for rich objects and arrays to be
+encoded into the URL-encoded format, allowing for a JSON-like experience
+with URL-encoded. For more information, please
+[see the qs library](https://www.npmjs.org/package/qs#readme).
 
-The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+Defaults to `true`, but using the default has been deprecated. Please
+research into the difference between `qs` and `querystring` and choose the
+appropriate setting.
 
-### req.body
+##### inflate
 
-A new `body` object containing the parsed data is populated on the `request` object after the middleware.
+When set to `true`, then deflated (compressed) bodies will be inflated; when
+`false`, deflated bodies are rejected. Defaults to `true`.
+
+##### limit
+
+Controls the maximum request body size. If this is a number, then the value
+specifies the number of bytes; if it is a string, the value is passed to the
+[bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
+to `'100kb'`.
+
+##### parameterLimit
+
+The `parameterLimit` option controls the maximum number of parameters that
+are allowed in the URL-encoded data. If a request contains more parameters
+than this value, a 413 will be returned to the client. Defaults to `1000`.
+
+##### type
+
+The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library. This can be an extension name (like `urlencoded`), a mime type (like
+`application/x-www-form-urlencoded`), or a mime time with a wildcard (like
+`*/x-www-form-urlencoded`). Defaults to `urlencoded`.
+
+##### verify
+
+The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
+where `buf` is a `Buffer` of the raw request body and `encoding` is the
+encoding of the request. The parsing can be aborted by throwing an error.
 
 ## Examples
 
 ### express/connect top-level generic
 
-This example demonstrates adding a generic JSON and urlencoded parser as a top-level middleware, which will parse the bodies of all incoming requests. This is the simplest setup.
+This example demonstrates adding a generic JSON and URL-encoded parser as a
+top-level middleware, which will parse the bodies of all incoming requests.
+This is the simplest setup.
 
 ```js
 var express = require('express')
@@ -141,7 +265,9 @@ app.use(function (req, res) {
 
 ### express route-specific
 
-This example demonstrates adding body parsers specifically to the routes that need them. In general, this is the most recommend way to use body-parser with express.
+This example demonstrates adding body parsers specifically to the routes that
+need them. In general, this is the most recommend way to use body-parser with
+express.
 
 ```js
 var express = require('express')
@@ -170,7 +296,8 @@ app.post('/api/users', jsonParser, function (req, res) {
 
 ### change content-type for parsers
 
-All the parsers accept a `type` option which allows you to change the `Content-Type` that the middleware will parse.
+All the parsers accept a `type` option which allows you to change the
+`Content-Type` that the middleware will parse.
 
 ```js
 // parse various different custom JSON types as JSON
