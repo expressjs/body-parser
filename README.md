@@ -180,13 +180,13 @@ app.use(bodyParser.text({ type: 'text/html' }))
 
 [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/body-parser.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/body-parser.svg
 [npm-url]: https://npmjs.org/package/body-parser
-[travis-image]: https://img.shields.io/travis/expressjs/body-parser.svg?style=flat
+[travis-image]: https://img.shields.io/travis/expressjs/body-parser/master.svg
 [travis-url]: https://travis-ci.org/expressjs/body-parser
-[coveralls-image]: https://img.shields.io/coveralls/expressjs/body-parser.svg?style=flat
+[coveralls-image]: https://img.shields.io/coveralls/expressjs/body-parser/master.svg
 [coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
-[downloads-image]: https://img.shields.io/npm/dm/body-parser.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/body-parser.svg
 [downloads-url]: https://npmjs.org/package/body-parser
-[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg?style=flat
+[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
 [gratipay-url]: https://www.gratipay.com/dougwilson/
