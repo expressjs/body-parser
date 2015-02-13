@@ -15,6 +15,13 @@ This does not handle multipart bodies, due to their complex and typically large 
 - [formidable](https://www.npmjs.org/package/formidable#readme)
 - [multer](https://www.npmjs.org/package/multer#readme)
 
+This module provides the following parsers:
+
+  * [JSON body parser](#bodyparserjsonoptions)
+  * [Raw body parser](#bodyparserrawoptions)
+  * [Text body parser](#bodyparsertextoptions)
+  * [URL-encoded form body parser](#bodyparserurlencodedoptions)
+
 Other body parsers you might be interested in:
 
 - [body](https://www.npmjs.org/package/body#readme)
