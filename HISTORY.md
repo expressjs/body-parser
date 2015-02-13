@@ -3,6 +3,8 @@ unreleased
 
   * deps: iconv-lite@0.4.7
     - Gracefully support enumerables on `Object.prototype`
+  * deps: raw-body@1.3.3
+    - deps: iconv-lite@0.4.7
 
 1.11.0 / 2015-01-30
 ===================
