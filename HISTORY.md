@@ -5,6 +5,11 @@ unreleased
     - Gracefully support enumerables on `Object.prototype`
   * deps: raw-body@1.3.3
     - deps: iconv-lite@0.4.7
+  * deps: type-is@~1.6.0
+    - fix argument reassignment
+    - fix false-positives in `hasBody` `Transfer-Encoding` check
+    - support wildcard for both type and subtype (`*/*`)
+    - deps: mime-types@~2.0.9
 
 1.11.0 / 2015-01-30
 ===================

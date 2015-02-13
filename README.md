@@ -45,7 +45,7 @@ The options are:
 - `type` - request content-type to parse (default: `json`)
 - `verify` - function to verify body content
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/json`).
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `json`), a mime type (like `application/json`), or a mime time with a wildcard (like `*/*` or `*/json`).
 
 The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
@@ -62,7 +62,7 @@ The options are:
 - `type` - request content-type to parse (default: `application/octet-stream`)
 - `verify` - function to verify body content
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `bin`), a mime type (like `application/octet-stream`), or a mime time with a wildcard (like `application/*`).
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `bin`), a mime type (like `application/octet-stream`), or a mime time with a wildcard (like `*/*` or `application/*`).
 
 The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
@@ -78,7 +78,7 @@ The options are:
 - `type` - request content-type to parse (default: `text/plain`)
 - `verify` - function to verify body content
 
-The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `txt`), a mime type (like `text/plain`), or a mime time with a wildcard (like `text/*`).
+The `type` argument is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. This can be an extension name (like `txt`), a mime type (like `text/plain`), or a mime time with a wildcard (like `*/*` or `text/*`).
 
 The `verify` argument, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
 
