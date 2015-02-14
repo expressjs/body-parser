@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * use `content-type` to parse `Content-Type` headers
   * deps: iconv-lite@0.4.7
     - Gracefully support enumerables on `Object.prototype`
   * deps: raw-body@1.3.3
