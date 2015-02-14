@@ -241,25 +241,67 @@ describe('bodyParser.json()', function(){
   })
 
   describe('with type option', function(){
-    var server;
-    before(function(){
-      server = createServer({ type: 'application/vnd.api+json' })
+    describe('when "application/vnd.api+json"', function () {
+      var server
+      before(function () {
+        server = createServer({ type: 'application/vnd.api+json' })
+      })
+
+      it('should parse JSON for custom type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/vnd.api+json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should ignore standard type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{}', done)
+      })
     })
 
-    it('should parse JSON for custom type', function(done){
-      request(server)
-      .post('/')
-      .set('Content-Type', 'application/vnd.api+json')
-      .send('{"user":"tobi"}')
-      .expect(200, '{"user":"tobi"}', done)
-    })
+    describe('when a function', function () {
+      it('should parse when truthy value returned', function (done) {
+        var server = createServer({ type: accept })
 
-    it('should ignore standard type', function(done){
-      request(server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('{"user":"tobi"}')
-      .expect(200, '{}', done)
+        function accept(req) {
+          return req.headers['content-type'] === 'application/vnd.api+json'
+        }
+
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/vnd.api+json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should work without content-type', function (done) {
+        var server = createServer({ type: accept })
+
+        function accept(req) {
+          return true
+        }
+
+        var test = request(server).post('/')
+        test.write('{"user":"tobi"}')
+        test.expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should not invoke without a body', function (done) {
+        var server = createServer({ type: accept })
+
+        function accept(req) {
+          throw new Error('oops!')
+        }
+
+        request(server)
+        .get('/')
+        .expect(200, done)
+      })
     })
   })
 

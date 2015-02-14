@@ -174,25 +174,67 @@ describe('bodyParser.text()', function(){
   })
 
   describe('with type option', function(){
-    var server;
-    before(function(){
-      server = createServer({ type: 'text/html' })
+    describe('when "text/html"', function () {
+      var server
+      before(function () {
+        server = createServer({ type: 'text/html' })
+      })
+
+      it('should parse for custom type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'text/html')
+        .send('<b>tobi</b>')
+        .expect(200, '"<b>tobi</b>"', done)
+      })
+
+      it('should ignore standard type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send('user is tobi')
+        .expect(200, '{}', done)
+      })
     })
 
-    it('should parse for custom type', function(done){
-      request(server)
-      .post('/')
-      .set('Content-Type', 'text/html')
-      .send('<b>tobi</b>')
-      .expect(200, '"<b>tobi</b>"', done)
-    })
+    describe('when a function', function () {
+      it('should parse when truthy value returned', function (done) {
+        var server = createServer({ type: accept })
 
-    it('should ignore standard type', function(done){
-      request(server)
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .send('user is tobi')
-      .expect(200, '{}', done)
+        function accept(req) {
+          return req.headers['content-type'] === 'text/vnd.something'
+        }
+
+        request(server)
+        .post('/')
+        .set('Content-Type', 'text/vnd.something')
+        .send('user is tobi')
+        .expect(200, '"user is tobi"', done)
+      })
+
+      it('should work without content-type', function (done) {
+        var server = createServer({ type: accept })
+
+        function accept(req) {
+          return true
+        }
+
+        var test = request(server).post('/')
+        test.write('user is tobi')
+        test.expect(200, '"user is tobi"', done)
+      })
+
+      it('should not invoke without a body', function (done) {
+        var server = createServer({ type: accept })
+
+        function accept(req) {
+          throw new Error('oops!')
+        }
+
+        request(server)
+        .get('/')
+        .expect(200, done)
+      })
     })
   })
 

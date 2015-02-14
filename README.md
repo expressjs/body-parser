@@ -82,10 +82,13 @@ accept anything `JSON.parse` accepts. Defaults to `true`.
 
 ##### type
 
-The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
-library. This can be an extension name (like `json`), a mime type (like
-`application/json`), or a mime time with a wildcard (like `*/*` or
-`*/json`). Defaults to `json`.
+The `type` option is used to determine what media type the middleware will
+parse. This option can be a function or a string. If a string, `type` option
+is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library and this can be an extension name (like `json`), a mime type (like
+`application/json`), or a mime time with a wildcard (like `*/*` or `*/json`).
+If a function, the `type` option is called as `fn(req)` and the request is
+parsed if it returns a truthy value. Defaults to `json`.
 
 ##### verify
 
@@ -121,10 +124,14 @@ to `'100kb'`.
 
 ##### type
 
-The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
-library. This can be an extension name (like `bin`), a mime type (like
+The `type` option is used to determine what media type the middleware will
+parse. This option can be a function or a string. If a string, `type` option
+is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library and this can be an extension name (like `bin`), a mime type (like
 `application/octet-stream`), or a mime time with a wildcard (like `*/*` or
-`application/*`). Defaults to `application/octet-stream`.
+`application/*`). If a function, the `type` option is called as `fn(req)`
+and the request is parsed if it returns a truthy value. Defaults to
+`application/octet-stream`.
 
 ##### verify
 
@@ -165,10 +172,13 @@ to `'100kb'`.
 
 ##### type
 
-The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
-library. This can be an extension name (like `txt`), a mime type (like
+The `type` option is used to determine what media type the middleware will
+parse. This option can be a function or a string. If a string, `type` option
+is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library and this can be an extension name (like `txt`), a mime type (like
 `text/plain`), or a mime time with a wildcard (like `*/*` or `text/*`).
-Defaults to `text/plain`.
+If a function, the `type` option is called as `fn(req)` and the request is
+parsed if it returns a truthy value. Defaults to `text/plain`.
 
 ##### verify
 
@@ -225,10 +235,14 @@ than this value, a 413 will be returned to the client. Defaults to `1000`.
 
 ##### type
 
-The `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
-library. This can be an extension name (like `urlencoded`), a mime type (like
+The `type` option is used to determine what media type the middleware will
+parse. This option can be a function or a string. If a string, `type` option
+is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
+library and this can be an extension name (like `urlencoded`), a mime type (like
 `application/x-www-form-urlencoded`), or a mime time with a wildcard (like
-`*/x-www-form-urlencoded`). Defaults to `urlencoded`.
+`*/x-www-form-urlencoded`). If a function, the `type` option is called as
+`fn(req)` and the request is parsed if it returns a truthy value. Defaults
+to `urlencoded`.
 
 ##### verify
 

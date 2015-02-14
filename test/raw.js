@@ -149,23 +149,64 @@ describe('bodyParser.raw()', function(){
   })
 
   describe('with type option', function(){
-    var server;
-    before(function(){
-      server = createServer({ type: 'application/vnd+octets' })
+    describe('when "application/vnd+octets"', function () {
+      var server
+      before(function () {
+        server = createServer({ type: 'application/vnd+octets' })
+      })
+
+      it('should parse for custom type', function (done) {
+        var test = request(server).post('/')
+        test.set('Content-Type', 'application/vnd+octets')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should ignore standard type', function (done) {
+        var test = request(server).post('/')
+        test.set('Content-Type', 'application/octet-stream')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, '{}', done)
+      })
     })
 
-    it('should parse for custom type', function(done){
-      var test = request(server).post('/')
-      test.set('Content-Type', 'application/vnd+octets')
-      test.write(new Buffer('000102', 'hex'))
-      test.expect(200, 'buf:000102', done)
-    })
+    describe('when a function', function () {
+      it('should parse when truthy value returned', function (done) {
+        var server = createServer({ type: accept })
 
-    it('should ignore standard type', function(done){
-      var test = request(server).post('/')
-      test.set('Content-Type', 'application/octet-stream')
-      test.write(new Buffer('000102', 'hex'))
-      test.expect(200, '{}', done)
+        function accept(req) {
+          return req.headers['content-type'] === 'application/vnd.octet'
+        }
+
+        var test = request(server).post('/')
+        test.set('Content-Type', 'application/vnd.octet')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should work without content-type', function (done) {
+        var server = createServer({ type: accept })
+
+        function accept(req) {
+          return true
+        }
+
+        var test = request(server).post('/')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should not invoke without a body', function (done) {
+        var server = createServer({ type: accept })
+
+        function accept(req) {
+          throw new Error('oops!')
+        }
+
+        request(server)
+        .get('/')
+        .expect(200, done)
+      })
     })
   })
 
