@@ -1,5 +1,5 @@
-unreleased
-==========
+1.12.0 / 2015-02-13
+===================
 
   * add `debug` messages
   * accept a function for the `type` option
