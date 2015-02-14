@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * add `debug` messages
   * accept a function for the `type` option
   * use `content-type` to parse `Content-Type` headers
   * deps: iconv-lite@0.4.7
