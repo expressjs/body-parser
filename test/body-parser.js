@@ -34,6 +34,20 @@ describe('bodyParser()', function(){
     .expect(200, '{"user":"tobi"}', done)
   })
 
+  it('should export raw body', function(done){
+    var _bodyParser = bodyParser()
+    var server = http.createServer(function(req, res){
+      _bodyParser(req, res, function(err){
+        res.end(req.rawBody);
+      })
+    })
+
+    request(server)
+    .post('/')
+    .send('arbitrary data')
+    .expect(200, 'arbitrary data', done)
+  })
+
   it('should handle duplicated middleware', function(done){
     var _bodyParser = bodyParser()
     var server = http.createServer(function(req, res){
