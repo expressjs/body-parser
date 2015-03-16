@@ -59,6 +59,21 @@ describe('bodyParser.urlencoded()', function(){
     .expect(200, '{}', done)
   })
 
+  it('should handle duplicated middleware', function (done) {
+    var urlencodedParser = bodyParser.urlencoded()
+    var server = createServer(function (req, res, next) {
+      urlencodedParser(req, res, function (err) {
+        urlencodedParser(req, res, next)
+      })
+    })
+
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send('user=tobi')
+    .expect(200, '{"user":"tobi"}', done)
+  })
+
   it('should parse extended syntax', function(done){
     request(server)
     .post('/')

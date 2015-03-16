@@ -51,6 +51,21 @@ describe('bodyParser.text()', function(){
     .expect(200, '""', done)
   })
 
+  it('should handle duplicated middleware', function (done) {
+    var textParser = bodyParser.text()
+    var server = createServer(function (req, res, next) {
+      textParser(req, res, function (err) {
+        textParser(req, res, next)
+      })
+    })
+
+    request(server)
+    .post('/')
+    .set('Content-Type', 'text/plain')
+    .send('user is tobi')
+    .expect(200, '"user is tobi"', done)
+  })
+
   describe('with defaultCharser option', function () {
     it('should change default charset', function(done){
       var server = createServer({ defaultCharset: 'koi8-r' })
@@ -391,7 +406,9 @@ describe('bodyParser.text()', function(){
 })
 
 function createServer(opts){
-  var _bodyParser = bodyParser.text(opts)
+  var _bodyParser = typeof opts !== 'function'
+    ? bodyParser.text(opts)
+    : opts
 
   return http.createServer(function(req, res){
     _bodyParser(req, res, function(err){

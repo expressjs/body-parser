@@ -47,6 +47,21 @@ describe('bodyParser.raw()', function(){
     .expect(200, 'buf:', done)
   })
 
+  it('should handle duplicated middleware', function (done) {
+    var rawParser = bodyParser.raw()
+    var server = createServer(function (req, res, next) {
+      rawParser(req, res, function (err) {
+        rawParser(req, res, next)
+      })
+    })
+
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/octet-stream')
+    .send('the user is tobi')
+    .expect(200, 'buf:746865207573657220697320746f6269', done)
+  })
+
   describe('with limit option', function(){
     it('should 413 when over limit with Content-Length', function(done){
       var buf = new Buffer(1028)
@@ -331,7 +346,9 @@ describe('bodyParser.raw()', function(){
 })
 
 function createServer(opts){
-  var _bodyParser = bodyParser.raw(opts)
+  var _bodyParser = typeof opts !== 'function'
+    ? bodyParser.raw(opts)
+    : opts
 
   return http.createServer(function(req, res){
     _bodyParser(req, res, function(err){

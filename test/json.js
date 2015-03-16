@@ -77,6 +77,21 @@ describe('bodyParser.json()', function(){
     test.expect(400, /content length/, done)
   })
 
+  it('should handle duplicated middleware', function (done) {
+    var jsonParser = bodyParser.json()
+    var server = createServer(function (req, res, next) {
+      jsonParser(req, res, function (err) {
+        jsonParser(req, res, next)
+      })
+    })
+
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('{"user":"tobi"}')
+    .expect(200, '{"user":"tobi"}', done)
+  })
+
   it('should support all http methods', function(done){
     var server = createServer()
 
@@ -499,7 +514,9 @@ describe('bodyParser.json()', function(){
 })
 
 function createServer(opts){
-  var _bodyParser = bodyParser.json(opts)
+  var _bodyParser = typeof opts !== 'function'
+    ? bodyParser.json(opts)
+    : opts
 
   return http.createServer(function(req, res){
     _bodyParser(req, res, function(err){
