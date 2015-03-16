@@ -92,17 +92,6 @@ describe('bodyParser.json()', function(){
     .expect(200, '{"user":"tobi"}', done)
   })
 
-  it('should support all http methods', function(done){
-    var server = createServer()
-
-    request(server)
-    .get('/')
-    .set('Content-Type', 'application/json')
-    .set('Content-Length', '["foo"]'.length)
-    .send('["foo"]')
-    .expect(200, '["foo"]', done);
-  })
-
   describe('when strict is false', function(){
     it('should parse primitives', function(done){
       var server = createServer({ strict: false })
