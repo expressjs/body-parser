@@ -11,7 +11,7 @@
   "dependencies": {
     "bytes": "1.0.0",
     "content-type": "~1.0.1",
-    "debug": "~2.1.1",
+    "debug": "~2.1.3",
     "depd": "~1.0.0",
     "iconv-lite": "0.4.7",
     "on-finished": "~2.2.0",
