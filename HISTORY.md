@@ -1,5 +1,5 @@
-unreleased
-==========
+1.12.2 / 2015-03-16
+===================
 
   * deps: qs@2.4.1
     - Fix error when parameter `hasOwnProperty` is present
