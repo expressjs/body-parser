@@ -145,10 +145,7 @@ describe('bodyParser()', function(){
 
   describe('with decryption transform stream', function(){
     it('should apply to json', function(done){
-      var server = createServer({decrypt: new Decryptor(function(input) {
-        var b = new Buffer(input, "base64");
-        return b ? b.toString() : input;
-      })})
+      var server = createServer({decryptor: Decryptor})
       request(server)
       .post('/')
       .set('Content-Type', 'application/json')
@@ -157,10 +154,7 @@ describe('bodyParser()', function(){
     })
 
     it('should apply to urlencoded', function(done){
-      var server = createServer({decrypt: new Decryptor(function(input) {
-        var b = new Buffer(input, "base64");
-        return b ? b.toString() : input;
-      })})
+      var server = createServer({decryptor: Decryptor})
       request(server)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -181,27 +175,28 @@ function createServer(opts){
   })
 }
 
-function Decryptor(decrypt) {
+function Decryptor() {
   if (!(this instanceof Decryptor)) {
-    return new Decryptor(filterProps, decrypt);
+    return new Decryptor()
   }
-  this.decrypt =  decrypt || false;
-  if (this.decrypt !== false && typeof this.decrypt !== 'function') {
-    throw new TypeError('decrypt must be function');
-  }
-  Transform.call(this, decrypt);
+  Transform.call(this)
 }
-util.inherits(Decryptor, Transform);
+util.inherits(Decryptor, Transform)
 
 Decryptor.prototype._transform = function (chunk, enc, cb) {
   if (this.decrypt) {
     try {
-      chunk = this.decrypt(chunk.toString());
+      chunk = this.decrypt(chunk.toString())
     } catch (err) {
-      if (!err.status) err.status = 403;
-      throw err;
+      if (!err.status) err.status = 403
+      throw err
     }
   }
-  this.push(chunk, 'utf-8');
-  cb();
+  this.push(chunk, 'utf-8')
+  cb()
 };
+
+Decryptor.prototype.decrypt = function(input) {
+  var b = new Buffer(input, "base64")
+  return b ? b.toString() : input
+}
