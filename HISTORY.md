@@ -1,3 +1,8 @@
+unreleased
+==========
+
+  * Slight efficiency improvement when not debugging
+
 1.12.2 / 2015-03-16
 ===================
 
