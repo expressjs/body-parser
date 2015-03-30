@@ -2,6 +2,9 @@
 var assert = require('assert');
 var http = require('http');
 var request = require('supertest');
+var stream = require('stream');
+var util = require('util');
+var Transform = stream.Transform || require('readable-stream').Transform;
 
 var bodyParser = require('..');
 

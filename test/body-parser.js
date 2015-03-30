@@ -6,6 +6,10 @@ var request = require('supertest');
 
 var bodyParser = require('..');
 
+var stream = require('stream');
+var util = require('util');
+var Transform = stream.Transform || require('readable-stream').Transform;
+
 describe('bodyParser()', function(){
   var server;
   before(function(){
@@ -138,6 +142,26 @@ describe('bodyParser()', function(){
       .expect(403, 'no leading space', done)
     })
   })
+
+  describe('with decryption transform stream', function(){
+    it('should apply to json', function(done){
+      var server = createServer({decryptor: Decryptor})
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('eyJ1c2VyIjoidG9iaSJ9')
+      .expect(200, '{"user":"tobi"}', done)
+    })
+
+    it('should apply to urlencoded', function(done){
+      var server = createServer({decryptor: Decryptor})
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('dXNlcj10b2Jp')
+      .expect(200, '{"user":"tobi"}', done)
+    })
+  })
 })
 
 function createServer(opts){
@@ -149,4 +173,30 @@ function createServer(opts){
       res.end(err ? err.message : JSON.stringify(req.body));
     })
   })
+}
+
+function Decryptor() {
+  if (!(this instanceof Decryptor)) {
+    return new Decryptor()
+  }
+  Transform.call(this)
+}
+util.inherits(Decryptor, Transform)
+
+Decryptor.prototype._transform = function (chunk, enc, cb) {
+  if (this.decrypt) {
+    try {
+      chunk = this.decrypt(chunk.toString())
+    } catch (err) {
+      if (!err.status) err.status = 403
+      throw err
+    }
+  }
+  this.push(chunk, 'utf-8')
+  cb()
+};
+
+Decryptor.prototype.decrypt = function(input) {
+  var b = new Buffer(input, "base64")
+  return b ? b.toString() : input
 }
