@@ -2,6 +2,7 @@ unreleased
 ==========
 
   * Slight efficiency improvement when not debugging
+  * deps: depd@~1.0.1
 
 1.12.2 / 2015-03-16
 ===================
