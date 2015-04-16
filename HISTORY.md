@@ -3,6 +3,8 @@ unreleased
 
   * Slight efficiency improvement when not debugging
   * deps: depd@~1.0.1
+  * deps: iconv-lite@0.4.8
+    - Add encoding alias UNICODE-1-1-UTF-7
 
 1.12.2 / 2015-03-16
 ===================
