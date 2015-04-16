@@ -5,6 +5,9 @@ unreleased
   * deps: depd@~1.0.1
   * deps: iconv-lite@0.4.8
     - Add encoding alias UNICODE-1-1-UTF-7
+  * deps: raw-body@1.3.4
+    - Fix hanging callback if request aborts during read
+    - deps: iconv-lite@0.4.8
 
 1.12.2 / 2015-03-16
 ===================
