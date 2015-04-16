@@ -1,5 +1,5 @@
-unreleased
-==========
+1.12.3 / 2015-04-15
+===================
 
   * Slight efficiency improvement when not debugging
   * deps: depd@~1.0.1
