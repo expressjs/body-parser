@@ -211,14 +211,17 @@ any of the following keys:
 
 The `extended` option allows to choose between parsing the URL-encoded data
 with the `querystring` library (when `false`) or the `qs` library (when
-`true`). The "extended" syntax allows for rich objects and arrays to be
-encoded into the URL-encoded format, allowing for a JSON-like experience
-with URL-encoded. For more information, please
+`true`, or an object). The "extended" syntax allows for rich objects and
+arrays to be encoded into the URL-encoded format, allowing for a JSON-like
+experience with URL-encoded. For more information, please
 [see the qs library](https://www.npmjs.org/package/qs#readme).
 
 Defaults to `true`, but using the default has been deprecated. Please
 research into the difference between `qs` and `querystring` and choose the
 appropriate setting.
+
+You may also set the `extended` option to an object in order to pass
+the `arrayLimit` and `delimiter` options to the underlying `qs` library.
 
 ##### inflate
 
