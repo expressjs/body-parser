@@ -189,6 +189,21 @@ describe('bodyParser.urlencoded()', function(){
         .expect(200, done)
       })
     })
+
+    describe('when object', function () {
+      var server;
+      before(function(){
+        server = createServer({ extended: { arrayLimit: 0, delimiter: ';' } })
+      })
+
+      it('should parse array index notation as object', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('foo[0]=bar;foo[1]=baz')
+        .expect(200, '{"foo":{"0":"bar","1":"baz"}}', done)
+      })
+    })
   })
 
   describe('with inflate option', function(){
