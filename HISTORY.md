@@ -7,6 +7,8 @@ unreleased
   * deps: raw-body@~2.0.1
     - Fix a false-positive when unpiping in Node.js 0.8
     - deps: bytes@2.0.1
+  * deps: type-is@~1.6.2
+    - deps: mime-types@~2.0.11
 
 1.12.3 / 2015-04-15
 ===================
