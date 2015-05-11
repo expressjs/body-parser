@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: qs@2.4.2
+    - Fix allowing parameters like `constructor`
   * deps: on-finished@~2.2.1
   * deps: raw-body@~2.0.1
     - Fix a false-positive when unpiping in Node.js 0.8
