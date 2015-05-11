@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: on-finished@~2.2.1
   * deps: raw-body@~2.0.1
     - Fix a false-positive when unpiping in Node.js 0.8
     - deps: bytes@2.0.1
