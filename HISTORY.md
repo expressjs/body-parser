@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: debug@~2.2.0
   * deps: qs@2.4.2
     - Fix allowing parameters like `constructor`
   * deps: on-finished@~2.2.1
