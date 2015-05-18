@@ -22,7 +22,7 @@
   "devDependencies": {
     "istanbul": "0.3.9",
     "methods": "~1.1.1",
-    "mocha": "~2.2.4",
+    "mocha": "2.2.5",
     "supertest": "~0.15.0"
   },
   "files": [
