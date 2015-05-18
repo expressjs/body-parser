@@ -91,7 +91,7 @@ The `type` option is used to determine what media type the middleware will
 parse. This option can be a function or a string. If a string, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `json`), a mime type (like
-`application/json`), or a mime time with a wildcard (like `*/*` or `*/json`).
+`application/json`), or a mime type with a wildcard (like `*/*` or `*/json`).
 If a function, the `type` option is called as `fn(req)` and the request is
 parsed if it returns a truthy value. Defaults to `json`.
 
@@ -133,7 +133,7 @@ The `type` option is used to determine what media type the middleware will
 parse. This option can be a function or a string. If a string, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `bin`), a mime type (like
-`application/octet-stream`), or a mime time with a wildcard (like `*/*` or
+`application/octet-stream`), or a mime type with a wildcard (like `*/*` or
 `application/*`). If a function, the `type` option is called as `fn(req)`
 and the request is parsed if it returns a truthy value. Defaults to
 `application/octet-stream`.
@@ -181,7 +181,7 @@ The `type` option is used to determine what media type the middleware will
 parse. This option can be a function or a string. If a string, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `txt`), a mime type (like
-`text/plain`), or a mime time with a wildcard (like `*/*` or `text/*`).
+`text/plain`), or a mime type with a wildcard (like `*/*` or `text/*`).
 If a function, the `type` option is called as `fn(req)` and the request is
 parsed if it returns a truthy value. Defaults to `text/plain`.
 
@@ -244,7 +244,7 @@ The `type` option is used to determine what media type the middleware will
 parse. This option can be a function or a string. If a string, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `urlencoded`), a mime type (like
-`application/x-www-form-urlencoded`), or a mime time with a wildcard (like
+`application/x-www-form-urlencoded`), or a mime type with a wildcard (like
 `*/x-www-form-urlencoded`). If a function, the `type` option is called as
 `fn(req)` and the request is parsed if it returns a truthy value. Defaults
 to `urlencoded`.
