@@ -8,6 +8,10 @@ unreleased
   * deps: raw-body@~2.1.1
     - Use `unpipe` module for unpiping requests
     - deps: iconv-lite@0.4.10
+  * deps: type-is@~1.6.3
+    - deps: mime-types@~2.1.1
+    - perf: reduce try block size
+    - perf: remove bitwise operations
 
 1.12.4 / 2015-05-10
 ===================
