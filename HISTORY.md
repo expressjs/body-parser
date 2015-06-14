@@ -3,6 +3,9 @@ unreleased
 
   * deps: bytes@2.1.0
     - Slight optimizations
+  * deps: iconv-lite@0.4.10
+    - The encoding UTF-16 without BOM now defaults to UTF-16LE when detection fails
+    - Leading BOM is now removed when decoding
   * deps: on-finished@~2.3.0
     - Add defined behavior for HTTP `CONNECT` requests
     - Add defined behavior for HTTP `Upgrade` requests

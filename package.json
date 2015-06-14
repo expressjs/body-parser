@@ -13,7 +13,7 @@
     "content-type": "~1.0.1",
     "debug": "~2.2.0",
     "depd": "~1.0.1",
-    "iconv-lite": "0.4.8",
+    "iconv-lite": "0.4.10",
     "on-finished": "~2.3.0",
     "qs": "2.4.2",
     "raw-body": "~2.1.1",
