@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: bytes@2.1.0
+    - Slight optimizations
   * deps: on-finished@~2.3.0
     - Add defined behavior for HTTP `CONNECT` requests
     - Add defined behavior for HTTP `Upgrade` requests
