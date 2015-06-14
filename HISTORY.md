@@ -5,6 +5,9 @@ unreleased
     - Add defined behavior for HTTP `CONNECT` requests
     - Add defined behavior for HTTP `Upgrade` requests
     - deps: ee-first@1.1.1
+  * deps: raw-body@~2.1.1
+    - Use `unpipe` module for unpiping requests
+    - deps: iconv-lite@0.4.10
 
 1.12.4 / 2015-05-10
 ===================
