@@ -2,6 +2,7 @@ unreleased
 ==========
 
   * Change `type` default to `application/json` for JSON parser
+  * Change `type` default to `application/x-www-form-urlencoded` for urlencoded parser
   * deps: bytes@2.1.0
     - Slight optimizations
   * deps: iconv-lite@0.4.10

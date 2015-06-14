@@ -247,7 +247,7 @@ library and this can be an extension name (like `urlencoded`), a mime type (like
 `application/x-www-form-urlencoded`), or a mime type with a wildcard (like
 `*/x-www-form-urlencoded`). If a function, the `type` option is called as
 `fn(req)` and the request is parsed if it returns a truthy value. Defaults
-to `urlencoded`.
+to `application/x-www-form-urlencoded`.
 
 ##### verify
 
