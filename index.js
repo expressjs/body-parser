@@ -1,11 +1,12 @@
 /*!
  * body-parser
- * Copyright(c) 2014 Douglas Christopher Wilson
+ * Copyright(c) 2014-2015 Douglas Christopher Wilson
  * MIT Licensed
  */
 
 /**
  * Module dependencies.
+ * @private
  */
 
 var deprecate = require('depd')('body-parser')
@@ -67,18 +68,18 @@ fs.readdirSync(parsersDir).forEach(function onfilename(filename) {
  * @param {object} [options]
  * @return {function}
  * @deprecated
- * @api public
+ * @public
  */
 
 function bodyParser(options){
   var opts = {}
 
-  options = options || {}
-
   // exclude type option
-  for (var prop in options) {
-    if ('type' !== prop) {
-      opts[prop] = options[prop]
+  if (options) {
+    for (var prop in options) {
+      if ('type' !== prop) {
+        opts[prop] = options[prop]
+      }
     }
   }
 

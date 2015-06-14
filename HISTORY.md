@@ -23,6 +23,7 @@ unreleased
     - deps: mime-types@~2.1.1
     - perf: reduce try block size
     - perf: remove bitwise operations
+  * perf: remove argument reassignment
 
 1.12.4 / 2015-05-10
 ===================
