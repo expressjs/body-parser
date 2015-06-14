@@ -119,6 +119,14 @@ describe('bodyParser.urlencoded()', function(){
         .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
       })
 
+      it('should parse parameters with dots', function(done){
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user.name=Tobi')
+        .expect(200, '{"user.name":"Tobi"}', done)
+      })
+
       it('should parse fully-encoded extended syntax', function(done){
         request(server)
         .post('/')

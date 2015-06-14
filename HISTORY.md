@@ -10,6 +10,10 @@ unreleased
     - Add defined behavior for HTTP `CONNECT` requests
     - Add defined behavior for HTTP `Upgrade` requests
     - deps: ee-first@1.1.1
+  * deps: qs@3.1.0
+    - Fix dropping parameters like `hasOwnProperty`
+    - Fix various parsing edge cases
+    - Parsed object now has `null` prototype
   * deps: raw-body@~2.1.1
     - Use `unpipe` module for unpiping requests
     - deps: iconv-lite@0.4.10
