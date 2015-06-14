@@ -93,7 +93,7 @@ is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme
 library and this can be an extension name (like `json`), a mime type (like
 `application/json`), or a mime type with a wildcard (like `*/*` or `*/json`).
 If a function, the `type` option is called as `fn(req)` and the request is
-parsed if it returns a truthy value. Defaults to `json`.
+parsed if it returns a truthy value. Defaults to `application/json`.
 
 ##### verify
 
