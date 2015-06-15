@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * Add `statusCode` property on `Error`s, in addition to `status`
   * Change `type` default to `application/json` for JSON parser
   * Change `type` default to `application/x-www-form-urlencoded` for urlencoded parser
   * Provide static `require` analysis
