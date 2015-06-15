@@ -1,5 +1,5 @@
-unreleased
-==========
+1.13.0 / 2015-06-14
+===================
 
   * Add `statusCode` property on `Error`s, in addition to `status`
   * Change `type` default to `application/json` for JSON parser
