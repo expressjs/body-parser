@@ -27,6 +27,7 @@ unreleased
     - perf: remove bitwise operations
   * perf: enable strict mode
   * perf: remove argument reassignment
+  * perf: remove delete call
 
 1.12.4 / 2015-05-10
 ===================
