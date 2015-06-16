@@ -1,5 +1,5 @@
-unreleased
-==========
+1.13.1 / 2015-06-16
+===================
 
   * deps: qs@2.4.2
     - Downgraded from 3.1.0 because of user-visible incompatibilities
