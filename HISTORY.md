@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@2.4.2
+    - Downgraded from 3.1.0 because of user-visible incompatibilities
+
 1.13.0 / 2015-06-14
 ===================
 
