@@ -2,6 +2,9 @@ unreleased
 ==========
 
   * deps: iconv-lite@0.4.11
+  * deps: raw-body@~2.1.2
+    - Fix error stack traces to skip `makeError`
+    - deps: iconv-lite@0.4.11
 
 1.13.1 / 2015-06-16
 ===================
