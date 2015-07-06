@@ -5,6 +5,10 @@ unreleased
   * deps: raw-body@~2.1.2
     - Fix error stack traces to skip `makeError`
     - deps: iconv-lite@0.4.11
+  * deps: type-is@~1.6.4
+    - deps: mime-types@~2.1.2
+    - perf: enable strict mode
+    - perf: remove argument reassignment
 
 1.13.1 / 2015-06-16
 ===================
