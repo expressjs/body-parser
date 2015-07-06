@@ -14,7 +14,7 @@
     "debug": "~2.2.0",
     "depd": "~1.0.1",
     "http-errors": "~1.3.1",
-    "iconv-lite": "0.4.10",
+    "iconv-lite": "0.4.11",
     "on-finished": "~2.3.0",
     "qs": "2.4.2",
     "raw-body": "~2.1.1",
