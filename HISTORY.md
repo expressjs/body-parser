@@ -2,6 +2,10 @@ unreleased
 ==========
 
   * deps: iconv-lite@0.4.11
+  * deps: qs@4.0.0
+    - Fix dropping parameters like `hasOwnProperty`
+    - Fix user-visible incompatibilities from 3.1.0
+    - Fix various parsing edge cases
   * deps: raw-body@~2.1.2
     - Fix error stack traces to skip `makeError`
     - deps: iconv-lite@0.4.11
