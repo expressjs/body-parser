@@ -18,7 +18,7 @@
     "on-finished": "~2.3.0",
     "qs": "4.0.0",
     "raw-body": "~2.1.2",
-    "type-is": "~1.6.4"
+    "type-is": "~1.6.5"
   },
   "devDependencies": {
     "istanbul": "0.3.17",
