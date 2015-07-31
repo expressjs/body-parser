@@ -1,8 +1,8 @@
 unreleased
 ==========
 
-  * deps: type-is@~1.6.5
-    - deps: mime-types@~2.1.3
+  * deps: type-is@~1.6.6
+    - deps: mime-types@~2.1.4
 
 1.13.2 / 2015-07-05
 ===================
