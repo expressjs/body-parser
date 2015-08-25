@@ -414,7 +414,7 @@ describe('bodyParser.json()', function(){
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=koi8-r')
       test.write(new Buffer('7b226e616d65223a22cec5d4227d', 'hex'))
-      test.expect(415, 'unsupported charset "KOI8-R"', done)
+      test.expect(415, 'unsupported charset "KOI8-R". JSON must have a UTF charset', done)
     })
   })
 
