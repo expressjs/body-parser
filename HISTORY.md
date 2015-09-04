@@ -2,6 +2,7 @@ unreleased
 ==========
 
   * Provide static `require` analysis in `urlencoded` parser
+  * deps: qs@5.0.0
 
 1.13.3 / 2015-07-31
 ===================
