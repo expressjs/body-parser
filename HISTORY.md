@@ -1,3 +1,8 @@
+unreleased
+==========
+
+  * Provide static `require` analysis in `urlencoded` parser
+
 1.13.3 / 2015-07-31
 ===================
 
