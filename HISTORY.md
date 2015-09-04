@@ -3,6 +3,9 @@ unreleased
 
   * Provide static `require` analysis in `urlencoded` parser
   * deps: qs@5.0.0
+  * deps: type-is@~1.6.8
+    - Fix type error when given invalid type to match against
+    - deps: mime-types@~2.1.6
 
 1.13.3 / 2015-07-31
 ===================
