@@ -3,6 +3,8 @@ unreleased
 
   * Fix JSON strict parse error to match syntax errors
   * Provide static `require` analysis in `urlencoded` parser
+  * deps: depd@~1.1.0
+    - Support web browser loading
   * deps: qs@5.1.0
   * deps: raw-body@~2.1.3
     - Fix sync callback when attaching data listener causes sync read
