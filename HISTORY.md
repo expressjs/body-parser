@@ -1,5 +1,5 @@
-unreleased
-==========
+1.14.0 / 2015-09-16
+===================
 
   * Fix JSON strict parse error to match syntax errors
   * Provide static `require` analysis in `urlencoded` parser
