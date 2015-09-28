@@ -305,6 +305,17 @@ describe('bodyParser.text()', function(){
       .send('user is tobi')
       .expect(200, '"user is tobi"', done)
     })
+
+    it('should 415 on unknown charset prior to verify', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
+        throw new Error('unexpected verify call')
+      }})
+
+      var test = request(server).post('/')
+      test.set('Content-Type', 'text/plain; charset=x-bogus')
+      test.write(new Buffer('00000000', 'hex'))
+      test.expect(415, 'unsupported charset "X-BOGUS"', done)
+    })
   })
 
   describe('charset', function(){

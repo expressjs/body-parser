@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * Fix issue where invalid charset results in 400 when `verify` used
   * deps: iconv-lite@0.4.12
     - Fix CESU-8 decoding in Node.js 4.x
   * deps: raw-body@~2.1.4
