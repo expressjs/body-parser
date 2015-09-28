@@ -6,6 +6,8 @@ unreleased
   * deps: raw-body@~2.1.4
     - Fix masking critical errors from `iconv-lite`
     - deps: iconv-lite@0.4.12
+  * deps: type-is@~1.6.9
+    - deps: mime-types@~2.1.7
 
 1.14.0 / 2015-09-16
 ===================
