@@ -1,5 +1,5 @@
-unreleased
-==========
+1.14.1 / 2015-09-27
+===================
 
   * Fix issue where invalid charset results in 400 when `verify` used
   * deps: iconv-lite@0.4.12
