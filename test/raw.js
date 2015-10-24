@@ -129,6 +129,42 @@ describe('bodyParser.raw()', function(){
       test.write(buf)
       test.expect(413, done)
     })
+
+    describe('when a function', function(){
+      it('should use the return value as the new limit', function(done){
+        var buf = new Buffer(1028)
+        var wasCalled = false
+        var limit = '1kb'
+        var server = createServer({ limit: function(req, res){
+          assert.equal(req.url, '/')
+          assert.ok(!res.headersSent)
+          wasCalled = true
+          return limit
+        }})
+
+        buf.fill('.')
+
+        // block with limit of 1kb
+        var test = request(server).post('/')
+        test.set('Content-Type', 'application/octet-stream')
+        test.write(buf)
+        test.expect(413, function (err) {
+          assert.ifError(err)
+          assert.ok(wasCalled)
+
+          // pass with limit of 2kb
+          wasCalled = false
+          limit = '2kb'
+          var test = request(server).post('/')
+          test.set('Content-Type', 'application/octet-stream')
+          test.write(buf)
+          test.expect(function () {
+            assert.ok(wasCalled)
+          })
+          test.expect(200, done)
+        })
+      })
+    })
   })
 
   describe('with inflate option', function(){
