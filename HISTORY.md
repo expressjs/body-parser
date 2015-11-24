@@ -4,6 +4,9 @@ unreleased
   * deps: bytes@2.2.0
   * deps: iconv-lite@0.4.13
   * deps: qs@5.2.0
+  * deps: raw-body@~2.1.5
+    - deps: bytes@2.2.0
+    - deps: iconv-lite@0.4.13
 
 1.14.1 / 2015-09-27
 ===================
