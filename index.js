@@ -23,6 +23,7 @@ var parsers = Object.create(null)
 /**
  * @typedef Parsers
  * @type {function}
+ * @property {function} json5
  * @property {function} json
  * @property {function} raw
  * @property {function} text
@@ -36,6 +37,17 @@ var parsers = Object.create(null)
 
 exports = module.exports = deprecate.function(bodyParser,
   'bodyParser: use individual json/urlencoded middlewares')
+
+/**
+ * JSON parser.
+ * @public
+ */
+
+Object.defineProperty(exports, 'json5', {
+	configurable: true,
+	enumerable: true,
+	get: createParserGetter('json5')
+})
 
 /**
  * JSON parser.
@@ -138,6 +150,9 @@ function loadParser(parserName) {
 
   // this uses a switch for static require analysis
   switch (parserName) {
+		case 'json5':
+			parser = require('./lib/types/json5')
+			break
     case 'json':
       parser = require('./lib/types/json')
       break
