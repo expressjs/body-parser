@@ -44,8 +44,10 @@ var bodyParser = require('body-parser')
 ```
 
 The `bodyParser` object exposes various factories to create middlewares. All
-middlewares will populate the `req.body` property with the parsed body or
-provide an error to the callback. The various errors are described in the
+middlewares will populate the `req.body` property with the parsed body, or an
+empty object (`{}`) if there was no body to parse (or an error was returned).
+
+The various errors returned by this module are described in the
 [errors section](#errors).
 
 ### bodyParser.json(options)
