@@ -261,7 +261,8 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 The middlewares provided by this module create errors depending on the error
 condition during parsing. The errors will typically have a `status` property
-that contains the suggested HTTP response code.
+that contains the suggested HTTP response code and a `body` property containing
+the read body, if available.
 
 The following are the common errors emitted, though any error can come through
 for various reasons.
