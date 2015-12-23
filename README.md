@@ -261,7 +261,8 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 The middlewares provided by this module create errors depending on the error
 condition during parsing. The errors will typically have a `status` property
-that contains the suggested HTTP response code.
+that contains the suggested HTTP response code. If parsing throws then 
+`req.body` is added as property in the `error` object passed to `next`.
 
 The following are the common errors emitted, though any error can come through
 for various reasons.
