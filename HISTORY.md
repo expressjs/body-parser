@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: type-is@~1.6.11
+    - deps: mime-types@~2.1.9
+
 1.14.2 / 2015-12-16
 ===================
 
@@ -8,7 +14,7 @@
     - deps: bytes@2.2.0
     - deps: iconv-lite@0.4.13
   * deps: type-is@~1.6.10
-    - deps: mime-types@~2.1.9
+    - deps: mime-types@~2.1.8
 
 1.14.1 / 2015-09-27
 ===================
