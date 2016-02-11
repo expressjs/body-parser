@@ -1,5 +1,5 @@
-unreleased
-==========
+1.15.0 / 2016-02-10
+===================
 
   * deps: http-errors@~1.4.0
     - Add `HttpError` export, for `err instanceof createError.HttpError`
