@@ -6,7 +6,7 @@ node_js:
   - "1.8"
   - "2.5"
   - "3.3"
-  - "4.2"
+  - "4.3"
   - "5.2"
 sudo: false
 before_install:
