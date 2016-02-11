@@ -67,14 +67,17 @@ describe('bodyParser.json()', function(){
   })
 
   it('should 400 when invalid content-length', function(done){
-    var server = createServer({ limit: '1kb' })
+    var jsonParser = bodyParser.json()
+    var server = createServer(function (req, res, next) {
+      req.headers['content-length'] = '20' // bad length
+      jsonParser(req, res, next)
+    })
 
-    var test = request(server).post('/')
-    test.set('Content-Type', 'application/json')
-    test.set('Content-Length', '20')
-    test.set('Transfer-Encoding', 'chunked')
-    test.write('{"str":')
-    test.expect(400, /content length/, done)
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('{"str":')
+    .expect(400, /content length/, done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -469,16 +472,6 @@ describe('bodyParser.json()', function(){
       var test = request(server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
-      test.expect(200, '{"name":"论"}', done)
-    })
-
-    it('should check content-length correctly', function(done){
-      var test = request(server).post('/')
-      test.set('Content-Encoding', 'gzip')
-      test.set('Content-Length', '49')
-      test.set('Content-Type', 'application/json')
-      test.set('Transfer-Encoding', 'chunked')
       test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })

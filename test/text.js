@@ -20,14 +20,17 @@ describe('bodyParser.text()', function(){
   })
 
   it('should 400 when invalid content-length', function(done){
-    var server = createServer({ limit: '1kb' })
+    var textParser = bodyParser.text()
+    var server = createServer(function (req, res, next) {
+      req.headers['content-length'] = '20' // bad length
+      textParser(req, res, next)
+    })
 
-    var test = request(server).post('/')
-    test.set('Content-Type', 'text/plain')
-    test.set('Content-Length', '20')
-    test.set('Transfer-Encoding', 'chunked')
-    test.write('user')
-    test.expect(400, /content length/, done)
+    request(server)
+    .post('/')
+    .set('Content-Type', 'text/plain')
+    .send('user')
+    .expect(400, /content length/, done)
   })
 
   it('should handle Content-Length: 0', function(done){

@@ -20,14 +20,17 @@ describe('bodyParser.urlencoded()', function(){
   })
 
   it('should 400 when invalid content-length', function(done){
-    var server = createServer({ limit: '1kb' })
+    var urlencodedParser = bodyParser.urlencoded()
+    var server = createServer(function (req, res, next) {
+      req.headers['content-length'] = '20' // bad length
+      urlencodedParser(req, res, next)
+    })
 
-    var test = request(server).post('/')
-    test.set('Content-Type', 'application/x-www-form-urlencoded')
-    test.set('Content-Length', '20')
-    test.set('Transfer-Encoding', 'chunked')
-    test.write('str=')
-    test.expect(400, /content length/, done)
+    request(server)
+    .post('/')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send('str=')
+    .expect(400, /content length/, done)
   })
 
   it('should handle Content-Length: 0', function(done){
@@ -651,7 +654,9 @@ function createManyParams(count) {
 }
 
 function createServer(opts){
-  var _bodyParser = bodyParser.urlencoded(opts)
+  var _bodyParser = typeof opts !== 'function'
+    ? bodyParser.urlencoded(opts)
+    : opts
 
   return http.createServer(function(req, res){
     _bodyParser(req, res, function(err){
