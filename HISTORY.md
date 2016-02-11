@@ -1,6 +1,10 @@
 unreleased
 ==========
 
+  * deps: http-errors@~1.4.0
+    - Add `HttpError` export, for `err instanceof createError.HttpError`
+    - deps: inherits@2.0.1
+    - deps: statuses@'>= 1.2.1 < 2'
   * deps: type-is@~1.6.11
     - deps: mime-types@~2.1.9
 
