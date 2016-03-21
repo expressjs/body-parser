@@ -3,6 +3,8 @@ unreleased
 
   * deps: raw-body@~2.1.6
     - deps: bytes@2.3.0
+  * deps: type-is@~1.6.12
+    - deps: mime-types@~2.1.10
 
 1.15.0 / 2016-02-10
 ===================
