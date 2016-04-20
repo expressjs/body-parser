@@ -23,7 +23,7 @@ describe('bodyParser.json()', function(){
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{"user"')
-    .expect(400, 'Unexpected end of input', done)
+    .expect(400, /^Unexpected end of( JSON)? input/, done)
   })
 
   it('should handle Content-Length: 0', function(done){
@@ -62,8 +62,8 @@ describe('bodyParser.json()', function(){
     request(server)
     .post('/')
     .set('Content-Type', 'application/json')
-    .send('{:')
-    .expect(400, 'Unexpected token :', done);
+    .send(' {:')
+    .expect(400, /^Unexpected token :\s?(in JSON at position 2)?$/, done);
   })
 
   it('should 400 when invalid content-length', function(done){
@@ -117,8 +117,8 @@ describe('bodyParser.json()', function(){
       request(server)
       .post('/')
       .set('Content-Type', 'application/json')
-      .send('true')
-      .expect(400, 'Unexpected token t', done)
+      .send('    true')
+      .expect(400, /^Unexpected token t\s?(in JSON at position 5)?$/, done);
     })
 
     it('should allow leading whitespaces in JSON', function(done){
@@ -138,7 +138,7 @@ describe('bodyParser.json()', function(){
       .post('/')
       .set('Content-Type', 'application/json')
       .send('true')
-      .expect(400, 'Unexpected token t', done);
+      .expect(400, /^Unexpected token t\s?(in JSON at position 1)?/, done);
     })
   })
 
