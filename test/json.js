@@ -23,7 +23,7 @@ describe('bodyParser.json()', function(){
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{"user"')
-    .expect(400, 'Unexpected end of input', done)
+    .expect(400, /unexpected end/i, done)
   })
 
   it('should handle Content-Length: 0', function(done){
@@ -63,7 +63,7 @@ describe('bodyParser.json()', function(){
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{:')
-    .expect(400, 'Unexpected token :', done);
+    .expect(400, /unexpected token/i, done);
   })
 
   it('should 400 when invalid content-length', function(done){
@@ -118,7 +118,7 @@ describe('bodyParser.json()', function(){
       .post('/')
       .set('Content-Type', 'application/json')
       .send('true')
-      .expect(400, 'Unexpected token t', done)
+      .expect(400, /unexpected token/i, done)
     })
 
     it('should allow leading whitespaces in JSON', function(done){
@@ -138,7 +138,7 @@ describe('bodyParser.json()', function(){
       .post('/')
       .set('Content-Type', 'application/json')
       .send('true')
-      .expect(400, 'Unexpected token t', done);
+      .expect(400, /unexpected token/i, done);
     })
   })
 
