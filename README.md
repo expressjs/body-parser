@@ -316,7 +316,7 @@ as well as in the `encoding` property. The `status` property is set to `415`.
 
 ## Examples
 
-### express/connect top-level generic
+### Express/Connect top-level generic
 
 This example demonstrates adding a generic JSON and URL-encoded parser as a
 top-level middleware, which will parse the bodies of all incoming requests.
@@ -341,11 +341,11 @@ app.use(function (req, res) {
 })
 ```
 
-### express route-specific
+### Express route-specific
 
 This example demonstrates adding body parsers specifically to the routes that
-need them. In general, this is the most recommend way to use body-parser with
-express.
+need them. In general, this is the most recommended way to use body-parser with
+Express.
 
 ```js
 var express = require('express')
@@ -372,7 +372,7 @@ app.post('/api/users', jsonParser, function (req, res) {
 })
 ```
 
-### change content-type for parsers
+### Change accepted type for parsers
 
 All the parsers accept a `type` option which allows you to change the
 `Content-Type` that the middleware will parse.
