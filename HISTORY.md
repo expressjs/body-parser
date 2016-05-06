@@ -1,5 +1,5 @@
-unreleased
-==========
+1.15.1 / 2016-05-05
+===================
 
   * deps: bytes@2.3.0
     - Drop partial bytes on all parsed units
