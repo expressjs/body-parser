@@ -1,6 +1,9 @@
 unreleased
 ==========
 
+  * deps: bytes@2.3.0
+    - Drop partial bytes on all parsed units
+    - Fix parsing byte string that looks like hex
   * deps: raw-body@~2.1.6
     - deps: bytes@2.3.0
   * deps: type-is@~1.6.12
