@@ -8,6 +8,9 @@ unreleased
     - deps: statuses@'>= 1.3.0 < 2'
     - perf: enable strict mode
   * deps: qs@6.2.0
+  * deps: raw-body@~2.1.7
+    - deps: bytes@2.4.0
+    - perf: remove double-cleanup on happy path
   * deps: type-is@~1.6.13
     - deps: mime-types@~2.1.11
 
