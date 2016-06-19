@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: content-type@~1.0.2
+    - perf: enable strict mode
+
 1.15.1 / 2016-05-05
 ===================
 
