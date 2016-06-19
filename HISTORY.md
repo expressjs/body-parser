@@ -3,6 +3,10 @@ unreleased
 
   * deps: content-type@~1.0.2
     - perf: enable strict mode
+  * deps: http-errors@~1.5.0
+    - Use `setprototypeof` module to replace `__proto__` setting
+    - deps: statuses@'>= 1.3.0 < 2'
+    - perf: enable strict mode
   * deps: qs@6.2.0
   * deps: type-is@~1.6.13
     - deps: mime-types@~2.1.11
