@@ -3,6 +3,8 @@ unreleased
 
   * deps: content-type@~1.0.2
     - perf: enable strict mode
+  * deps: type-is@~1.6.13
+    - deps: mime-types@~2.1.11
 
 1.15.1 / 2016-05-05
 ===================
