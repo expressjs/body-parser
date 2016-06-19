@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: bytes@2.4.0
   * deps: content-type@~1.0.2
     - perf: enable strict mode
   * deps: http-errors@~1.5.0
