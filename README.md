@@ -6,7 +6,7 @@
 [![Test Coverage][coveralls-image]][coveralls-url]
 [![Gratipay][gratipay-image]][gratipay-url]
 
-Node.js body parsing middleware.
+Node.js [request body](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/#request-body) parsing middleware.
 
 _This does not handle multipart bodies_, due to their complex and typically
 large nature. For multipart bodies, you may be interested in the following
