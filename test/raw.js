@@ -66,13 +66,10 @@ describe('bodyParser.raw()', function(){
     .expect(200, 'buf:746865207573657220697320746f6269', done)
   })
 
-  describe('with limit option', function(){
-    it('should 413 when over limit with Content-Length', function(done){
-      var buf = new Buffer(1028)
+  describe('with limit option', function () {
+    it('should 413 when over limit with Content-Length', function (done) {
+      var buf = allocBuffer(1028, '.')
       var server = createServer({ limit: '1kb' })
-
-      buf.fill('.')
-
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.set('Content-Length', '1028')
@@ -80,12 +77,9 @@ describe('bodyParser.raw()', function(){
       test.expect(413, done)
     })
 
-    it('should 413 when over limit with chunked encoding', function(done){
-      var buf = new Buffer(1028)
+    it('should 413 when over limit with chunked encoding', function (done) {
+      var buf = allocBuffer(1028, '.')
       var server = createServer({ limit: '1kb' })
-
-      buf.fill('.')
-
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.set('Transfer-Encoding', 'chunked')
@@ -93,24 +87,20 @@ describe('bodyParser.raw()', function(){
       test.expect(413, done)
     })
 
-    it('should accept number of bytes', function(done){
-      var buf = new Buffer(1028)
+    it('should accept number of bytes', function (done) {
+      var buf = allocBuffer(1028, '.')
       var server = createServer({ limit: 1024 })
-
-      buf.fill('.')
-
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(buf)
       test.expect(413, done)
     })
 
-    it('should not change when options altered', function(done){
-      var buf = new Buffer(1028)
+    it('should not change when options altered', function (done) {
+      var buf = allocBuffer(1028, '.')
       var options = { limit: '1kb' }
       var server = createServer(options)
 
-      buf.fill('.')
       options.limit = '100kb'
 
       var test = request(server).post('/')
@@ -119,12 +109,8 @@ describe('bodyParser.raw()', function(){
       test.expect(413, done)
     })
 
-    it('should not hang response', function(done){
-      var buf = new Buffer(1024 * 10)
-      var server = createServer({ limit: '1kb' })
-
-      buf.fill('.')
-
+    it('should not hang response', function (done) {
+      var buf = allocBuffer(10240, '.')
       var server = createServer({ limit: '8kb' })
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
@@ -340,6 +326,16 @@ describe('bodyParser.raw()', function(){
     })
   })
 })
+
+function allocBuffer (size, fill) {
+  if (Buffer.alloc) {
+    return Buffer.alloc(size, fill)
+  }
+
+  var buf = new Buffer(size)
+  buf.fill(fill)
+  return buf
+}
 
 function createServer(opts){
   var _bodyParser = typeof opts !== 'function'
