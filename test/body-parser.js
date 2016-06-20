@@ -1,24 +1,23 @@
 
-var assert = require('assert');
-var http = require('http');
-var methods = require('methods');
-var request = require('supertest');
+var http = require('http')
+var methods = require('methods')
+var request = require('supertest')
 
-var bodyParser = require('..');
+var bodyParser = require('..')
 
-describe('bodyParser()', function(){
-  var server;
-  before(function(){
+describe('bodyParser()', function () {
+  var server
+  before(function () {
     server = createServer()
   })
 
-  it('should default to {}', function(done){
+  it('should default to {}', function (done) {
     request(server)
     .post('/')
     .expect(200, '{}', done)
   })
 
-  it('should parse JSON', function(done){
+  it('should parse JSON', function (done) {
     request(server)
     .post('/')
     .set('Content-Type', 'application/json')
@@ -26,7 +25,7 @@ describe('bodyParser()', function(){
     .expect(200, '{"user":"tobi"}', done)
   })
 
-  it('should parse x-www-form-urlencoded', function(done){
+  it('should parse x-www-form-urlencoded', function (done) {
     request(server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -82,8 +81,7 @@ describe('bodyParser()', function(){
       }
 
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
-        request(server)
-        [method]('/')
+        request(server)[method]('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi"}')
         .expect(201, done)
@@ -91,13 +89,13 @@ describe('bodyParser()', function(){
     })
   })
 
-  describe('with type option', function(){
-    var server;
-    before(function(){
+  describe('with type option', function () {
+    var server
+    before(function () {
       server = createServer({ limit: '1mb', type: 'application/octet-stream' })
     })
 
-    it('should parse JSON', function(done){
+    it('should parse JSON', function (done) {
       request(server)
       .post('/')
       .set('Content-Type', 'application/json')
@@ -105,7 +103,7 @@ describe('bodyParser()', function(){
       .expect(200, '{"user":"tobi"}', done)
     })
 
-    it('should parse x-www-form-urlencoded', function(done){
+    it('should parse x-www-form-urlencoded', function (done) {
       request(server)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -114,9 +112,9 @@ describe('bodyParser()', function(){
     })
   })
 
-  describe('with verify option', function(){
-    it('should apply to json', function(done){
-      var server = createServer({verify: function(req, res, buf){
+  describe('with verify option', function () {
+    it('should apply to json', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
       }})
 
@@ -127,8 +125,8 @@ describe('bodyParser()', function(){
       .expect(403, 'no leading space', done)
     })
 
-    it('should apply to urlencoded', function(done){
-      var server = createServer({verify: function(req, res, buf){
+    it('should apply to urlencoded', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
       }})
 
@@ -141,13 +139,13 @@ describe('bodyParser()', function(){
   })
 })
 
-function createServer(opts){
+function createServer (opts) {
   var _bodyParser = bodyParser(opts)
 
-  return http.createServer(function(req, res){
-    _bodyParser(req, res, function(err){
-      res.statusCode = err ? (err.status || 500) : 200;
-      res.end(err ? err.message : JSON.stringify(req.body));
+  return http.createServer(function (req, res) {
+    _bodyParser(req, res, function (err) {
+      res.statusCode = err ? (err.status || 500) : 200
+      res.end(err ? err.message : JSON.stringify(req.body))
     })
   })
 }

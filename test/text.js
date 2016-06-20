@@ -5,13 +5,13 @@ var request = require('supertest')
 
 var bodyParser = require('..')
 
-describe('bodyParser.text()', function(){
+describe('bodyParser.text()', function () {
   var server
-  before(function(){
+  before(function () {
     server = createServer()
   })
 
-  it('should parse text/plain', function(done){
+  it('should parse text/plain', function (done) {
     request(server)
     .post('/')
     .set('Content-Type', 'text/plain')
@@ -19,7 +19,7 @@ describe('bodyParser.text()', function(){
     .expect(200, '"user is tobi"', done)
   })
 
-  it('should 400 when invalid content-length', function(done){
+  it('should 400 when invalid content-length', function (done) {
     var textParser = bodyParser.text()
     var server = createServer(function (req, res, next) {
       req.headers['content-length'] = '20' // bad length
@@ -33,20 +33,16 @@ describe('bodyParser.text()', function(){
     .expect(400, /content length/, done)
   })
 
-  it('should handle Content-Length: 0', function(done){
-    var server = createServer({ limit: '1kb' })
-
-    request(server)
+  it('should handle Content-Length: 0', function (done) {
+    request(createServer({ limit: '1kb' }))
     .post('/')
     .set('Content-Type', 'text/plain')
     .set('Content-Length', '0')
     .expect(200, '""', done)
   })
 
-  it('should handle empty message-body', function(done){
-    var server = createServer({ limit: '1kb' })
-
-    request(server)
+  it('should handle empty message-body', function (done) {
+    request(createServer({ limit: '1kb' }))
     .post('/')
     .set('Content-Type', 'text/plain')
     .set('Transfer-Encoding', 'chunked')
@@ -71,7 +67,7 @@ describe('bodyParser.text()', function(){
   })
 
   describe('with defaultCharser option', function () {
-    it('should change default charset', function(done){
+    it('should change default charset', function (done) {
       var server = createServer({ defaultCharset: 'koi8-r' })
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain')
@@ -79,7 +75,7 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is нет"', done)
     })
 
-    it('should honor content-type charset', function(done){
+    it('should honor content-type charset', function (done) {
       var server = createServer({ defaultCharset: 'koi8-r' })
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
@@ -144,14 +140,14 @@ describe('bodyParser.text()', function(){
     })
   })
 
-  describe('with inflate option', function(){
-    describe('when false', function(){
-      var server;
-      before(function(){
+  describe('with inflate option', function () {
+    describe('when false', function () {
+      var server
+      before(function () {
         server = createServer({ inflate: false })
       })
 
-      it('should not accept content-encoding', function(done){
+      it('should not accept content-encoding', function (done) {
         var test = request(server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'text/plain')
@@ -160,23 +156,23 @@ describe('bodyParser.text()', function(){
       })
     })
 
-    describe('when true', function(){
-      var server;
-      before(function(){
+    describe('when true', function () {
+      var server
+      before(function () {
         server = createServer({ inflate: true })
       })
 
-      it('should accept content-encoding', function(done){
+      it('should accept content-encoding', function (done) {
         var test = request(server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'text/plain')
-      test.write(new Buffer('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
-      test.expect(200, '"name is 论"', done)
+        test.write(new Buffer('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
+        test.expect(200, '"name is 论"', done)
       })
     })
   })
 
-  describe('with type option', function(){
+  describe('with type option', function () {
     describe('when "text/html"', function () {
       var server
       before(function () {
@@ -204,7 +200,7 @@ describe('bodyParser.text()', function(){
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })
 
-        function accept(req) {
+        function accept (req) {
           return req.headers['content-type'] === 'text/vnd.something'
         }
 
@@ -218,7 +214,7 @@ describe('bodyParser.text()', function(){
       it('should work without content-type', function (done) {
         var server = createServer({ type: accept })
 
-        function accept(req) {
+        function accept (req) {
           return true
         }
 
@@ -230,7 +226,7 @@ describe('bodyParser.text()', function(){
       it('should not invoke without a body', function (done) {
         var server = createServer({ type: accept })
 
-        function accept(req) {
+        function accept (req) {
           throw new Error('oops!')
         }
 
@@ -247,8 +243,8 @@ describe('bodyParser.text()', function(){
         /TypeError: option verify must be function/)
     })
 
-    it('should error from verify', function(done){
-      var server = createServer({verify: function(req, res, buf){
+    it('should error from verify', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
       }})
 
@@ -259,8 +255,8 @@ describe('bodyParser.text()', function(){
       .expect(403, 'no leading space', done)
     })
 
-    it('should allow custom codes', function(done){
-      var server = createServer({verify: function(req, res, buf){
+    it('should allow custom codes', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
         if (buf[0] !== 0x20) return
         var err = new Error('no leading space')
         err.status = 400
@@ -274,8 +270,8 @@ describe('bodyParser.text()', function(){
       .expect(400, 'no leading space', done)
     })
 
-    it('should allow pass-through', function(done){
-      var server = createServer({verify: function(req, res, buf){
+    it('should allow pass-through', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
       }})
 
@@ -298,27 +294,27 @@ describe('bodyParser.text()', function(){
     })
   })
 
-  describe('charset', function(){
-    var server;
-    before(function(){
+  describe('charset', function () {
+    var server
+    before(function () {
       server = createServer()
     })
 
-    it('should parse utf-8', function(done){
+    it('should parse utf-8', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
       test.write(new Buffer('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should parse codepage charsets', function(done){
+    it('should parse codepage charsets', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=koi8-r')
       test.write(new Buffer('6e616d6520697320cec5d4', 'hex'))
       test.expect(200, '"name is нет"', done)
     })
 
-    it('should parse when content-length != char length', function(done){
+    it('should parse when content-length != char length', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
       test.set('Content-Length', '11')
@@ -326,14 +322,14 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should default to utf-8', function(done){
+    it('should default to utf-8', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain')
       test.write(new Buffer('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should 415 on unknown charset', function(done){
+    it('should 415 on unknown charset', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(new Buffer('00000000', 'hex'))
@@ -341,20 +337,20 @@ describe('bodyParser.text()', function(){
     })
   })
 
-  describe('encoding', function(){
-    var server;
-    before(function(){
+  describe('encoding', function () {
+    var server
+    before(function () {
       server = createServer({ limit: '10kb' })
     })
 
-    it('should parse without encoding', function(done){
+    it('should parse without encoding', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain')
       test.write(new Buffer('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should support identity encoding', function(done){
+    it('should support identity encoding', function (done) {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'text/plain')
@@ -362,7 +358,7 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should support gzip encoding', function(done){
+    it('should support gzip encoding', function (done) {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'text/plain')
@@ -370,7 +366,7 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should support deflate encoding', function(done){
+    it('should support deflate encoding', function (done) {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'deflate')
       test.set('Content-Type', 'text/plain')
@@ -378,7 +374,7 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should be case-insensitive', function(done){
+    it('should be case-insensitive', function (done) {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'text/plain')
@@ -386,7 +382,7 @@ describe('bodyParser.text()', function(){
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should fail on unknown encoding', function(done){
+    it('should fail on unknown encoding', function (done) {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'text/plain')
@@ -406,15 +402,15 @@ function allocBuffer (size, fill) {
   return buf
 }
 
-function createServer(opts){
+function createServer (opts) {
   var _bodyParser = typeof opts !== 'function'
     ? bodyParser.text(opts)
     : opts
 
-  return http.createServer(function(req, res){
-    _bodyParser(req, res, function(err){
-      res.statusCode = err ? (err.status || 500) : 200;
-      res.end(err ? err.message : JSON.stringify(req.body));
+  return http.createServer(function (req, res) {
+    _bodyParser(req, res, function (err) {
+      res.statusCode = err ? (err.status || 500) : 200
+      res.end(err ? err.message : JSON.stringify(req.body))
     })
   })
 }
