@@ -34,13 +34,14 @@ describe('bodyParser()', function(){
     .expect(200, '{"user":"tobi"}', done)
   })
 
-  it('should handle duplicated middleware', function(done){
+  it('should handle duplicated middleware', function (done) {
     var _bodyParser = bodyParser()
-    var server = http.createServer(function(req, res){
-      _bodyParser(req, res, function(err){
-        _bodyParser(req, res, function(err){
-          res.statusCode = err ? (err.status || 500) : 200;
-          res.end(err ? err.message : JSON.stringify(req.body));
+    var server = http.createServer(function (req, res) {
+      _bodyParser(req, res, function (err0) {
+        _bodyParser(req, res, function (err1) {
+          var err = err0 || err1
+          res.statusCode = err ? (err.status || 500) : 200
+          res.end(err ? err.message : JSON.stringify(req.body))
         })
       })
     })

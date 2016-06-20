@@ -58,6 +58,7 @@ describe('bodyParser.text()', function(){
     var textParser = bodyParser.text()
     var server = createServer(function (req, res, next) {
       textParser(req, res, function (err) {
+        if (err) return next(err)
         textParser(req, res, next)
       })
     })

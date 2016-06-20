@@ -57,6 +57,7 @@ describe('bodyParser.urlencoded()', function(){
     var urlencodedParser = bodyParser.urlencoded()
     var server = createServer(function (req, res, next) {
       urlencodedParser(req, res, function (err) {
+        if (err) return next(err)
         urlencodedParser(req, res, next)
       })
     })

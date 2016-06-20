@@ -84,6 +84,7 @@ describe('bodyParser.json()', function(){
     var jsonParser = bodyParser.json()
     var server = createServer(function (req, res, next) {
       jsonParser(req, res, function (err) {
+        if (err) return next(err)
         jsonParser(req, res, next)
       })
     })

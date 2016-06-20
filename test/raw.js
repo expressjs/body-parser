@@ -54,6 +54,7 @@ describe('bodyParser.raw()', function(){
     var rawParser = bodyParser.raw()
     var server = createServer(function (req, res, next) {
       rawParser(req, res, function (err) {
+        if (err) return next(err)
         rawParser(req, res, next)
       })
     })
