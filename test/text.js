@@ -256,18 +256,10 @@ describe('bodyParser.text()', function(){
     })
   })
 
-  describe('with verify option', function(){
-    it('should assert value is function', function(){
-      var err;
-
-      try {
-        var server = createServer({ verify: 'lol' })
-      } catch (e) {
-        err = e;
-      }
-
-      assert.ok(err);
-      assert.equal(err.name, 'TypeError');
+  describe('with verify option', function () {
+    it('should assert value is function', function () {
+      assert.throws(createServer.bind(null, { verify: 'lol' }),
+        /TypeError: option verify must be function/)
     })
 
     it('should error from verify', function(done){
