@@ -8,7 +8,7 @@
 
 Node.js body parsing middleware.
 
-Parse incoming request bodies in a middleware before your handlers, availabe
+Parse incoming request bodies in a middleware before your handlers, available
 under the `req.body` property.
 
 [Learn about the anatomy of an HTTP transaction in Node.js](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/).
