@@ -171,7 +171,7 @@ describe('bodyParser.raw()', function () {
         var test = request(server).post('/')
         test.set('Content-Type', 'application/octet-stream')
         test.write(new Buffer('000102', 'hex'))
-        test.expect(200, '{}', done)
+        test.expect(200, '""', done)
       })
     })
 
