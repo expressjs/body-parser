@@ -27,6 +27,7 @@ var parsers = Object.create(null)
  * @property {function} raw
  * @property {function} text
  * @property {function} urlencoded
+ * @property {function} generic
  */
 
 /**
@@ -46,6 +47,17 @@ Object.defineProperty(exports, 'json', {
   configurable: true,
   enumerable: true,
   get: createParserGetter('json')
+})
+
+/**
+ * Generic parser.
+ * @public
+ */
+
+Object.defineProperty(exports, 'generic', {
+  configurable: true,
+  enumerable: true,
+  get: createParserGetter('generic')
 })
 
 /**
@@ -149,6 +161,9 @@ function loadParser (parserName) {
       break
     case 'urlencoded':
       parser = require('./lib/types/urlencoded')
+      break
+    case 'generic':
+      parser = require('./lib/types/generic')
       break
   }
 
