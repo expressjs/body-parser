@@ -1,3 +1,11 @@
+unreleased
+==========
+
+  * deps: http-errors@~1.5.1
+    - deps: inherits@2.0.3
+    - deps: setprototypeof@1.0.2
+    - deps: statuses@'>= 1.3.1 < 2'
+
 1.15.2 / 2016-06-19
 ===================
 
