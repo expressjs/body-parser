@@ -5,6 +5,8 @@ unreleased
     - deps: inherits@2.0.3
     - deps: setprototypeof@1.0.2
     - deps: statuses@'>= 1.3.1 < 2'
+  * deps: qs@6.2.1
+    - Fix array parsing from skipping empty values
   * deps: type-is@~1.6.14
     - deps: mime-types@~2.1.13
 
