@@ -1,7 +1,7 @@
 1.15.3 / 2016-12-xx
 ===================
 
-  * deps: debug@2.5.1
+  * deps: debug@~2.5.1
   * deps: iconv-lite@0.4.15
   * deps: qs@6.3.0
 
