@@ -1,3 +1,11 @@
+1.15.3 / 2016-12-xx
+===================
+
+  * deps: qs@6.3.0
+    - Date stringification format configurable (https://github.com/ljharb/qs/issues/159)
+    - RFC 1738 support (`+` instead of `%20`). Must be explicitly enabled.
+    - For remaining changes, see [qs/CHANGELOG.md](https://github.com/ljharb/qs/blob/master/CHANGELOG.md#630)
+
 1.15.2 / 2016-06-19
 ===================
 
