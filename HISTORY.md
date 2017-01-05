@@ -5,6 +5,13 @@ unreleased
     - deps: inherits@2.0.3
     - deps: setprototypeof@1.0.2
     - deps: statuses@'>= 1.3.1 < 2'
+  * deps: iconv-lite@0.4.15
+    - Added encoding MS-31J
+    - Added encoding MS-932
+    - Added encoding MS-936
+    - Added encoding MS-949
+    - Added encoding MS-950
+    - Fix GBK/GB18030 handling of Euro character
   * deps: qs@6.2.1
     - Fix array parsing from skipping empty values
   * deps: raw-body@~2.2.0
