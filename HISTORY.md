@@ -7,6 +7,8 @@ unreleased
     - deps: statuses@'>= 1.3.1 < 2'
   * deps: qs@6.2.1
     - Fix array parsing from skipping empty values
+  * deps: raw-body@~2.2.0
+    - deps: iconv-lite@0.4.15
   * deps: type-is@~1.6.14
     - deps: mime-types@~2.1.13
 
