@@ -44,6 +44,8 @@ $ npm install body-parser
 
 ## API
 
+<!-- eslint-disable no-unused-vars -->
+
 ```js
 var bodyParser = require('body-parser')
 ```
@@ -383,6 +385,11 @@ All the parsers accept a `type` option which allows you to change the
 `Content-Type` that the middleware will parse.
 
 ```js
+var express = require('express')
+var bodyParser = require('body-parser')
+
+var app = express()
+
 // parse various different custom JSON types as JSON
 app.use(bodyParser.json({ type: 'application/*+json' }))
 
