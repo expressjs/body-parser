@@ -264,6 +264,32 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+
+
+
+
+
+
+
+### bodyParser.nested(options)
+
+Returns middleware that only parses `nested` bodies.
+
+A new `body` and `query` object containing the parsed data is populated on the request object after the middleware (i.e. `req.body`, `req.query`).
+
+#### Options
+
+The `nested` function takes an option `options` object that may contain
+any of the following keys:
+
+##### body
+
+When set to `true`, bodies will be nested; when `false`, the bodies conform to request. The default is `true`.
+
+##### query
+
+When set to `true`, bodies will be nested; when `false`, the bodies conform to request. The default is `true`.
+
 ## Errors
 
 The middlewares provided by this module create errors depending on the error
