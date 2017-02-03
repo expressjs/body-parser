@@ -264,13 +264,6 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
-
-
-
-
-
-
-
 ### bodyParser.nested(options)
 
 Returns middleware that only parses `nested` bodies.
@@ -371,6 +364,31 @@ app.use(function (req, res) {
   res.setHeader('Content-Type', 'text/plain')
   res.write('you posted:\n')
   res.end(JSON.stringify(req.body, null, 2))
+})
+```
+
+### Express nested
+
+This example demonstrates the use of nesting, ie when submitted `user.name`.
+With nesting `req.body.user.name`; without nesting would be `req.body['user.name']`.
+
+```js
+var express = require('express')
+var bodyParser = require('body-parser')
+
+var app = express()
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+// parse nested
+app.use(bodyParser.nested())
+
+app.use(function (req, res) {
+  res.send('welcome, ' + req.body.user.name)
 })
 ```
 
