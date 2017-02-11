@@ -18,9 +18,8 @@
     - Added encoding MS-949
     - Added encoding MS-950
     - Fix GBK/GB18030 handling of Euro character
-  * deps: qs@6.3.0
+  * deps: qs@6.2.1
     - Fix array parsing from skipping empty values
-    - Fix compacting nested arrays
   * deps: raw-body@~2.2.0
     - deps: iconv-lite@0.4.15
   * deps: type-is@~1.6.14
