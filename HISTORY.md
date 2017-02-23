@@ -4,6 +4,8 @@ unreleased
   * deps: http-errors@~1.6.1
     - Make `message` property enumerable for `HttpError`s
     - deps: setprototypeof@1.0.3
+  * deps: qs@6.3.1
+    - Fix compacting nested arrays
 
 1.16.1 / 2017-02-10
 ===================
