@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@6.4.0
+    - Fix regression parsing keys starting with `[`
+
 1.17.0 / 2017-03-01
 ===================
 
