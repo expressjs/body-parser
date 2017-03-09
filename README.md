@@ -321,6 +321,12 @@ This error will occur when the request had a `Content-Encoding` header that
 contained an unsupported encoding. The encoding is contained in the message
 as well as in the `encoding` property. The `status` property is set to `415`.
 
+### unsupported charset "BOGUS". JSON must have a UTF charset
+
+This error will occur when a non-utf charset is attempted to be used for
+requests with json content types. The charset is contained in the message
+as well as in the `charset` property. The `status` property is set to `415`.
+
 ## Examples
 
 ### Express/Connect top-level generic
