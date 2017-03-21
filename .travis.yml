@@ -11,6 +11,13 @@ node_js:
   - "6.11"
   - "7.10"
   - "8.4"
+matrix:
+  include:
+    - node_js: "8.4"
+      env: "NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/chakracore-release/"
+  allow_failures:
+    # Allow chakracore to fail
+    - env: "NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/chakracore-release/"
 sudo: false
 cache:
   directories:
