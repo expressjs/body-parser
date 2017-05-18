@@ -51,17 +51,20 @@ var bodyParser = require('body-parser')
 ```
 
 The `bodyParser` object exposes various factories to create middlewares. All
-middlewares will populate the `req.body` property with the parsed body, or an
-empty object (`{}`) if there was no body to parse (or an error was returned).
+middlewares will populate the `req.body` property with the parsed body when
+the `Content-Type` request header matches the `type` option, or an empty
+object (`{}`) if there was no body to parse, the `Content-Type` was not matched,
+or an error occurred.
 
 The various errors returned by this module are described in the
 [errors section](#errors).
 
 ### bodyParser.json(options)
 
-Returns middleware that only parses `json`. This parser accepts any Unicode
-encoding of the body and supports automatic inflation of `gzip` and `deflate`
-encodings.
+Returns middleware that only parses `json` and only looks at requests where
+the `Content-Type` header matches the `type` option. This parser accepts any
+Unicode encoding of the body and supports automatic inflation of `gzip` and
+`deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`).
@@ -112,8 +115,9 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 ### bodyParser.raw(options)
 
-Returns middleware that parses all bodies as a `Buffer`. This parser
-supports automatic inflation of `gzip` and `deflate` encodings.
+Returns middleware that parses all bodies as a `Buffer` and only looks at
+requests where the `Content-Type` header matches the `type` option. This
+parser supports automatic inflation of `gzip` and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a `Buffer` object
@@ -155,8 +159,9 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 ### bodyParser.text(options)
 
-Returns middleware that parses all bodies as a string. This parser supports
-automatic inflation of `gzip` and `deflate` encodings.
+Returns middleware that parses all bodies as a string and only looks at
+requests where the `Content-Type` header matches the `type` option. This
+parser supports automatic inflation of `gzip` and `deflate` encodings.
 
 A new `body` string containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a string of the
@@ -202,9 +207,10 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 ### bodyParser.urlencoded(options)
 
-Returns middleware that only parses `urlencoded` bodies. This parser accepts
-only UTF-8 encoding of the body and supports automatic inflation of `gzip`
-and `deflate` encodings.
+Returns middleware that only parses `urlencoded` bodies and only looks at
+requests where the `Content-Type` header matches the `type` option. This
+parser accepts only UTF-8 encoding of the body and supports automatic
+inflation of `gzip` and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This object will contain
