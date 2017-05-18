@@ -27,6 +27,7 @@ var parsers = Object.create(null)
  * @property {function} raw
  * @property {function} text
  * @property {function} urlencoded
+ * @property {function} nested
  */
 
 /**
@@ -79,6 +80,17 @@ Object.defineProperty(exports, 'urlencoded', {
   configurable: true,
   enumerable: true,
   get: createParserGetter('urlencoded')
+})
+
+/**
+ * Nested parser.
+ * @public
+ */
+
+Object.defineProperty(exports, 'nested', {
+  configurable: true,
+  enumerable: true,
+  get: createParserGetter('nested')
 })
 
 /**
@@ -149,6 +161,9 @@ function loadParser (parserName) {
       break
     case 'urlencoded':
       parser = require('./lib/types/urlencoded')
+      break
+    case 'nested':
+      parser = require('./lib/types/nested')
       break
   }
 
