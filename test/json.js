@@ -1,5 +1,6 @@
 
 var assert = require('assert')
+var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
 
@@ -129,7 +130,7 @@ describe('bodyParser.json()', function () {
 
   describe('with limit option', function () {
     it('should 413 when over limit with Content-Length', function (done) {
-      var buf = allocBuffer(1024, '.')
+      var buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: '1kb' }))
       .post('/')
       .set('Content-Type', 'application/json')
@@ -139,7 +140,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
-      var buf = allocBuffer(1024, '.')
+      var buf = Buffer.alloc(1024, '.')
       var server = createServer({ limit: '1kb' })
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json')
@@ -150,7 +151,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should accept number of bytes', function (done) {
-      var buf = allocBuffer(1024, '.')
+      var buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: 1024 }))
       .post('/')
       .set('Content-Type', 'application/json')
@@ -159,7 +160,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should not change when options altered', function (done) {
-      var buf = allocBuffer(1024, '.')
+      var buf = Buffer.alloc(1024, '.')
       var options = { limit: '1kb' }
       var server = createServer(options)
 
@@ -173,7 +174,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should not hang response', function (done) {
-      var buf = allocBuffer(10240, '.')
+      var buf = Buffer.alloc(10240, '.')
       var server = createServer({ limit: '8kb' })
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json')
@@ -195,7 +196,7 @@ describe('bodyParser.json()', function () {
         var test = request(server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/json')
-        test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+        test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
         test.expect(415, 'content encoding unsupported', done)
       })
     })
@@ -210,7 +211,7 @@ describe('bodyParser.json()', function () {
         var test = request(server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/json')
-        test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+        test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
         test.expect(200, '{"name":"论"}', done)
       })
     })
@@ -333,7 +334,7 @@ describe('bodyParser.json()', function () {
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-16')
-      test.write(new Buffer('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
+      test.write(Buffer.from('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -344,7 +345,7 @@ describe('bodyParser.json()', function () {
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=x-bogus')
-      test.write(new Buffer('00000000', 'hex'))
+      test.write(Buffer.from('00000000', 'hex'))
       test.expect(415, 'unsupported charset "X-BOGUS"', done)
     })
   })
@@ -358,14 +359,14 @@ describe('bodyParser.json()', function () {
     it('should parse utf-8', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-8')
-      test.write(new Buffer('7b226e616d65223a22e8aeba227d', 'hex'))
+      test.write(Buffer.from('7b226e616d65223a22e8aeba227d', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should parse utf-16', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-16')
-      test.write(new Buffer('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
+      test.write(Buffer.from('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -373,21 +374,21 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-8')
       test.set('Content-Length', '13')
-      test.write(new Buffer('7b2274657374223a22c3a5227d', 'hex'))
+      test.write(Buffer.from('7b2274657374223a22c3a5227d', 'hex'))
       test.expect(200, '{"test":"å"}', done)
     })
 
     it('should default to utf-8', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('7b226e616d65223a22e8aeba227d', 'hex'))
+      test.write(Buffer.from('7b226e616d65223a22e8aeba227d', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should fail on unknown charset', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=koi8-r')
-      test.write(new Buffer('7b226e616d65223a22cec5d4227d', 'hex'))
+      test.write(Buffer.from('7b226e616d65223a22cec5d4227d', 'hex'))
       test.expect(415, 'unsupported charset "KOI8-R"', done)
     })
   })
@@ -401,7 +402,7 @@ describe('bodyParser.json()', function () {
     it('should parse without encoding', function (done) {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('7b226e616d65223a22e8aeba227d', 'hex'))
+      test.write(Buffer.from('7b226e616d65223a22e8aeba227d', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -409,7 +410,7 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('7b226e616d65223a22e8aeba227d', 'hex'))
+      test.write(Buffer.from('7b226e616d65223a22e8aeba227d', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -417,7 +418,7 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -425,7 +426,7 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'deflate')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('789cab56ca4bcc4d55b2527ab16e97522d00274505ac', 'hex'))
+      test.write(Buffer.from('789cab56ca4bcc4d55b2527ab16e97522d00274505ac', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -433,7 +434,7 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -441,7 +442,7 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('000000000000', 'hex'))
+      test.write(Buffer.from('000000000000', 'hex'))
       test.expect(415, 'unsupported content encoding "nulls"', done)
     })
 
@@ -449,7 +450,7 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('1f8b080000000000000bab56cc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.write(Buffer.from('1f8b080000000000000bab56cc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
       test.expect(400, done)
     })
 
@@ -458,23 +459,13 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/json')
-      test.write(new Buffer('1f8b080000000000000bedc1010d000000c2a0f74f6d0f071400000000000000', 'hex'))
-      test.write(new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex'))
-      test.write(new Buffer('0000000000000000004f0625b3b71650c30000', 'hex'))
+      test.write(Buffer.from('1f8b080000000000000bedc1010d000000c2a0f74f6d0f071400000000000000', 'hex'))
+      test.write(Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex'))
+      test.write(Buffer.from('0000000000000000004f0625b3b71650c30000', 'hex'))
       test.expect(413, done)
     })
   })
 })
-
-function allocBuffer (size, fill) {
-  if (Buffer.alloc) {
-    return Buffer.alloc(size, fill)
-  }
-
-  var buf = new Buffer(size)
-  buf.fill(fill)
-  return buf
-}
 
 function createServer (opts) {
   var _bodyParser = typeof opts !== 'function'
