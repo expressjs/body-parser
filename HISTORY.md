@@ -1,8 +1,9 @@
 unreleased
 ==========
 
-  * deps: debug@2.6.3
+  * deps: debug@2.6.7
     - Fix `DEBUG_MAX_ARRAY_LENGTH`
+    - deps: ms@2.0.0
   * deps: type-is@~1.6.15
     - deps: mime-types@~2.1.15
 
