@@ -33,7 +33,10 @@ var parsers = Object.create(null)
  * Module exports.
  * @type {Parsers}
  */
-
+ 
+/**
+ * @type {{json: function, urlencoded: function}}
+ */
 exports = module.exports = deprecate.function(bodyParser,
   'bodyParser: use individual json/urlencoded middlewares')
 
