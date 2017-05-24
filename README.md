@@ -100,12 +100,13 @@ accept anything `JSON.parse` accepts. Defaults to `true`.
 ##### type
 
 The `type` option is used to determine what media type the middleware will
-parse. This option can be a function or a string. If a string, `type` option
-is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
-library and this can be an extension name (like `json`), a mime type (like
-`application/json`), or a mime type with a wildcard (like `*/*` or `*/json`).
-If a function, the `type` option is called as `fn(req)` and the request is
-parsed if it returns a truthy value. Defaults to `application/json`.
+parse. This option can be a string, array of strings, or a function. If it
+is a string or array of strings, `type` option is passed directly to the
+[type-is](https://www.npmjs.org/package/type-is#readme) library and this can
+be an extension name (like `json`), a mime type (like `application/json`), or
+a mime type with a wildcard (like `*/*` or `*/json`). If a function, the `type`
+option is called as `fn(req)` and the request is parsed if it returns a truthy
+value. Defaults to `application/json`.
 
 ##### verify
 
