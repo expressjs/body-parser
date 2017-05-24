@@ -350,6 +350,26 @@ describe('bodyParser.json()', function () {
     })
   })
 
+  describe('when validate is true', function () {
+    it('should 400 with a specific message when invalid json', function (done) {
+      request(createServer({ validate: true }))
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"str":')
+      .expect(400, /Invalid json: Unexpected end of JSON input/, done)
+    })
+  });
+
+  describe('when validate is false', function () {
+    it('should 400 when invalid json', function (done) {
+      request(createServer({ validate: false }))
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{:')
+      .expect(400, /unexpected token/i, done)
+    })
+  });
+
   describe('charset', function () {
     var server
     before(function () {

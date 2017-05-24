@@ -107,6 +107,12 @@ library and this can be an extension name (like `json`), a mime type (like
 If a function, the `type` option is called as `fn(req)` and the request is
 parsed if it returns a truthy value. Defaults to `application/json`.
 
+##### validate
+
+When set to `true`, will response with a 400 when it fails to parse the body as
+a JSON; when `false` will not handle the parse error by itself. Default to `false`.
+
+
 ##### verify
 
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
