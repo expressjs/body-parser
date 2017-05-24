@@ -79,6 +79,10 @@ the following keys:
 When set to `true`, then deflated (compressed) bodies will be inflated; when
 `false`, deflated bodies are rejected. Defaults to `true`.
 
+##### disabled
+
+Disable body-parse for the url, This option should be a Regexp, Defaults to `false`.
+
 ##### limit
 
 Controls the maximum request body size. If this is a number, then the value
@@ -133,6 +137,10 @@ the following keys:
 When set to `true`, then deflated (compressed) bodies will be inflated; when
 `false`, deflated bodies are rejected. Defaults to `true`.
 
+##### disabled
+
+Disable body-parse for the url, This option should be a Regexp, Defaults to `false`.
+
 ##### limit
 
 Controls the maximum request body size. If this is a number, then the value
@@ -181,6 +189,10 @@ specified in the `Content-Type` header of the request. Defaults to `utf-8`.
 
 When set to `true`, then deflated (compressed) bodies will be inflated; when
 `false`, deflated bodies are rejected. Defaults to `true`.
+
+##### disabled
+
+Disable body-parse for the url, This option should be a Regexp, Defaults to `false`.
 
 ##### limit
 
@@ -239,6 +251,10 @@ appropriate setting.
 
 When set to `true`, then deflated (compressed) bodies will be inflated; when
 `false`, deflated bodies are rejected. Defaults to `true`.
+
+##### disabled
+
+Disable body-parse for the url, This option should be a Regexp, Defaults to `false`.
 
 ##### limit
 
