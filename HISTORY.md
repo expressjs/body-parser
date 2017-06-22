@@ -15,6 +15,7 @@ unreleased
     - Use `http-errors` for standard emitted errors
     - deps: bytes@2.5.0
     - deps: iconv-lite@0.4.18
+  * perf: prevent internal `throw` when missing charset
 
 1.17.2 / 2017-05-17
 ===================
