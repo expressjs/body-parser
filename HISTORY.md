@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: bytes@2.5.0
   * deps: debug@2.6.8
 
 1.17.2 / 2017-05-17
