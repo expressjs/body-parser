@@ -6,6 +6,7 @@ unreleased
   * deps: iconv-lite@0.4.16
     - Add support for React Native
     - Change ISO-8859-1 and related to use Node.js binary encoding
+  * deps: qs@6.5.0
 
 1.17.2 / 2017-05-17
 ===================
