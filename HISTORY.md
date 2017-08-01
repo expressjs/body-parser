@@ -3,6 +3,8 @@ unreleased
 
   * deps: bytes@2.5.0
   * deps: debug@2.6.8
+  * deps: depd@~1.1.1
+    - Remove unnecessary `Buffer` loading
   * deps: iconv-lite@0.4.16
     - Add support for React Native
     - Change ISO-8859-1 and related to use Node.js binary encoding
