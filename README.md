@@ -59,7 +59,7 @@ or an error occurred.
 The various errors returned by this module are described in the
 [errors section](#errors).
 
-### bodyParser.json(options)
+### bodyParser.json([options])
 
 Returns middleware that only parses `json` and only looks at requests where
 the `Content-Type` header matches the `type` option. This parser accepts any
@@ -71,7 +71,7 @@ object after the middleware (i.e. `req.body`).
 
 #### Options
 
-The `json` function takes an option `options` object that may contain any of
+The `json` function takes an optional `options` object that may contain any of
 the following keys:
 
 ##### inflate
@@ -113,7 +113,7 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
-### bodyParser.raw(options)
+### bodyParser.raw([options])
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
 requests where the `Content-Type` header matches the `type` option. This
@@ -125,7 +125,7 @@ of the body.
 
 #### Options
 
-The `raw` function takes an option `options` object that may contain any of
+The `raw` function takes an optional `options` object that may contain any of
 the following keys:
 
 ##### inflate
@@ -157,7 +157,7 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
-### bodyParser.text(options)
+### bodyParser.text([options])
 
 Returns middleware that parses all bodies as a string and only looks at
 requests where the `Content-Type` header matches the `type` option. This
@@ -169,7 +169,7 @@ body.
 
 #### Options
 
-The `text` function takes an option `options` object that may contain any of
+The `text` function takes an optional `options` object that may contain any of
 the following keys:
 
 ##### defaultCharset
@@ -205,7 +205,7 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
-### bodyParser.urlencoded(options)
+### bodyParser.urlencoded([options])
 
 Returns middleware that only parses `urlencoded` bodies and only looks at
 requests where the `Content-Type` header matches the `type` option. This
@@ -219,7 +219,7 @@ key-value pairs, where the value can be a string or array (when `extended` is
 
 #### Options
 
-The `urlencoded` function takes an option `options` object that may contain
+The `urlencoded` function takes an optional `options` object that may contain
 any of the following keys:
 
 ##### extended
