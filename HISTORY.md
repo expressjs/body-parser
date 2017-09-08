@@ -5,6 +5,8 @@ unreleased
   * deps: debug@2.6.8
   * deps: depd@~1.1.1
     - Remove unnecessary `Buffer` loading
+  * deps: http-errors@~1.6.2
+    - deps: depd@1.1.1
   * deps: iconv-lite@0.4.18
     - Add support for React Native
     - Add a warning if not loaded as utf-8

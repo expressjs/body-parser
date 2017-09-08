@@ -13,7 +13,7 @@
     "content-type": "~1.0.2",
     "debug": "2.6.8",
     "depd": "~1.1.1",
-    "http-errors": "~1.6.1",
+    "http-errors": "~1.6.2",
     "iconv-lite": "0.4.18",
     "on-finished": "~2.3.0",
     "qs": "6.5.0",
