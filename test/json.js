@@ -85,64 +85,6 @@ describe('bodyParser.json()', function () {
     .expect(200, '{"user":"tobi"}', done)
   })
 
-  describe('when strict is false', function () {
-    before(function () {
-      this.server = createServer({ strict: false })
-    })
-
-    it('should parse primitives', function (done) {
-      request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('true')
-      .expect(200, 'true', done)
-    })
-  })
-
-  describe('when strict is true', function () {
-    before(function () {
-      this.server = createServer({ strict: true })
-    })
-
-    it('should not parse primitives', function (done) {
-      request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('true')
-      .expect(400, parseError('#rue').replace('#', 't'), done)
-    })
-
-    it('should not parse primitives with leading whitespaces', function (done) {
-      request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('    true')
-      .expect(400, parseError('    #rue').replace('#', 't'), done)
-    })
-
-    it('should allow leading whitespaces in JSON', function (done) {
-      request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('   { "user": "tobi" }')
-      .expect(200, '{"user":"tobi"}', done)
-    })
-  })
-
-  describe('by default', function () {
-    before(function () {
-      this.server = createServer()
-    })
-
-    it('should 400 on primitives', function (done) {
-      request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('true')
-      .expect(400, parseError('#rue').replace('#', 't'), done)
-    })
-  })
-
   describe('with limit option', function () {
     it('should 413 when over limit with Content-Length', function (done) {
       var buf = Buffer.alloc(1024, '.')
@@ -226,6 +168,66 @@ describe('bodyParser.json()', function () {
         test.set('Content-Type', 'application/json')
         test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
         test.expect(200, '{"name":"论"}', done)
+      })
+    })
+  })
+
+  describe('with strict option', function () {
+    describe('when undefined', function () {
+      before(function () {
+        this.server = createServer()
+      })
+
+      it('should 400 on primitives', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('true')
+        .expect(400, parseError('#rue').replace('#', 't'), done)
+      })
+    })
+
+    describe('when false', function () {
+      before(function () {
+        this.server = createServer({ strict: false })
+      })
+
+      it('should parse primitives', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('true')
+        .expect(200, 'true', done)
+      })
+    })
+
+    describe('when true', function () {
+      before(function () {
+        this.server = createServer({ strict: true })
+      })
+
+      it('should not parse primitives', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('true')
+        .expect(400, parseError('#rue').replace('#', 't'), done)
+      })
+
+      it('should not parse primitives with leading whitespaces', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('    true')
+        .expect(400, parseError('    #rue').replace('#', 't'), done)
+      })
+
+      it('should allow leading whitespaces in JSON', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('   { "user": "tobi" }')
+        .expect(200, '{"user":"tobi"}', done)
       })
     })
   })
