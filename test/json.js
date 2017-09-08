@@ -20,7 +20,7 @@ describe('bodyParser.json()', function () {
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{"user"')
-    .expect(400, /unexpected end/i, done)
+    .expect(400, parseError('{"user"'), done)
   })
 
   it('should handle Content-Length: 0', function (done) {
@@ -52,7 +52,7 @@ describe('bodyParser.json()', function () {
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{:')
-    .expect(400, /unexpected token/i, done)
+    .expect(400, parseError('{:'), done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -106,7 +106,7 @@ describe('bodyParser.json()', function () {
       .post('/')
       .set('Content-Type', 'application/json')
       .send('true')
-      .expect(400, /unexpected token/i, done)
+      .expect(400, parseError('#rue').replace('#', 't'), done)
     })
 
     it('should not parse primitives with leading whitespaces', function (done) {
@@ -114,7 +114,7 @@ describe('bodyParser.json()', function () {
       .post('/')
       .set('Content-Type', 'application/json')
       .send('    true')
-      .expect(400, /unexpected token/i, done)
+      .expect(400, parseError('    #rue').replace('#', 't'), done)
     })
 
     it('should allow leading whitespaces in JSON', function (done) {
@@ -132,7 +132,7 @@ describe('bodyParser.json()', function () {
       .post('/')
       .set('Content-Type', 'application/json')
       .send('true')
-      .expect(400, /unexpected token/i, done)
+      .expect(400, parseError('#rue').replace('#', 't'), done)
     })
   })
 
@@ -486,4 +486,12 @@ function createServer (opts) {
       res.end(err ? err.message : JSON.stringify(req.body))
     })
   })
+}
+
+function parseError (str) {
+  try {
+    JSON.parse(str); throw new SyntaxError('strict violation')
+  } catch (e) {
+    return e.message
+  }
 }
