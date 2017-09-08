@@ -344,6 +344,19 @@ describe('bodyParser.json()', function () {
       .expect(400, 'no arrays', done)
     })
 
+    it('should include original body on error object', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
+        if (buf[0] === 0x5b) throw new Error('no arrays')
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('X-Error-Property', 'body')
+      .send('["tobi"]')
+      .expect(403, '["tobi"]', done)
+    })
+
     it('should allow pass-through', function (done) {
       var server = createServer({verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
