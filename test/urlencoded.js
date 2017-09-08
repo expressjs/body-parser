@@ -7,13 +7,12 @@ var request = require('supertest')
 var bodyParser = require('..')
 
 describe('bodyParser.urlencoded()', function () {
-  var server
   before(function () {
-    server = createServer()
+    this.server = createServer()
   })
 
   it('should parse x-www-form-urlencoded', function (done) {
-    request(server)
+    request(this.server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send('user=tobi')
@@ -35,7 +34,7 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   it('should handle Content-Length: 0', function (done) {
-    request(server)
+    request(this.server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .set('Content-Length', '0')
@@ -69,7 +68,7 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   it('should parse extended syntax', function (done) {
-    request(server)
+    request(this.server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send('user[name][first]=Tobi')
@@ -78,13 +77,12 @@ describe('bodyParser.urlencoded()', function () {
 
   describe('with extended option', function () {
     describe('when false', function () {
-      var server
       before(function () {
-        server = createServer({ extended: false })
+        this.server = createServer({ extended: false })
       })
 
       it('should not parse extended syntax', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user[name][first]=Tobi')
@@ -92,7 +90,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse multiple key instances', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user=Tobi&user=Loki')
@@ -101,13 +99,12 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     describe('when true', function () {
-      var server
       before(function () {
-        server = createServer({ extended: true })
+        this.server = createServer({ extended: true })
       })
 
       it('should parse multiple key instances', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user=Tobi&user=Loki')
@@ -115,7 +112,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse extended syntax', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user[name][first]=Tobi')
@@ -123,7 +120,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse parameters with dots', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user.name=Tobi')
@@ -131,7 +128,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse fully-encoded extended syntax', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user%5Bname%5D%5Bfirst%5D=Tobi')
@@ -139,7 +136,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse array index notation', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('foo[0]=bar&foo[1]=baz')
@@ -153,7 +150,7 @@ describe('bodyParser.urlencoded()', function () {
           str += '&f[' + i + ']=' + i.toString(16)
         }
 
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(str)
@@ -167,7 +164,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse array of objects syntax', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('foo[0][bar]=baz&foo[0][fizz]=buzz')
@@ -183,7 +180,7 @@ describe('bodyParser.urlencoded()', function () {
 
         str += '=bar'
 
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(str)
@@ -204,13 +201,12 @@ describe('bodyParser.urlencoded()', function () {
 
   describe('with inflate option', function () {
     describe('when false', function () {
-      var server
       before(function () {
-        server = createServer({ inflate: false })
+        this.server = createServer({ inflate: false })
       })
 
       it('should not accept content-encoding', function (done) {
-        var test = request(server).post('/')
+        var test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/x-www-form-urlencoded')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -219,13 +215,12 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     describe('when true', function () {
-      var server
       before(function () {
-        server = createServer({ inflate: true })
+        this.server = createServer({ inflate: true })
       })
 
       it('should accept content-encoding', function (done) {
-        var test = request(server).post('/')
+        var test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/x-www-form-urlencoded')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -405,13 +400,12 @@ describe('bodyParser.urlencoded()', function () {
 
   describe('with type option', function () {
     describe('when "application/vnd.x-www-form-urlencoded"', function () {
-      var server
       before(function () {
-        server = createServer({ type: 'application/vnd.x-www-form-urlencoded' })
+        this.server = createServer({ type: 'application/vnd.x-www-form-urlencoded' })
       })
 
       it('should parse for custom type', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/vnd.x-www-form-urlencoded')
         .send('user=tobi')
@@ -419,7 +413,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should ignore standard type', function (done) {
-        request(server)
+        request(this.server)
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send('user=tobi')
@@ -526,20 +520,19 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   describe('charset', function () {
-    var server
     before(function () {
-      server = createServer()
+      this.server = createServer()
     })
 
     it('should parse utf-8', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should parse when content-length != char length', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8')
       test.set('Content-Length', '7')
       test.write(Buffer.from('746573743dc3a5', 'hex'))
@@ -547,14 +540,14 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should default to utf-8', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should fail on unknown charset', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=koi8-r')
       test.write(Buffer.from('6e616d653dcec5d4', 'hex'))
       test.expect(415, 'unsupported charset "KOI8-R"', done)
@@ -562,20 +555,19 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   describe('encoding', function () {
-    var server
     before(function () {
-      server = createServer({ limit: '10kb' })
+      this.server = createServer({ limit: '10kb' })
     })
 
     it('should parse without encoding', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should support identity encoding', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
@@ -583,7 +575,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should support gzip encoding', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -591,7 +583,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should support deflate encoding', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Encoding', 'deflate')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('789ccb4bcc4db57db16e17001068042f', 'hex'))
@@ -599,7 +591,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should be case-insensitive', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -607,7 +599,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should fail on unknown encoding', function (done) {
-      var test = request(server).post('/')
+      var test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('000000000000', 'hex'))

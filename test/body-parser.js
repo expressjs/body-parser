@@ -6,19 +6,18 @@ var request = require('supertest')
 var bodyParser = require('..')
 
 describe('bodyParser()', function () {
-  var server
   before(function () {
-    server = createServer()
+    this.server = createServer()
   })
 
   it('should default to {}', function (done) {
-    request(server)
+    request(this.server)
     .post('/')
     .expect(200, '{}', done)
   })
 
   it('should parse JSON', function (done) {
-    request(server)
+    request(this.server)
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{"user":"tobi"}')
@@ -26,7 +25,7 @@ describe('bodyParser()', function () {
   })
 
   it('should parse x-www-form-urlencoded', function (done) {
-    request(server)
+    request(this.server)
     .post('/')
     .set('Content-Type', 'application/x-www-form-urlencoded')
     .send('user=tobi')
@@ -53,12 +52,10 @@ describe('bodyParser()', function () {
   })
 
   describe('http methods', function () {
-    var server
-
     before(function () {
       var _bodyParser = bodyParser()
 
-      server = http.createServer(function (req, res) {
+      this.server = http.createServer(function (req, res) {
         _bodyParser(req, res, function (err) {
           if (err) {
             res.statusCode = 500
@@ -81,7 +78,7 @@ describe('bodyParser()', function () {
       }
 
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
-        request(server)[method]('/')
+        request(this.server)[method]('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi"}')
         .expect(201, done)
@@ -90,13 +87,12 @@ describe('bodyParser()', function () {
   })
 
   describe('with type option', function () {
-    var server
     before(function () {
-      server = createServer({ limit: '1mb', type: 'application/octet-stream' })
+      this.server = createServer({ limit: '1mb', type: 'application/octet-stream' })
     })
 
     it('should parse JSON', function (done) {
-      request(server)
+      request(this.server)
       .post('/')
       .set('Content-Type', 'application/json')
       .send('{"user":"tobi"}')
@@ -104,7 +100,7 @@ describe('bodyParser()', function () {
     })
 
     it('should parse x-www-form-urlencoded', function (done) {
-      request(server)
+      request(this.server)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user=tobi')
