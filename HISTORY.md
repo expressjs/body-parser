@@ -13,10 +13,11 @@ unreleased
     - Fix CESU-8 decoding in Node.js 8
     - Improve speed of ISO-8859-1 encoding
   * deps: qs@6.5.0
-  * deps: raw-body@2.3.0
+  * deps: raw-body@2.3.1
     - Use `http-errors` for standard emitted errors
-    - deps: bytes@2.5.0
+    - deps: bytes@3.0.0
     - deps: iconv-lite@0.4.18
+    - perf: skip buffer decoding on overage chunk
   * perf: prevent internal `throw` when missing charset
 
 1.17.2 / 2017-05-17
