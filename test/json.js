@@ -89,6 +89,15 @@ describe('bodyParser.json()', function () {
       .send('{"user"')
       .expect(400, parseError('{"user"'), done)
     })
+
+    it('should include original body on error object', function (done) {
+      request(this.server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('X-Error-Property', 'body')
+      .send(' {"user"')
+      .expect(400, ' {"user"', done)
+    })
   })
 
   describe('with limit option', function () {
@@ -492,8 +501,13 @@ function createServer (opts) {
 
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
-      res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : JSON.stringify(req.body))
+      if (err) {
+        res.statusCode = err.status || 500
+        res.end(err[req.headers['x-error-property'] || 'message'])
+      } else {
+        res.statusCode = 200
+        res.end(JSON.stringify(req.body))
+      }
     })
   })
 }
