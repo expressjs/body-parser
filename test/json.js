@@ -109,6 +109,14 @@ describe('bodyParser.json()', function () {
       .expect(400, /unexpected token/i, done)
     })
 
+    it('should not parse primitives with leading whitespaces', function (done) {
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('    true')
+      .expect(400, /unexpected token/i, done)
+    })
+
     it('should allow leading whitespaces in JSON', function (done) {
       request(server)
       .post('/')
