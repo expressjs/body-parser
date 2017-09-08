@@ -15,14 +15,6 @@ describe('bodyParser.json()', function () {
     .expect(200, '{"user":"tobi"}', done)
   })
 
-  it('should fail gracefully', function (done) {
-    request(createServer())
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .send('{"user"')
-    .expect(400, parseError('{"user"'), done)
-  })
-
   it('should handle Content-Length: 0', function (done) {
     request(createServer())
     .get('/')
@@ -45,14 +37,6 @@ describe('bodyParser.json()', function () {
     .set('Content-Type', 'application/json')
     .unset('Transfer-Encoding')
     .expect(200, '{}', done)
-  })
-
-  it('should 400 on malformed JSON', function (done) {
-    request(createServer())
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .send('{:')
-    .expect(400, parseError('{:'), done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -83,6 +67,28 @@ describe('bodyParser.json()', function () {
     .set('Content-Type', 'application/json')
     .send('{"user":"tobi"}')
     .expect(200, '{"user":"tobi"}', done)
+  })
+
+  describe('when JSON is invalid', function () {
+    before(function () {
+      this.server = createServer()
+    })
+
+    it('should 400 for bad token', function (done) {
+      request(this.server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{:')
+      .expect(400, parseError('{:'), done)
+    })
+
+    it('should 400 for incomplete', function (done) {
+      request(this.server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user"')
+      .expect(400, parseError('{"user"'), done)
+    })
   })
 
   describe('with limit option', function () {
