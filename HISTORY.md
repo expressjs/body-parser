@@ -3,6 +3,7 @@ unreleased
 
   * Fix JSON strict violation error to match native parse error
   * Include the `body` property on verify errors
+  * Include the `type` property on all generated errors
   * Use `http-errors` to set status code on errors
   * deps: bytes@3.0.0
   * deps: debug@2.6.8

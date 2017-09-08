@@ -306,6 +306,15 @@ describe('bodyParser.urlencoded()', function () {
         .expect(413, /too many parameters/, done)
       })
 
+      it('should error with type = "parameters.too.many"', function (done) {
+        request(createServer({ extended: false, parameterLimit: 10 }))
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('X-Error-Property', 'type')
+        .send(createManyParams(11))
+        .expect(413, 'parameters.too.many', done)
+      })
+
       it('should work when at the limit', function (done) {
         request(createServer({ extended: false, parameterLimit: 10 }))
         .post('/')
@@ -359,6 +368,15 @@ describe('bodyParser.urlencoded()', function () {
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(createManyParams(11))
         .expect(413, /too many parameters/, done)
+      })
+
+      it('should error with type = "parameters.too.many"', function (done) {
+        request(createServer({ extended: true, parameterLimit: 10 }))
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('X-Error-Property', 'type')
+        .send(createManyParams(11))
+        .expect(413, 'parameters.too.many', done)
       })
 
       it('should work when at the limit', function (done) {
@@ -480,6 +498,19 @@ describe('bodyParser.urlencoded()', function () {
       .expect(403, 'no leading space', done)
     })
 
+    it('should error with type = "entity.verify.failed"', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
+        if (buf[0] === 0x20) throw new Error('no leading space')
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('X-Error-Property', 'type')
+      .send(' user=tobi')
+      .expect(403, 'entity.verify.failed', done)
+    })
+
     it('should allow custom codes', function (done) {
       var server = createServer({verify: function (req, res, buf) {
         if (buf[0] !== 0x20) return
@@ -493,6 +524,22 @@ describe('bodyParser.urlencoded()', function () {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send(' user=tobi')
       .expect(400, 'no leading space', done)
+    })
+
+    it('should allow custom type', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
+        if (buf[0] !== 0x20) return
+        var err = new Error('no leading space')
+        err.type = 'foo.bar'
+        throw err
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('X-Error-Property', 'type')
+      .send(' user=tobi')
+      .expect(403, 'foo.bar', done)
     })
 
     it('should allow pass-through', function (done) {
@@ -632,8 +679,13 @@ function createServer (opts) {
 
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
-      res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : JSON.stringify(req.body))
+      if (err) {
+        res.statusCode = err.status || 500
+        res.end(err[req.headers['x-error-property'] || 'message'])
+      } else {
+        res.statusCode = 200
+        res.end(JSON.stringify(req.body))
+      }
     })
   })
 }

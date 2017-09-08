@@ -90,6 +90,15 @@ describe('bodyParser.json()', function () {
       .expect(400, parseError('{"user"'), done)
     })
 
+    it('should error with type = "entity.parse.failed"', function (done) {
+      request(this.server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('X-Error-Property', 'type')
+      .send(' {"user"')
+      .expect(400, 'entity.parse.failed', done)
+    })
+
     it('should include original body on error object', function (done) {
       request(this.server)
       .post('/')
@@ -109,6 +118,17 @@ describe('bodyParser.json()', function () {
       .set('Content-Length', '1034')
       .send(JSON.stringify({ str: buf.toString() }))
       .expect(413, done)
+    })
+
+    it('should error with type = "entity.too.large"', function (done) {
+      var buf = Buffer.alloc(1024, '.')
+      request(createServer({ limit: '1kb' }))
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('Content-Length', '1034')
+      .set('X-Error-Property', 'type')
+      .send(JSON.stringify({ str: buf.toString() }))
+      .expect(413, 'entity.too.large', done)
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
@@ -244,6 +264,15 @@ describe('bodyParser.json()', function () {
         .send('   { "user": "tobi" }')
         .expect(200, '{"user":"tobi"}', done)
       })
+
+      it('should error with type = "entity.parse.failed"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .set('X-Error-Property', 'type')
+        .send('true')
+        .expect(400, 'entity.parse.failed', done)
+      })
     })
   })
 
@@ -329,6 +358,19 @@ describe('bodyParser.json()', function () {
       .expect(403, 'no arrays', done)
     })
 
+    it('should error with type = "entity.verify.failed"', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
+        if (buf[0] === 0x5b) throw new Error('no arrays')
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('X-Error-Property', 'type')
+      .send('["tobi"]')
+      .expect(403, 'entity.verify.failed', done)
+    })
+
     it('should allow custom codes', function (done) {
       var server = createServer({verify: function (req, res, buf) {
         if (buf[0] !== 0x5b) return
@@ -342,6 +384,22 @@ describe('bodyParser.json()', function () {
       .set('Content-Type', 'application/json')
       .send('["tobi"]')
       .expect(400, 'no arrays', done)
+    })
+
+    it('should allow custom type', function (done) {
+      var server = createServer({verify: function (req, res, buf) {
+        if (buf[0] !== 0x5b) return
+        var err = new Error('no arrays')
+        err.type = 'foo.bar'
+        throw err
+      }})
+
+      request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .set('X-Error-Property', 'type')
+      .send('["tobi"]')
+      .expect(403, 'foo.bar', done)
     })
 
     it('should include original body on error object', function (done) {
@@ -432,6 +490,14 @@ describe('bodyParser.json()', function () {
       test.write(Buffer.from('7b226e616d65223a22cec5d4227d', 'hex'))
       test.expect(415, 'unsupported charset "KOI8-R"', done)
     })
+
+    it('should error with type = "charset.unsupported"', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Type', 'application/json; charset=koi8-r')
+      test.set('X-Error-Property', 'type')
+      test.write(Buffer.from('7b226e616d65223a22cec5d4227d', 'hex'))
+      test.expect(415, 'charset.unsupported', done)
+    })
   })
 
   describe('encoding', function () {
@@ -484,6 +550,15 @@ describe('bodyParser.json()', function () {
       test.set('Content-Type', 'application/json')
       test.write(Buffer.from('000000000000', 'hex'))
       test.expect(415, 'unsupported content encoding "nulls"', done)
+    })
+
+    it('should error with type = "encoding.unsupported"', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'nulls')
+      test.set('Content-Type', 'application/json')
+      test.set('X-Error-Property', 'type')
+      test.write(Buffer.from('000000000000', 'hex'))
+      test.expect(415, 'encoding.unsupported', done)
     })
 
     it('should 400 on malformed encoding', function (done) {
