@@ -315,6 +315,12 @@ to this middleware. This module operates directly on bytes only and you cannot
 call `req.setEncoding` when using this module. The `status` property is set to
 `500`.
 
+### too many parameters
+
+This error will occur when the content of the request exceeds the configured
+`parameterLimit` for the `urlencoded` parser. The `status` property is set to
+`413`.
+
 ### unsupported charset "BOGUS"
 
 This error will occur when the request had a charset parameter in the
