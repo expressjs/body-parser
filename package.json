@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "expressjs/body-parser",
   "dependencies": {
-    "bytes": "2.5.0",
+    "bytes": "3.0.0",
     "content-type": "~1.0.2",
     "debug": "2.6.8",
     "depd": "~1.1.1",

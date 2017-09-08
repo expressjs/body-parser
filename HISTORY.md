@@ -1,7 +1,7 @@
 unreleased
 ==========
 
-  * deps: bytes@2.5.0
+  * deps: bytes@3.0.0
   * deps: debug@2.6.8
   * deps: depd@~1.1.1
     - Remove unnecessary `Buffer` loading
