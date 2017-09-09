@@ -1,5 +1,5 @@
-unreleased
-==========
+1.18.0 / 2017-09-08
+===================
 
   * Fix JSON strict violation error to match native parse error
   * Include the `body` property on verify errors
