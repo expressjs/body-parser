@@ -4,6 +4,8 @@ unreleased
   * deps: iconv-lite@0.4.19
     - Fix ISO-8859-1 regression
     - Update Windows-1255
+  * deps: qs@6.5.1
+    - Fix parsing & compacting very deep objects
   * deps: raw-body@2.3.2
     - deps: iconv-lite@0.4.19
 
