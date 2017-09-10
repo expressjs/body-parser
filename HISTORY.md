@@ -4,6 +4,8 @@ unreleased
   * deps: iconv-lite@0.4.19
     - Fix ISO-8859-1 regression
     - Update Windows-1255
+  * deps: raw-body@2.3.2
+    - deps: iconv-lite@0.4.19
 
 1.18.0 / 2017-09-08
 ===================
