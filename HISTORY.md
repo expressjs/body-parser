@@ -1,5 +1,5 @@
-unreleased
-==========
+1.18.1 / 2017-09-12
+===================
 
   * deps: content-type@~1.0.4
     - perf: remove argument reassignment
