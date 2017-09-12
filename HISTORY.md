@@ -1,6 +1,9 @@
 unreleased
 ==========
 
+  * deps: content-type@~1.0.4
+    - perf: remove argument reassignment
+    - perf: skip parameter parsing when no parameters
   * deps: iconv-lite@0.4.19
     - Fix ISO-8859-1 regression
     - Update Windows-1255
