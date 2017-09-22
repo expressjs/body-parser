@@ -2,6 +2,7 @@ unreleased
 ==========
 
   * deps: debug@2.6.9
+  * perf: remove argument reassignment
 
 1.18.1 / 2017-09-12
 ===================
