@@ -11,7 +11,7 @@
   "dependencies": {
     "bytes": "3.0.0",
     "content-type": "~1.0.4",
-    "debug": "2.6.8",
+    "debug": "2.6.9",
     "depd": "~1.1.1",
     "http-errors": "~1.6.2",
     "iconv-lite": "0.4.19",
