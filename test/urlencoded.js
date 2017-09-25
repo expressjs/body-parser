@@ -439,6 +439,38 @@ describe('bodyParser.urlencoded()', function () {
       })
     })
 
+    describe('when ["urlencoded", "application/x-pairs"]', function () {
+      before(function () {
+        this.server = createServer({
+          type: ['urlencoded', 'application/x-pairs']
+        })
+      })
+
+      it('should parse "application/x-www-form-urlencoded"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user=tobi')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should parse "application/x-pairs"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/x-pairs')
+        .send('user=tobi')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should ignore application/x-foo', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/x-foo')
+        .send('user=tobi')
+        .expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })

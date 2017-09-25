@@ -193,6 +193,36 @@ describe('bodyParser.text()', function () {
       })
     })
 
+    describe('when ["text/html", "text/plain"]', function () {
+      before(function () {
+        this.server = createServer({ type: ['text/html', 'text/plain'] })
+      })
+
+      it('should parse "text/html"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'text/html')
+        .send('<b>tobi</b>')
+        .expect(200, '"<b>tobi</b>"', done)
+      })
+
+      it('should parse "text/plain"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send('tobi')
+        .expect(200, '"tobi"', done)
+      })
+
+      it('should ignore "text/xml"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'text/xml')
+        .send('<user>tobi</user>')
+        .expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })

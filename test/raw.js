@@ -172,6 +172,35 @@ describe('bodyParser.raw()', function () {
       })
     })
 
+    describe('when ["application/octet-stream", "application/vnd+octets"]', function () {
+      before(function () {
+        this.server = createServer({
+          type: ['application/octet-stream', 'application/vnd+octets']
+        })
+      })
+
+      it('should parse "application/octet-stream"', function (done) {
+        var test = request(this.server).post('/')
+        test.set('Content-Type', 'application/octet-stream')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should parse "application/vnd+octets"', function (done) {
+        var test = request(this.server).post('/')
+        test.set('Content-Type', 'application/vnd+octets')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should ignore "application/x-foo"', function (done) {
+        var test = request(this.server).post('/')
+        test.set('Content-Type', 'application/x-foo')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })

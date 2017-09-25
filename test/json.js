@@ -299,6 +299,38 @@ describe('bodyParser.json()', function () {
       })
     })
 
+    describe('when ["application/json", "application/vnd.api+json"]', function () {
+      before(function () {
+        this.server = createServer({
+          type: ['application/json', 'application/vnd.api+json']
+        })
+      })
+
+      it('should parse JSON for "application/json"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should parse JSON for "application/vnd.api+json"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/vnd.api+json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should ignore "application/x-json"', function (done) {
+        request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/x-json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })
