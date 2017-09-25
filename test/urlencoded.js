@@ -439,6 +439,37 @@ describe('bodyParser.urlencoded()', function(){
       })
     })
 
+    describe('when an array of strings', function () {
+      var server
+      before(function () {
+        server = createServer({ type: ['application/vnd.x-www-form-urlencoded', 'application/x-www-form-urlencoded'] })
+      })
+
+      it('should parse for the first type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/vnd.x-www-form-urlencoded')
+        .send('user=tobi')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should parse for the second type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user=tobi')
+        .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should ignore other types', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'my/urlencoded')
+        .send('user=tobi')
+        .expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })

@@ -133,7 +133,7 @@ to `'100kb'`.
 ##### type
 
 The `type` option is used to determine what media type the middleware will
-parse. This option can be a function or a string. If a string, `type` option
+parse. This option can be a string, array of strings, or a function. If it is a string or array of strings, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `bin`), a mime type (like
 `application/octet-stream`), or a mime type with a wildcard (like `*/*` or
@@ -181,7 +181,7 @@ to `'100kb'`.
 ##### type
 
 The `type` option is used to determine what media type the middleware will
-parse. This option can be a function or a string. If a string, `type` option
+parse. This option can be a string, array of strings, or a function. If it is a string or array of strings, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `txt`), a mime type (like
 `text/plain`), or a mime type with a wildcard (like `*/*` or `text/*`).
@@ -244,7 +244,7 @@ than this value, a 413 will be returned to the client. Defaults to `1000`.
 ##### type
 
 The `type` option is used to determine what media type the middleware will
-parse. This option can be a function or a string. If a string, `type` option
+parse. This option can be a string, array of strings, or a function. If it is a string or array of strings, `type` option
 is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme)
 library and this can be an extension name (like `urlencoded`), a mime type (like
 `application/x-www-form-urlencoded`), or a mime type with a wildcard (like

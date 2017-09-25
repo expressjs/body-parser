@@ -215,6 +215,37 @@ describe('bodyParser.text()', function(){
       })
     })
 
+    describe('when an array of strings', function () {
+      var server
+      before(function () {
+        server = createServer({ type: ['text/html', 'text/plain'] })
+      })
+
+      it('should parse for the first type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'text/html')
+        .send('<b>tobi</b>')
+        .expect(200, '<b>tobi</b>', done)
+      })
+
+      it('should parse for the second type', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send('user is tobi')
+        .expect(200, 'user is tobi', done)
+      })
+
+      it('should ignore other types', function (done) {
+        request(server)
+        .post('/')
+        .set('Content-Type', 'my/text')
+        .send('user is tobi')
+        .expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })

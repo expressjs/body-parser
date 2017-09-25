@@ -188,6 +188,34 @@ describe('bodyParser.raw()', function(){
       })
     })
 
+    describe('when an array of strings', function () {
+      var server
+      before(function () {
+        server = createServer({ type: ['application/octet-stream', 'application/vnd+octets'] })
+      })
+
+      it('should parse for the first type', function (done) {
+        var test = request(server).post('/')
+        test.set('Content-Type', 'application/octet-stream')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should parse for the second type', function (done) {
+        var test = request(server).post('/')
+        test.set('Content-Type', 'application/vnd+octets')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, 'buf:000102', done)
+      })
+
+      it('should ignore other types', function (done) {
+        var test = request(server).post('/')
+        test.set('Content-Type', 'my/raw')
+        test.write(new Buffer('000102', 'hex'))
+        test.expect(200, '{}', done)
+      })
+    })
+
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
         var server = createServer({ type: accept })
