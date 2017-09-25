@@ -226,7 +226,7 @@ describe('bodyParser.text()', function(){
         .post('/')
         .set('Content-Type', 'text/html')
         .send('<b>tobi</b>')
-        .expect(200, '<b>tobi</b>', done)
+        .expect(200, '"<b>tobi</b>"', done)
       })
 
       it('should parse for the second type', function (done) {
@@ -234,7 +234,7 @@ describe('bodyParser.text()', function(){
         .post('/')
         .set('Content-Type', 'text/plain')
         .send('user is tobi')
-        .expect(200, 'user is tobi', done)
+        .expect(200, '"user is tobi"', done)
       })
 
       it('should ignore other types', function (done) {
