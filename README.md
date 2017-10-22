@@ -11,6 +11,12 @@ Node.js body parsing middleware.
 Parse incoming request bodies in a middleware before your handlers, available
 under the `req.body` property.
 
+**Note** As `req.body`'s shape is based on user-controlled input, all
+properties and values in this object are untrusted and should be validated
+before trusting. For example, `req.body.foo.toString()` may fail in multiple
+ways, for example the `foo` property may not be there or may not be a string,
+and `toString` may not be a function and instead a string or other user input.
+
 [Learn about the anatomy of an HTTP transaction in Node.js](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/).
 
 _This does not handle multipart bodies_, due to their complex and typically
