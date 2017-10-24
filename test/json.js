@@ -372,6 +372,20 @@ describe('bodyParser.json()', function () {
     })
   })
 
+  describe('with strictType option', function () {
+    before(function () {
+      this.server = createServer({ strictType: true })
+    })
+
+    it('should error when given wrong content type', function (done) {
+      request(this.server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('')
+      .expect(415, 'Unsupported Content-Type: "application/x-www-form-urlencoded"', done)
+    })
+  })
+
   describe('with verify option', function () {
     it('should assert value if function', function () {
       assert.throws(createServer.bind(null, { verify: 'lol' }),
