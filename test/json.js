@@ -7,11 +7,27 @@ var request = require('supertest')
 var bodyParser = require('..')
 
 describe('bodyParser.json()', function () {
-  it('should parse JSON', function (done) {
+  it('should parse JSON objects', function (done) {
     request(createServer())
     .post('/')
     .set('Content-Type', 'application/json')
     .send('{"user":"tobi"}')
+    .expect(200, '{"user":"tobi"}', done)
+  })
+
+  it('should parse JSON arrays', function (done) {
+    request(createServer())
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('[{"user":"tobi"}]')
+    .expect(200, '{"user":"tobi"}', done)
+  })
+
+  it('should parse JSON strings', function (done) {
+    request(createServer())
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('"VALID JSON STRING"')
     .expect(200, '{"user":"tobi"}', done)
   })
 
