@@ -3,6 +3,7 @@ var assert = require('assert')
 var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
+var JSONbig = require('json-bigint')
 
 var bodyParser = require('..')
 
@@ -67,6 +68,16 @@ describe('bodyParser.json()', function () {
     .set('Content-Type', 'application/json')
     .send('{"user":"tobi"}')
     .expect(200, '{"user":"tobi"}', done)
+  })
+
+  it('should use external parsers', function (done) {
+    request(createServer({
+      parser: JSONbig({ storeAsString: true }).parse
+    }))
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('{"user_id":1234567890123456789012345678901234567890123456789012345678901234567890}')
+    .expect(200, '{"user_id":"1234567890123456789012345678901234567890123456789012345678901234567890"}', done)
   })
 
   describe('when JSON is invalid', function () {
