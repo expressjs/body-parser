@@ -20,16 +20,6 @@ describe('bodyParser.raw()', function () {
       .expect(200, 'buf:746865207573657220697320746f6269', done)
   })
 
-  it('should parse application/octet-stream with a custom parser', function (done) {
-    request(createServer({
-      parser: function (body) { return body.toString('utf8') }
-    }))
-    .post('/')
-    .set('Content-Type', 'application/octet-stream')
-    .send('the user is tobi')
-    .expect(200, '"the user is tobi"', done)
-  })
-
   it('should 400 when invalid content-length', function (done) {
     var rawParser = bodyParser.raw()
     var server = createServer(function (req, res, next) {
