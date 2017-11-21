@@ -161,9 +161,9 @@ function loadParser (parserName) {
     case 'urlencoded':
       parser = require('./lib/types/urlencoded')
       break
-		case 'generic':
-			parser = require('./lib/generic-parser')
-			break
+    case 'generic':
+      parser = require('./lib/generic-parser')
+      break
   }
 
   // store to prevent invoking require()
