@@ -89,12 +89,18 @@ to `'100kb'`.
 ##### parser
 
 The `parser` option is the function called against the request body to convert
-it to a Javascript object. Defaults to `JSON.parse`.
+it to a Javascript object. If a `reviver` is supplied, it is supplied as the
+second argument to this function.
+
+```javascript
+parser(body, reviver) -> req.body
+```
+
+Defaults to `JSON.parse`.
 
 ##### reviver
 
-The `reviver` option is passed directly to the `parser` as the second
-argument. You can find more information on this argument
+You can find more information on this argument
 [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
 
 ##### strict
