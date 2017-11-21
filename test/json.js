@@ -72,7 +72,7 @@ describe('bodyParser.json()', function () {
   it('should use external parsers', function (done) {
     request(createServer({
       parser: function (body) {
-        return { foo: "bar" }
+        return { foo: 'bar' }
       }
     }))
     .post('/')
