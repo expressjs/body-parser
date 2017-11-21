@@ -324,6 +324,16 @@ form. Defaults to `false`.
 
 The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
 
+##### parser
+
+The `parser` option, if supplied, is used to in place of the default parser to
+convert the request body into a Javascript object. If this option is supplied,
+both the `extended` and `parameterLimit` options are ignored.
+
+```javascript
+parser(body) -> req.body
+```
+
 ## Errors
 
 The middlewares provided by this module create errors using the
