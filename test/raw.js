@@ -21,7 +21,7 @@ describe('bodyParser.raw()', function () {
 
   it('should parse application/octet-stream with a custom parser', function (done) {
     request(createServer({
-      parser: function (body) { return body.toString("utf8") }
+      parser: function (body) { return body.toString('utf8') }
     }))
     .post('/')
     .set('Content-Type', 'application/octet-stream')
