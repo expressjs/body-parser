@@ -19,6 +19,16 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{"user":"tobi"}', done)
   })
 
+  it('should parse x-www-form-urlencoded with custom parser', function (done) {
+    request(createServer({
+      parser: function (input) { return input.toUpperCase() }
+    }))
+    .post('/')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send('user=tobi')
+    .expect(200, '"USER=TOBI"', done)
+  })
+
   it('should 400 when invalid content-length', function (done) {
     var urlencodedParser = bodyParser.urlencoded()
     var server = createServer(function (req, res, next) {
