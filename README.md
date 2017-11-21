@@ -94,7 +94,7 @@ The `parser` option is the function called against the request body to convert
 it to a Javascript object. If a `reviver` is supplied, it is supplied as the
 second argument to this function.
 
-```javascript
+```
 parser(body, reviver) -> req.body
 ```
 
@@ -178,7 +178,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 The `parser` option, if supplied, is used to transform the body of a request
 before being set to `req.body`.
 
-```javascript
+```
 parser(body) -> req.body
 ```
 
@@ -237,7 +237,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 The `parser` option, if supplied, is used to transform the body of a request
 before being set to `req.body`.
 
-```javascript
+```
 parser(body) -> req.body
 ```
 
@@ -330,7 +330,7 @@ The `parser` option, if supplied, is used to in place of the default parser to
 convert the request body into a Javascript object. If this option is supplied,
 both the `extended` and `parameterLimit` options are ignored.
 
-```javascript
+```
 parser(body) -> req.body
 ```
 
