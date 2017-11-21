@@ -20,16 +20,6 @@ describe('bodyParser.text()', function () {
       .expect(200, '"user is tobi"', done)
   })
 
-  it('should parse text/plain with a custom parser', function (done) {
-    request(createServer({
-      parser: function (input) { return input.toUpperCase() }
-    }))
-    .post('/')
-    .set('Content-Type', 'text/plain')
-    .send('user is tobi')
-    .expect(200, '"USER IS TOBI"', done)
-  })
-
   it('should 400 when invalid content-length', function (done) {
     var textParser = bodyParser.text()
     var server = createServer(function (req, res, next) {
