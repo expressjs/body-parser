@@ -171,15 +171,6 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
-##### parser
-
-The `parser` option, if supplied, is used to transform the body of a request
-before being set to `req.body`.
-
-```
-parser(body) -> req.body
-```
-
 ### bodyParser.text([options])
 
 Returns middleware that parses all bodies as a string and only looks at
@@ -228,15 +219,6 @@ truthy value. Defaults to `text/plain`.
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
-
-##### parser
-
-The `parser` option, if supplied, is used to transform the body of a request
-before being set to `req.body`.
-
-```
-parser(body) -> req.body
-```
 
 ### bodyParser.urlencoded([options])
 
