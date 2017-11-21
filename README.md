@@ -91,16 +91,21 @@ specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
 
+##### parser
+
+The `parser` option is the function called against the request body to convert
+it to a Javascript object. Defaults to `JSON.parse`.
+
 ##### reviver
 
-The `reviver` option is passed directly to `JSON.parse` as the second
+The `reviver` option is passed directly to the `parser` as the second
 argument. You can find more information on this argument
 [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
 
 ##### strict
 
 When set to `true`, will only accept arrays and objects; when `false` will
-accept anything `JSON.parse` accepts. Defaults to `true`.
+accept anything the `parser` accepts. Defaults to `true`.
 
 ##### type
 
