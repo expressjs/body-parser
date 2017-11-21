@@ -69,6 +69,18 @@ describe('bodyParser.json()', function () {
     .expect(200, '{"user":"tobi"}', done)
   })
 
+  it('should use external parsers', function (done) {
+    request(createServer({
+      parser: function (body) {
+        return { foo: 'bar' }
+      }
+    }))
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send('{"str":')
+    .expect(200, '{"foo":"bar"}', done)
+  })
+
   describe('when JSON is invalid', function () {
     before(function () {
       this.server = createServer()
