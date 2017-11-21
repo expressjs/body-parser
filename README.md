@@ -303,6 +303,16 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+##### parser
+
+The `parser` option, if supplied, is used to in place of the default parser to
+convert the request body into a Javascript object. If this option is supplied,
+both the `extended` and `parameterLimit` options are ignored.
+
+```javascript
+parser(body) -> req.body
+```
+
 ## Errors
 
 The middlewares provided by this module create errors depending on the error
