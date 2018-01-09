@@ -4,7 +4,6 @@
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Build Status][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
-[![Gratipay][gratipay-image]][gratipay-url]
 
 Node.js body parsing middleware.
 
@@ -444,5 +443,3 @@ app.use(bodyParser.text({ type: 'text/html' }))
 [coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
 [downloads-image]: https://img.shields.io/npm/dm/body-parser.svg
 [downloads-url]: https://npmjs.org/package/body-parser
-[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
-[gratipay-url]: https://www.gratipay.com/dougwilson/
