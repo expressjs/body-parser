@@ -13,10 +13,10 @@ describe('bodyParser.urlencoded()', function () {
 
   it('should parse x-www-form-urlencoded', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send('user=tobi')
-    .expect(200, '{"user":"tobi"}', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '{"user":"tobi"}', done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -27,28 +27,28 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send('str=')
-    .expect(400, /content length/, done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('str=')
+      .expect(400, /content length/, done)
   })
 
   it('should handle Content-Length: 0', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .set('Content-Length', '0')
-    .send('')
-    .expect(200, '{}', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Content-Length', '0')
+      .send('')
+      .expect(200, '{}', done)
   })
 
   it('should handle empty message-body', function (done) {
     request(createServer({ limit: '1kb' }))
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .set('Transfer-Encoding', 'chunked')
-    .send('')
-    .expect(200, '{}', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Transfer-Encoding', 'chunked')
+      .send('')
+      .expect(200, '{}', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -61,18 +61,18 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send('user=tobi')
-    .expect(200, '{"user":"tobi"}', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '{"user":"tobi"}', done)
   })
 
   it('should parse extended syntax', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send('user[name][first]=Tobi')
-    .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user[name][first]=Tobi')
+      .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
   })
 
   describe('with extended option', function () {
@@ -83,18 +83,18 @@ describe('bodyParser.urlencoded()', function () {
 
       it('should not parse extended syntax', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user[name][first]=Tobi')
-        .expect(200, '{"user[name][first]":"Tobi"}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user[name][first]=Tobi')
+          .expect(200, '{"user[name][first]":"Tobi"}', done)
       })
 
       it('should parse multiple key instances', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user=Tobi&user=Loki')
-        .expect(200, '{"user":["Tobi","Loki"]}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user=Tobi&user=Loki')
+          .expect(200, '{"user":["Tobi","Loki"]}', done)
       })
     })
 
@@ -105,42 +105,42 @@ describe('bodyParser.urlencoded()', function () {
 
       it('should parse multiple key instances', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user=Tobi&user=Loki')
-        .expect(200, '{"user":["Tobi","Loki"]}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user=Tobi&user=Loki')
+          .expect(200, '{"user":["Tobi","Loki"]}', done)
       })
 
       it('should parse extended syntax', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user[name][first]=Tobi')
-        .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user[name][first]=Tobi')
+          .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
       })
 
       it('should parse parameters with dots', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user.name=Tobi')
-        .expect(200, '{"user.name":"Tobi"}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user.name=Tobi')
+          .expect(200, '{"user.name":"Tobi"}', done)
       })
 
       it('should parse fully-encoded extended syntax', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user%5Bname%5D%5Bfirst%5D=Tobi')
-        .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user%5Bname%5D%5Bfirst%5D=Tobi')
+          .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
       })
 
       it('should parse array index notation', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('foo[0]=bar&foo[1]=baz')
-        .expect(200, '{"foo":["bar","baz"]}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('foo[0]=bar&foo[1]=baz')
+          .expect(200, '{"foo":["bar","baz"]}', done)
       })
 
       it('should parse array index notation with large array', function (done) {
@@ -151,24 +151,24 @@ describe('bodyParser.urlencoded()', function () {
         }
 
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(str)
-        .expect(function (res) {
-          var obj = JSON.parse(res.text)
-          assert.equal(Object.keys(obj).length, 1)
-          assert.equal(Array.isArray(obj.f), true)
-          assert.equal(obj.f.length, 500)
-        })
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(str)
+          .expect(function (res) {
+            var obj = JSON.parse(res.text)
+            assert.equal(Object.keys(obj).length, 1)
+            assert.equal(Array.isArray(obj.f), true)
+            assert.equal(obj.f.length, 500)
+          })
+          .expect(200, done)
       })
 
       it('should parse array of objects syntax', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('foo[0][bar]=baz&foo[0][fizz]=buzz')
-        .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"}]}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('foo[0][bar]=baz&foo[0][fizz]=buzz')
+          .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"}]}', done)
       })
 
       it('should parse deep object', function (done) {
@@ -181,20 +181,20 @@ describe('bodyParser.urlencoded()', function () {
         str += '=bar'
 
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(str)
-        .expect(function (res) {
-          var obj = JSON.parse(res.text)
-          assert.equal(Object.keys(obj).length, 1)
-          assert.equal(typeof obj.foo, 'object')
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(str)
+          .expect(function (res) {
+            var obj = JSON.parse(res.text)
+            assert.equal(Object.keys(obj).length, 1)
+            assert.equal(typeof obj.foo, 'object')
 
-          var depth = 0
-          var ref = obj.foo
-          while ((ref = ref.p)) { depth++ }
-          assert.equal(depth, 500)
-        })
-        .expect(200, done)
+            var depth = 0
+            var ref = obj.foo
+            while ((ref = ref.p)) { depth++ }
+            assert.equal(depth, 500)
+          })
+          .expect(200, done)
       })
     })
   })
@@ -233,11 +233,11 @@ describe('bodyParser.urlencoded()', function () {
     it('should 413 when over limit with Content-Length', function (done) {
       var buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: '1kb' }))
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('Content-Length', '1028')
-      .send('str=' + buf.toString())
-      .expect(413, done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('Content-Length', '1028')
+        .send('str=' + buf.toString())
+        .expect(413, done)
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
@@ -254,10 +254,10 @@ describe('bodyParser.urlencoded()', function () {
     it('should accept number of bytes', function (done) {
       var buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: 1024 }))
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('str=' + buf.toString())
-      .expect(413, done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('str=' + buf.toString())
+        .expect(413, done)
     })
 
     it('should not change when options altered', function (done) {
@@ -268,10 +268,10 @@ describe('bodyParser.urlencoded()', function () {
       options.limit = '100kb'
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('str=' + buf.toString())
-      .expect(413, done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('str=' + buf.toString())
+        .expect(413, done)
     })
 
     it('should not hang response', function (done) {
@@ -300,54 +300,54 @@ describe('bodyParser.urlencoded()', function () {
 
       it('should 413 if over limit', function (done) {
         request(createServer({ extended: false, parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(11))
-        .expect(413, /too many parameters/, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(11))
+          .expect(413, /too many parameters/, done)
       })
 
       it('should error with type = "parameters.too.many"', function (done) {
         request(createServer({ extended: false, parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .set('X-Error-Property', 'type')
-        .send(createManyParams(11))
-        .expect(413, 'parameters.too.many', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .set('X-Error-Property', 'type')
+          .send(createManyParams(11))
+          .expect(413, 'parameters.too.many', done)
       })
 
       it('should work when at the limit', function (done) {
         request(createServer({ extended: false, parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(10))
-        .expect(expectKeyCount(10))
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(10))
+          .expect(expectKeyCount(10))
+          .expect(200, done)
       })
 
       it('should work if number is floating point', function (done) {
         request(createServer({ extended: false, parameterLimit: 10.1 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(11))
-        .expect(413, /too many parameters/, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(11))
+          .expect(413, /too many parameters/, done)
       })
 
       it('should work with large limit', function (done) {
         request(createServer({ extended: false, parameterLimit: 5000 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(5000))
-        .expect(expectKeyCount(5000))
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(5000))
+          .expect(expectKeyCount(5000))
+          .expect(200, done)
       })
 
       it('should work with Infinity limit', function (done) {
         request(createServer({ extended: false, parameterLimit: Infinity }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(10000))
-        .expect(expectKeyCount(10000))
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(10000))
+          .expect(expectKeyCount(10000))
+          .expect(200, done)
       })
     })
 
@@ -364,54 +364,54 @@ describe('bodyParser.urlencoded()', function () {
 
       it('should 413 if over limit', function (done) {
         request(createServer({ extended: true, parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(11))
-        .expect(413, /too many parameters/, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(11))
+          .expect(413, /too many parameters/, done)
       })
 
       it('should error with type = "parameters.too.many"', function (done) {
         request(createServer({ extended: true, parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .set('X-Error-Property', 'type')
-        .send(createManyParams(11))
-        .expect(413, 'parameters.too.many', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .set('X-Error-Property', 'type')
+          .send(createManyParams(11))
+          .expect(413, 'parameters.too.many', done)
       })
 
       it('should work when at the limit', function (done) {
         request(createServer({ extended: true, parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(10))
-        .expect(expectKeyCount(10))
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(10))
+          .expect(expectKeyCount(10))
+          .expect(200, done)
       })
 
       it('should work if number is floating point', function (done) {
         request(createServer({ extended: true, parameterLimit: 10.1 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(11))
-        .expect(413, /too many parameters/, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(11))
+          .expect(413, /too many parameters/, done)
       })
 
       it('should work with large limit', function (done) {
         request(createServer({ extended: true, parameterLimit: 5000 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(5000))
-        .expect(expectKeyCount(5000))
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(5000))
+          .expect(expectKeyCount(5000))
+          .expect(200, done)
       })
 
       it('should work with Infinity limit', function (done) {
         request(createServer({ extended: true, parameterLimit: Infinity }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send(createManyParams(10000))
-        .expect(expectKeyCount(10000))
-        .expect(200, done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(createManyParams(10000))
+          .expect(expectKeyCount(10000))
+          .expect(200, done)
       })
     })
   })
@@ -424,18 +424,18 @@ describe('bodyParser.urlencoded()', function () {
 
       it('should parse for custom type', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/vnd.x-www-form-urlencoded')
-        .send('user=tobi')
-        .expect(200, '{"user":"tobi"}', done)
+          .post('/')
+          .set('Content-Type', 'application/vnd.x-www-form-urlencoded')
+          .send('user=tobi')
+          .expect(200, '{"user":"tobi"}', done)
       })
 
       it('should ignore standard type', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user=tobi')
-        .expect(200, '{}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user=tobi')
+          .expect(200, '{}', done)
       })
     })
 
@@ -448,26 +448,26 @@ describe('bodyParser.urlencoded()', function () {
 
       it('should parse "application/x-www-form-urlencoded"', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('user=tobi')
-        .expect(200, '{"user":"tobi"}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user=tobi')
+          .expect(200, '{"user":"tobi"}', done)
       })
 
       it('should parse "application/x-pairs"', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-pairs')
-        .send('user=tobi')
-        .expect(200, '{"user":"tobi"}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-pairs')
+          .send('user=tobi')
+          .expect(200, '{"user":"tobi"}', done)
       })
 
       it('should ignore application/x-foo', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/x-foo')
-        .send('user=tobi')
-        .expect(200, '{}', done)
+          .post('/')
+          .set('Content-Type', 'application/x-foo')
+          .send('user=tobi')
+          .expect(200, '{}', done)
       })
     })
 
@@ -480,10 +480,10 @@ describe('bodyParser.urlencoded()', function () {
         }
 
         request(server)
-        .post('/')
-        .set('Content-Type', 'application/vnd.something')
-        .send('user=tobi')
-        .expect(200, '{"user":"tobi"}', done)
+          .post('/')
+          .set('Content-Type', 'application/vnd.something')
+          .send('user=tobi')
+          .expect(200, '{"user":"tobi"}', done)
       })
 
       it('should work without content-type', function (done) {
@@ -506,8 +506,8 @@ describe('bodyParser.urlencoded()', function () {
         }
 
         request(server)
-        .get('/')
-        .expect(200, done)
+          .get('/')
+          .expect(200, done)
       })
     })
   })
@@ -524,10 +524,10 @@ describe('bodyParser.urlencoded()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send(' user=tobi')
-      .expect(403, 'no leading space', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(' user=tobi')
+        .expect(403, 'no leading space', done)
     })
 
     it('should error with type = "entity.verify.failed"', function (done) {
@@ -536,11 +536,11 @@ describe('bodyParser.urlencoded()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('X-Error-Property', 'type')
-      .send(' user=tobi')
-      .expect(403, 'entity.verify.failed', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('X-Error-Property', 'type')
+        .send(' user=tobi')
+        .expect(403, 'entity.verify.failed', done)
     })
 
     it('should allow custom codes', function (done) {
@@ -552,10 +552,10 @@ describe('bodyParser.urlencoded()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send(' user=tobi')
-      .expect(400, 'no leading space', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(' user=tobi')
+        .expect(400, 'no leading space', done)
     })
 
     it('should allow custom type', function (done) {
@@ -567,11 +567,11 @@ describe('bodyParser.urlencoded()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('X-Error-Property', 'type')
-      .send(' user=tobi')
-      .expect(403, 'foo.bar', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('X-Error-Property', 'type')
+        .send(' user=tobi')
+        .expect(403, 'foo.bar', done)
     })
 
     it('should allow pass-through', function (done) {
@@ -580,10 +580,10 @@ describe('bodyParser.urlencoded()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('user=tobi')
-      .expect(200, '{"user":"tobi"}', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user=tobi')
+        .expect(200, '{"user":"tobi"}', done)
     })
 
     it('should 415 on unknown charset prior to verify', function (done) {

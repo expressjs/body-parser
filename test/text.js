@@ -13,10 +13,10 @@ describe('bodyParser.text()', function () {
 
   it('should parse text/plain', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'text/plain')
-    .send('user is tobi')
-    .expect(200, '"user is tobi"', done)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .send('user is tobi')
+      .expect(200, '"user is tobi"', done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -27,27 +27,27 @@ describe('bodyParser.text()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'text/plain')
-    .send('user')
-    .expect(400, /content length/, done)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .send('user')
+      .expect(400, /content length/, done)
   })
 
   it('should handle Content-Length: 0', function (done) {
     request(createServer({ limit: '1kb' }))
-    .post('/')
-    .set('Content-Type', 'text/plain')
-    .set('Content-Length', '0')
-    .expect(200, '""', done)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .set('Content-Length', '0')
+      .expect(200, '""', done)
   })
 
   it('should handle empty message-body', function (done) {
     request(createServer({ limit: '1kb' }))
-    .post('/')
-    .set('Content-Type', 'text/plain')
-    .set('Transfer-Encoding', 'chunked')
-    .send('')
-    .expect(200, '""', done)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .set('Transfer-Encoding', 'chunked')
+      .send('')
+      .expect(200, '""', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -60,10 +60,10 @@ describe('bodyParser.text()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'text/plain')
-    .send('user is tobi')
-    .expect(200, '"user is tobi"', done)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .send('user is tobi')
+      .expect(200, '"user is tobi"', done)
   })
 
   describe('with defaultCharser option', function () {
@@ -88,11 +88,11 @@ describe('bodyParser.text()', function () {
     it('should 413 when over limit with Content-Length', function (done) {
       var buf = Buffer.alloc(1028, '.')
       request(createServer({ limit: '1kb' }))
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .set('Content-Length', '1028')
-      .send(buf.toString())
-      .expect(413, done)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .set('Content-Length', '1028')
+        .send(buf.toString())
+        .expect(413, done)
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
@@ -108,10 +108,10 @@ describe('bodyParser.text()', function () {
     it('should accept number of bytes', function (done) {
       var buf = Buffer.alloc(1028, '.')
       request(createServer({ limit: 1024 }))
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .send(buf.toString())
-      .expect(413, done)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send(buf.toString())
+        .expect(413, done)
     })
 
     it('should not change when options altered', function (done) {
@@ -122,10 +122,10 @@ describe('bodyParser.text()', function () {
       options.limit = '100kb'
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .send(buf.toString())
-      .expect(413, done)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send(buf.toString())
+        .expect(413, done)
     })
 
     it('should not hang response', function (done) {
@@ -178,18 +178,18 @@ describe('bodyParser.text()', function () {
 
       it('should parse for custom type', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'text/html')
-        .send('<b>tobi</b>')
-        .expect(200, '"<b>tobi</b>"', done)
+          .post('/')
+          .set('Content-Type', 'text/html')
+          .send('<b>tobi</b>')
+          .expect(200, '"<b>tobi</b>"', done)
       })
 
       it('should ignore standard type', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'text/plain')
-        .send('user is tobi')
-        .expect(200, '{}', done)
+          .post('/')
+          .set('Content-Type', 'text/plain')
+          .send('user is tobi')
+          .expect(200, '{}', done)
       })
     })
 
@@ -200,26 +200,26 @@ describe('bodyParser.text()', function () {
 
       it('should parse "text/html"', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'text/html')
-        .send('<b>tobi</b>')
-        .expect(200, '"<b>tobi</b>"', done)
+          .post('/')
+          .set('Content-Type', 'text/html')
+          .send('<b>tobi</b>')
+          .expect(200, '"<b>tobi</b>"', done)
       })
 
       it('should parse "text/plain"', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'text/plain')
-        .send('tobi')
-        .expect(200, '"tobi"', done)
+          .post('/')
+          .set('Content-Type', 'text/plain')
+          .send('tobi')
+          .expect(200, '"tobi"', done)
       })
 
       it('should ignore "text/xml"', function (done) {
         request(this.server)
-        .post('/')
-        .set('Content-Type', 'text/xml')
-        .send('<user>tobi</user>')
-        .expect(200, '{}', done)
+          .post('/')
+          .set('Content-Type', 'text/xml')
+          .send('<user>tobi</user>')
+          .expect(200, '{}', done)
       })
     })
 
@@ -232,10 +232,10 @@ describe('bodyParser.text()', function () {
         }
 
         request(server)
-        .post('/')
-        .set('Content-Type', 'text/vnd.something')
-        .send('user is tobi')
-        .expect(200, '"user is tobi"', done)
+          .post('/')
+          .set('Content-Type', 'text/vnd.something')
+          .send('user is tobi')
+          .expect(200, '"user is tobi"', done)
       })
 
       it('should work without content-type', function (done) {
@@ -258,8 +258,8 @@ describe('bodyParser.text()', function () {
         }
 
         request(server)
-        .get('/')
-        .expect(200, done)
+          .get('/')
+          .expect(200, done)
       })
     })
   })
@@ -276,10 +276,10 @@ describe('bodyParser.text()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .send(' user is tobi')
-      .expect(403, 'no leading space', done)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send(' user is tobi')
+        .expect(403, 'no leading space', done)
     })
 
     it('should allow custom codes', function (done) {
@@ -291,10 +291,10 @@ describe('bodyParser.text()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .send(' user is tobi')
-      .expect(400, 'no leading space', done)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send(' user is tobi')
+        .expect(400, 'no leading space', done)
     })
 
     it('should allow pass-through', function (done) {
@@ -303,10 +303,10 @@ describe('bodyParser.text()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'text/plain')
-      .send('user is tobi')
-      .expect(200, '"user is tobi"', done)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send('user is tobi')
+        .expect(200, '"user is tobi"', done)
     })
 
     it('should 415 on unknown charset prior to verify', function (done) {

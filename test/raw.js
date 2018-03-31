@@ -13,10 +13,10 @@ describe('bodyParser.raw()', function () {
 
   it('should parse application/octet-stream', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/octet-stream')
-    .send('the user is tobi')
-    .expect(200, 'buf:746865207573657220697320746f6269', done)
+      .post('/')
+      .set('Content-Type', 'application/octet-stream')
+      .send('the user is tobi')
+      .expect(200, 'buf:746865207573657220697320746f6269', done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -27,27 +27,27 @@ describe('bodyParser.raw()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'application/octet-stream')
-    .send('stuff')
-    .expect(400, /content length/, done)
+      .post('/')
+      .set('Content-Type', 'application/octet-stream')
+      .send('stuff')
+      .expect(400, /content length/, done)
   })
 
   it('should handle Content-Length: 0', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/octet-stream')
-    .set('Content-Length', '0')
-    .expect(200, 'buf:', done)
+      .post('/')
+      .set('Content-Type', 'application/octet-stream')
+      .set('Content-Length', '0')
+      .expect(200, 'buf:', done)
   })
 
   it('should handle empty message-body', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/octet-stream')
-    .set('Transfer-Encoding', 'chunked')
-    .send('')
-    .expect(200, 'buf:', done)
+      .post('/')
+      .set('Content-Type', 'application/octet-stream')
+      .set('Transfer-Encoding', 'chunked')
+      .send('')
+      .expect(200, 'buf:', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -60,10 +60,10 @@ describe('bodyParser.raw()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'application/octet-stream')
-    .send('the user is tobi')
-    .expect(200, 'buf:746865207573657220697320746f6269', done)
+      .post('/')
+      .set('Content-Type', 'application/octet-stream')
+      .send('the user is tobi')
+      .expect(200, 'buf:746865207573657220697320746f6269', done)
   })
 
   describe('with limit option', function () {
@@ -235,8 +235,8 @@ describe('bodyParser.raw()', function () {
         }
 
         request(server)
-        .get('/')
-        .expect(200, done)
+          .get('/')
+          .expect(200, done)
       })
     })
   })

@@ -12,24 +12,24 @@ describe('bodyParser()', function () {
 
   it('should default to {}', function (done) {
     request(this.server)
-    .post('/')
-    .expect(200, '{}', done)
+      .post('/')
+      .expect(200, '{}', done)
   })
 
   it('should parse JSON', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .send('{"user":"tobi"}')
-    .expect(200, '{"user":"tobi"}', done)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user":"tobi"}')
+      .expect(200, '{"user":"tobi"}', done)
   })
 
   it('should parse x-www-form-urlencoded', function (done) {
     request(this.server)
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send('user=tobi')
-    .expect(200, '{"user":"tobi"}', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '{"user":"tobi"}', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -45,10 +45,10 @@ describe('bodyParser()', function () {
     })
 
     request(server)
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .send('{"user":"tobi"}')
-    .expect(200, '{"user":"tobi"}', done)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user":"tobi"}')
+      .expect(200, '{"user":"tobi"}', done)
   })
 
   describe('http methods', function () {
@@ -79,9 +79,9 @@ describe('bodyParser()', function () {
 
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
         request(this.server)[method]('/')
-        .set('Content-Type', 'application/json')
-        .send('{"user":"tobi"}')
-        .expect(201, done)
+          .set('Content-Type', 'application/json')
+          .send('{"user":"tobi"}')
+          .expect(201, done)
       })
     })
   })
@@ -93,18 +93,18 @@ describe('bodyParser()', function () {
 
     it('should parse JSON', function (done) {
       request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send('{"user":"tobi"}')
-      .expect(200, '{"user":"tobi"}', done)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"user":"tobi"}', done)
     })
 
     it('should parse x-www-form-urlencoded', function (done) {
       request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('user=tobi')
-      .expect(200, '{"user":"tobi"}', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('user=tobi')
+        .expect(200, '{"user":"tobi"}', done)
     })
   })
 
@@ -115,10 +115,10 @@ describe('bodyParser()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/json')
-      .send(' {"user":"tobi"}')
-      .expect(403, 'no leading space', done)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send(' {"user":"tobi"}')
+        .expect(403, 'no leading space', done)
     })
 
     it('should apply to urlencoded', function (done) {
@@ -127,10 +127,10 @@ describe('bodyParser()', function () {
       }})
 
       request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send(' user=tobi')
-      .expect(403, 'no leading space', done)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(' user=tobi')
+        .expect(403, 'no leading space', done)
     })
   })
 })

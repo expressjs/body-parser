@@ -21,12 +21,12 @@
     "type-is": "~1.6.15"
   },
   "devDependencies": {
-    "eslint": "3.19.0",
-    "eslint-config-standard": "10.2.1",
-    "eslint-plugin-import": "2.8.0",
+    "eslint": "4.19.1",
+    "eslint-config-standard": "11.0.0",
+    "eslint-plugin-import": "2.9.0",
     "eslint-plugin-markdown": "1.0.0-beta.6",
-    "eslint-plugin-node": "5.2.1",
-    "eslint-plugin-promise": "3.6.0",
+    "eslint-plugin-node": "6.0.1",
+    "eslint-plugin-promise": "3.7.0",
     "eslint-plugin-standard": "3.0.1",
     "istanbul": "0.4.5",
     "methods": "1.1.2",
