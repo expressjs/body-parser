@@ -3,6 +3,10 @@ unreleased
 
   * deps: depd@~1.1.2
     - perf: remove argument reassignment
+  * deps: http-errors@~1.6.3
+    - deps: depd@~1.1.2
+    - deps: setprototypeof@1.1.0
+    - deps: statuses@'>= 1.3.1 < 2'
 
 1.18.2 / 2017-09-22
 ===================
