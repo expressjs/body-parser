@@ -7,6 +7,9 @@ unreleased
     - deps: depd@~1.1.2
     - deps: setprototypeof@1.1.0
     - deps: statuses@'>= 1.3.1 < 2'
+  * deps: iconv-lite@0.4.23
+    - Fix loading encoding with year appended
+    - Fix deprecation warnings on Node.js 10+
   * deps: qs@6.5.2
   * deps: type-is@~1.6.16
     - deps: mime-types@~2.1.18
