@@ -11,6 +11,9 @@ unreleased
     - Fix loading encoding with year appended
     - Fix deprecation warnings on Node.js 10+
   * deps: qs@6.5.2
+  * deps: raw-body@2.3.3
+    - deps: http-errors@1.6.3
+    - deps: iconv-lite@0.4.23
   * deps: type-is@~1.6.16
     - deps: mime-types@~2.1.18
 
