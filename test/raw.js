@@ -182,21 +182,21 @@ describe('bodyParser.raw()', function () {
       it('should parse "application/octet-stream"', function (done) {
         var test = request(this.server).post('/')
         test.set('Content-Type', 'application/octet-stream')
-        test.write(new Buffer('000102', 'hex'))
+        test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should parse "application/vnd+octets"', function (done) {
         var test = request(this.server).post('/')
         test.set('Content-Type', 'application/vnd+octets')
-        test.write(new Buffer('000102', 'hex'))
+        test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should ignore "application/x-foo"', function (done) {
         var test = request(this.server).post('/')
         test.set('Content-Type', 'application/x-foo')
-        test.write(new Buffer('000102', 'hex'))
+        test.write(Buffer.from('000102', 'hex'))
         test.expect(200, '{}', done)
       })
     })
