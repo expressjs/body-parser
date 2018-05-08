@@ -273,6 +273,17 @@ describe('bodyParser.json()', function () {
           .send('true')
           .expect(400, 'entity.parse.failed', done)
       })
+
+      it('should include correct message in stack trace', function (done) {
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/json')
+          .set('X-Error-Property', 'stack')
+          .send('true')
+          .expect(400)
+          .expect(shouldContainInBody(parseError('#rue').replace('#', 't')))
+          .end(done)
+      })
     })
   })
 
@@ -637,5 +648,12 @@ function parseError (str) {
     JSON.parse(str); throw new SyntaxError('strict violation')
   } catch (e) {
     return e.message
+  }
+}
+
+function shouldContainInBody (str) {
+  return function (res) {
+    assert.ok(res.text.indexOf(str) !== -1,
+      'expected \'' + res.text + '\' to contain \'' + str + '\'')
   }
 }

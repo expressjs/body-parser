@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * Fix stack trace for strict json parse error
   * deps: depd@~1.1.2
     - perf: remove argument reassignment
   * deps: http-errors@~1.6.3
