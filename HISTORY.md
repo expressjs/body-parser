@@ -1,5 +1,5 @@
-unreleased
-==========
+1.18.3 / 2018-05-14
+===================
 
   * Fix stack trace for strict json parse error
   * deps: depd@~1.1.2
