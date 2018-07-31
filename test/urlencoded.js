@@ -77,6 +77,35 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{"user":"ø"}', done)
   })
 
+  describe('in simple mode', function () {
+    it('should not leave an empty string parameter when removing the utf8 sentinel from the start of the string', function (done) {
+      var server = createServer({ utf8Sentinel: true, extended: false })
+      request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('utf8=%E2%9C%93&foo=bar')
+        .expect(200, '{"foo":"bar"}', done)
+    })
+
+    it('should not leave an empty string parameter when removing the utf8 sentinel from the middle of the string', function (done) {
+      var server = createServer({ utf8Sentinel: true, extended: false })
+      request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('foo=bar&utf8=%E2%9C%93&baz=quux')
+        .expect(200, '{"foo":"bar","baz":"quux"}', done)
+    })
+
+    it('should not leave an empty string parameter when removing the utf8 sentinel from the end of the string', function (done) {
+      var server = createServer({ utf8Sentinel: true, extended: false })
+      request(server)
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('foo=bar&baz=quux&utf8=%E2%9C%93')
+        .expect(200, '{"foo":"bar","baz":"quux"}', done)
+    })
+  })
+
   it('should handle empty message-body', function (done) {
     request(createServer({ limit: '1kb' }))
       .post('/')
