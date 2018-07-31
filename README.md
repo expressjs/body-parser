@@ -282,19 +282,18 @@ encoding of the request. The parsing can be aborted by throwing an error.
 ##### defaultCharset
 
 The default charset to parse as, if not specified in content-type. Must be
-either `utf-8` or `iso-8859-1`. The latter is only supported in `extended`
-mode. Defaults to `utf-8`.
+either `utf-8` or `iso-8859-1`.
 
 ##### utf8Sentinel
 
 Whether to let the value of the `utf8` parameter take precedence as the charset
 selector. It requires the form to contain a parameter named `utf8` with a value
-of `✓`. Only supported in `extended` mode. Defaults to `false`.
+of `✓`. Defaults to `false`.
 
 ##### interpretNumericEntities
 
 Whether to decode numeric entities such as `&#9786;` when parsing an iso-8859-1
-form. Only supported in `extended` mode. Defaults to `false`.
+form. Defaults to `false`.
 
 
 ## Errors
