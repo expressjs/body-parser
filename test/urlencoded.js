@@ -42,67 +42,71 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{}', done)
   })
 
-  it('should parse x-www-form-urlencoded with an explicit iso-8859-1 encoding', function (done) {
-    request(this.server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded; charset=iso-8859-1')
-      .send('%A2=%BD')
-      .expect(200, '{"¢":"½"}', done)
-  })
+  var extendedValues = [true, false]
+  extendedValues.forEach(function (extended) {
+    describe('in ' + (extended ? 'extended' : 'simple') + ' mode', function () {
+      it('should parse x-www-form-urlencoded with an explicit iso-8859-1 encoding', function (done) {
+        var server = createServer({ extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded; charset=iso-8859-1')
+          .send('%A2=%BD')
+          .expect(200, '{"¢":"½"}', done)
+      })
 
-  it('should parse x-www-form-urlencoded with unspecified iso-8859-1 encoding when the defaultCharset is set to iso-8859-1', function (done) {
-    var server = createServer({ defaultCharset: 'iso-8859-1' })
-    request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('%A2=%BD')
-      .expect(200, '{"¢":"½"}', done)
-  })
+      it('should parse x-www-form-urlencoded with unspecified iso-8859-1 encoding when the defaultCharset is set to iso-8859-1', function (done) {
+        var server = createServer({ defaultCharset: 'iso-8859-1', extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('%A2=%BD')
+          .expect(200, '{"¢":"½"}', done)
+      })
 
-  it('should parse x-www-form-urlencoded with an unspecified iso-8859-1 encoding when the utf-8 sentinel has a value of %26%2310003%3B', function (done) {
-    var server = createServer({ utf8Sentinel: true })
-    request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('utf8=%26%2310003%3B&user=%C3%B8')
-      .expect(200, '{"user":"Ã¸"}', done)
-  })
+      it('should parse x-www-form-urlencoded with an unspecified iso-8859-1 encoding when the utf-8 sentinel has a value of %26%2310003%3B', function (done) {
+        var server = createServer({ utf8Sentinel: true, extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('utf8=%26%2310003%3B&user=%C3%B8')
+          .expect(200, '{"user":"Ã¸"}', done)
+      })
 
-  it('should parse x-www-form-urlencoded with an unspecified utf-8 encoding when the utf-8 sentinel has a value of %E2%9C%93 and the defaultCharset is iso-8859-1', function (done) {
-    var server = createServer({ utf8Sentinel: true })
-    request(server)
-      .post('/')
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .send('utf8=%E2%9C%93&user=%C3%B8')
-      .expect(200, '{"user":"ø"}', done)
-  })
+      it('should parse x-www-form-urlencoded with an unspecified utf-8 encoding when the utf-8 sentinel has a value of %E2%9C%93 and the defaultCharset is iso-8859-1', function (done) {
+        var server = createServer({ utf8Sentinel: true, extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('utf8=%E2%9C%93&user=%C3%B8')
+          .expect(200, '{"user":"ø"}', done)
+      })
 
-  describe('in simple mode', function () {
-    it('should not leave an empty string parameter when removing the utf8 sentinel from the start of the string', function (done) {
-      var server = createServer({ utf8Sentinel: true, extended: false })
-      request(server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('utf8=%E2%9C%93&foo=bar')
-        .expect(200, '{"foo":"bar"}', done)
-    })
+      it('should not leave an empty string parameter when removing the utf8 sentinel from the start of the string', function (done) {
+        var server = createServer({ utf8Sentinel: true, extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('utf8=%E2%9C%93&foo=bar')
+          .expect(200, '{"foo":"bar"}', done)
+      })
 
-    it('should not leave an empty string parameter when removing the utf8 sentinel from the middle of the string', function (done) {
-      var server = createServer({ utf8Sentinel: true, extended: false })
-      request(server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('foo=bar&utf8=%E2%9C%93&baz=quux')
-        .expect(200, '{"foo":"bar","baz":"quux"}', done)
-    })
+      it('should not leave an empty string parameter when removing the utf8 sentinel from the middle of the string', function (done) {
+        var server = createServer({ utf8Sentinel: true, extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('foo=bar&utf8=%E2%9C%93&baz=quux')
+          .expect(200, '{"foo":"bar","baz":"quux"}', done)
+      })
 
-    it('should not leave an empty string parameter when removing the utf8 sentinel from the end of the string', function (done) {
-      var server = createServer({ utf8Sentinel: true, extended: false })
-      request(server)
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('foo=bar&baz=quux&utf8=%E2%9C%93')
-        .expect(200, '{"foo":"bar","baz":"quux"}', done)
+      it('should not leave an empty string parameter when removing the utf8 sentinel from the end of the string', function (done) {
+        var server = createServer({ utf8Sentinel: true, extended: extended })
+        request(server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('foo=bar&baz=quux&utf8=%E2%9C%93')
+          .expect(200, '{"foo":"bar","baz":"quux"}', done)
+      })
     })
   })
 
