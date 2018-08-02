@@ -284,7 +284,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 The default charset to parse as, if not specified in content-type. Must be
 either `utf-8` or `iso-8859-1`.
 
-##### utf8Sentinel
+##### charsetSentinel
 
 Whether to let the value of the `utf8` parameter take precedence as the charset
 selector. It requires the form to contain a parameter named `utf8` with a value

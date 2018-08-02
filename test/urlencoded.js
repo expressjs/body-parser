@@ -64,7 +64,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse x-www-form-urlencoded with an unspecified iso-8859-1 encoding when the utf-8 sentinel has a value of %26%2310003%3B', function (done) {
-        var server = createServer({ utf8Sentinel: true, extended: extended })
+        var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -73,7 +73,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse x-www-form-urlencoded with an unspecified utf-8 encoding when the utf-8 sentinel has a value of %E2%9C%93 and the defaultCharset is iso-8859-1', function (done) {
-        var server = createServer({ utf8Sentinel: true, extended: extended })
+        var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -82,7 +82,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not leave an empty string parameter when removing the utf8 sentinel from the start of the string', function (done) {
-        var server = createServer({ utf8Sentinel: true, extended: extended })
+        var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -91,7 +91,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not leave an empty string parameter when removing the utf8 sentinel from the middle of the string', function (done) {
-        var server = createServer({ utf8Sentinel: true, extended: extended })
+        var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -100,7 +100,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not leave an empty string parameter when removing the utf8 sentinel from the end of the string', function (done) {
-        var server = createServer({ utf8Sentinel: true, extended: extended })
+        var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
