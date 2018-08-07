@@ -66,7 +66,7 @@ describe('bodyParser.text()', function () {
       .expect(200, '"user is tobi"', done)
   })
 
-  describe('with defaultCharser option', function () {
+  describe('with defaultCharset option', function () {
     it('should change default charset', function (done) {
       var server = createServer({ defaultCharset: 'koi8-r' })
       var test = request(server).post('/')
