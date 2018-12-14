@@ -156,9 +156,9 @@ describe('bodyParser.urlencoded()', function () {
           .send(str)
           .expect(function (res) {
             var obj = JSON.parse(res.text)
-            assert.equal(Object.keys(obj).length, 1)
-            assert.equal(Array.isArray(obj.f), true)
-            assert.equal(obj.f.length, 500)
+            assert.strictEqual(Object.keys(obj).length, 1)
+            assert.strictEqual(Array.isArray(obj.f), true)
+            assert.strictEqual(obj.f.length, 500)
           })
           .expect(200, done)
       })
@@ -186,13 +186,13 @@ describe('bodyParser.urlencoded()', function () {
           .send(str)
           .expect(function (res) {
             var obj = JSON.parse(res.text)
-            assert.equal(Object.keys(obj).length, 1)
-            assert.equal(typeof obj.foo, 'object')
+            assert.strictEqual(Object.keys(obj).length, 1)
+            assert.strictEqual(typeof obj.foo, 'object')
 
             var depth = 0
             var ref = obj.foo
             while ((ref = ref.p)) { depth++ }
-            assert.equal(depth, 500)
+            assert.strictEqual(depth, 500)
           })
           .expect(200, done)
       })
@@ -724,6 +724,6 @@ function createServer (opts) {
 
 function expectKeyCount (count) {
   return function (res) {
-    assert.equal(Object.keys(JSON.parse(res.text)).length, count)
+    assert.strictEqual(Object.keys(JSON.parse(res.text)).length, count)
   }
 }
