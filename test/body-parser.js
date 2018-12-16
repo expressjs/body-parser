@@ -110,9 +110,9 @@ describe('bodyParser()', function () {
 
   describe('with verify option', function () {
     it('should apply to json', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -122,9 +122,9 @@ describe('bodyParser()', function () {
     })
 
     it('should apply to urlencoded', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
-      }})
+      } })
 
       request(server)
         .post('/')
