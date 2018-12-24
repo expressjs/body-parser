@@ -73,6 +73,11 @@ before_install:
     if   node_version_lt '0.10'; then npm_use_module 'mocha' '2.5.3'
     elif node_version_lt '4.0' ; then npm_use_module 'mocha' '3.5.3'
     fi
+  - |
+    # Configure supertest for http calls
+    if   node_version_lt '0.10'; then npm_use_module 'supertest' '1.1.0'
+    elif node_version_lt '4.0' ; then npm_use_module 'supertest' '2.0.0'
+    fi
   # Update Node.js modules
   - |
     # Prune & rebuild node_modules

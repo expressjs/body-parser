@@ -63,9 +63,11 @@ describe('bodyParser()', function () {
             return
           }
 
-          res.statusCode = req.body.user === 'tobi'
-            ? 201
-            : 400
+          res.statusCode = req.headers['x-expect-method'] === req.method
+            ? req.body.user === 'tobi'
+              ? 201
+              : 400
+            : 405
           res.end()
         })
       })
@@ -80,6 +82,8 @@ describe('bodyParser()', function () {
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
         request(this.server)[method]('/')
           .set('Content-Type', 'application/json')
+          .set('Content-Length', '15')
+          .set('X-Expect-Method', method.toUpperCase())
           .send('{"user":"tobi"}')
           .expect(201, done)
       })
