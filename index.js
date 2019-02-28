@@ -11,7 +11,7 @@
  * @private
  */
 
-var deprecate = require('depd')('body-parser')
+var deprecate = require('depd')('body-parser'), path = require("path")
 
 /**
  * Cache of loaded parsers.
@@ -139,16 +139,16 @@ function loadParser (parserName) {
   // this uses a switch for static require analysis
   switch (parserName) {
     case 'json':
-      parser = require('./lib/types/json')
+      parser = require(path.join(__dirname, './lib/types/json'))
       break
     case 'raw':
-      parser = require('./lib/types/raw')
+      parser = require(path.join(__dirname, './lib/types/raw'))
       break
     case 'text':
-      parser = require('./lib/types/text')
+      parser = require(path.join(__dirname, './lib/types/text'))
       break
     case 'urlencoded':
-      parser = require('./lib/types/urlencoded')
+      parser = require(path.join(__dirname, './lib/types/urlencoded'))
       break
   }
 
