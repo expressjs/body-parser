@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: bytes@3.1.0
+    - Add petabyte (`pb`) support
   * deps: qs@6.6.0
 
 1.18.3 / 2018-05-14
