@@ -3,6 +3,10 @@ unreleased
 
   * deps: bytes@3.1.0
     - Add petabyte (`pb`) support
+  * deps: http-errors@1.7.2
+    - Set constructor name when possible
+    - deps: setprototypeof@1.1.1
+    - deps: statuses@'>= 1.5.0 < 2'
   * deps: qs@6.6.0
 
 1.18.3 / 2018-05-14
