@@ -7,6 +7,8 @@ unreleased
     - Set constructor name when possible
     - deps: setprototypeof@1.1.1
     - deps: statuses@'>= 1.5.0 < 2'
+  * deps: iconv-lite@0.4.24
+    - Added encoding MIK
   * deps: qs@6.6.0
 
 1.18.3 / 2018-05-14
