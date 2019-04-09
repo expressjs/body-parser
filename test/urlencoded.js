@@ -167,8 +167,8 @@ describe('bodyParser.urlencoded()', function () {
         request(this.server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('foo[0][bar]=baz&foo[0][fizz]=buzz')
-          .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"}]}', done)
+          .send('foo[0][bar]=baz&foo[0][fizz]=buzz&foo[]=done!')
+          .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"},"done!"]}', done)
       })
 
       it('should parse deep object', function (done) {

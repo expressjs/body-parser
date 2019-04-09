@@ -9,7 +9,8 @@ unreleased
     - deps: statuses@'>= 1.5.0 < 2'
   * deps: iconv-lite@0.4.24
     - Added encoding MIK
-  * deps: qs@6.6.0
+  * deps: qs@6.7.0
+    - Fix parsing array brackets after index
 
 1.18.3 / 2018-05-14
 ===================
