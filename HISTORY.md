@@ -11,6 +11,10 @@ unreleased
     - Added encoding MIK
   * deps: qs@6.7.0
     - Fix parsing array brackets after index
+  * deps: raw-body@2.4.0
+    - deps: bytes@3.1.0
+    - deps: http-errors@1.7.2
+    - deps: iconv-lite@0.4.24
 
 1.18.3 / 2018-05-14
 ===================
