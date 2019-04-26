@@ -1,5 +1,5 @@
-unreleased
-==========
+1.19.0 / 2019-04-25
+===================
 
   * deps: bytes@3.1.0
     - Add petabyte (`pb`) support
