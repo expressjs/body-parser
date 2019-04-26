@@ -15,6 +15,9 @@ unreleased
     - deps: bytes@3.1.0
     - deps: http-errors@1.7.2
     - deps: iconv-lite@0.4.24
+  * deps: type-is@~1.6.17
+    - deps: mime-types@~2.1.24
+    - perf: prevent internal `throw` on invalid type
 
 1.18.3 / 2018-05-14
 ===================
