@@ -407,7 +407,7 @@ describe('bodyParser.text()', function () {
       test.expect(200, '"name is 论"', done)
     })
 
-    it('should fail on unknown encoding', function (done) {
+    it('should 415 on unknown encoding', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'text/plain')

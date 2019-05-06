@@ -341,7 +341,7 @@ describe('bodyParser.raw()', function () {
       test.expect(200, 'buf:6e616d653de8aeba', done)
     })
 
-    it('should fail on unknown encoding', function (done) {
+    it('should 415 on unknown encoding', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/octet-stream')

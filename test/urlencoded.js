@@ -677,7 +677,7 @@ describe('bodyParser.urlencoded()', function () {
       test.expect(200, '{"name":"论"}', done)
     })
 
-    it('should fail on unknown encoding', function (done) {
+    it('should 415 on unknown encoding', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
