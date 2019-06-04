@@ -22,19 +22,19 @@ _This does not handle multipart bodies_, due to their complex and typically
 large nature. For multipart bodies, you may be interested in the following
 modules:
 
-  * [busboy](https://www.npmjs.org/package/busboy#readme) and
-    [connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)
-  * [multiparty](https://www.npmjs.org/package/multiparty#readme) and
-    [connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)
-  * [formidable](https://www.npmjs.org/package/formidable#readme)
-  * [multer](https://www.npmjs.org/package/multer#readme)
+- [busboy](https://www.npmjs.org/package/busboy#readme) and
+  [connect-busboy](https://www.npmjs.org/package/connect-busboy#readme)
+- [multiparty](https://www.npmjs.org/package/multiparty#readme) and
+  [connect-multiparty](https://www.npmjs.org/package/connect-multiparty#readme)
+- [formidable](https://www.npmjs.org/package/formidable#readme)
+- [multer](https://www.npmjs.org/package/multer#readme)
 
 This module provides the following parsers:
 
-  * [JSON body parser](#bodyparserjsonoptions)
-  * [Raw body parser](#bodyparserrawoptions)
-  * [Text body parser](#bodyparsertextoptions)
-  * [URL-encoded form body parser](#bodyparserurlencodedoptions)
+- [JSON body parser](#bodyparserjsonoptions)
+- [Raw body parser](#bodyparserrawoptions)
+- [Text body parser](#bodyparsertextoptions)
+- [URL-encoded form body parser](#bodyparserurlencodedoptions)
 
 Other body parsers you might be interested in:
 
@@ -52,7 +52,7 @@ $ npm install body-parser
 <!-- eslint-disable no-unused-vars -->
 
 ```js
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 ```
 
 The `bodyParser` object exposes various factories to create middlewares. All
@@ -361,22 +361,22 @@ top-level middleware, which will parse the bodies of all incoming requests.
 This is the simplest setup.
 
 ```js
-var express = require('express')
-var bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var app = express()
+const app = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.use(function (req, res) {
-  res.setHeader('Content-Type', 'text/plain')
-  res.write('you posted:\n')
-  res.end(JSON.stringify(req.body, null, 2))
-})
+app.use(function(req, res) {
+	res.setHeader('Content-Type', 'text/plain');
+	res.write('you posted:\n');
+	res.end(JSON.stringify(req.body, null, 2));
+});
 ```
 
 ### Express route-specific
@@ -386,26 +386,28 @@ need them. In general, this is the most recommended way to use body-parser with
 Express.
 
 ```js
-var express = require('express')
-var bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var app = express()
+const app = express();
 
 // create application/json parser
-var jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json();
 
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+var
+var
+var
 // POST /login gets urlencoded bodies
-app.post('/login', urlencodedParser, function (req, res) {
-  res.send('welcome, ' + req.body.username)
-})
+app.post('/login', urlencodedParser, function(req, res) {
+	res.send('welcome, ' + req.body.username);
+});
 
 // POST /api/users gets JSON bodies
-app.post('/api/users', jsonParser, function (req, res) {
-  // create user in req.body
-})
+app.post('/api/users', jsonParser, function(req, res) {
+	// create user in req.body
+});
 ```
 
 ### Change accepted type for parsers
@@ -414,19 +416,19 @@ All the parsers accept a `type` option which allows you to change the
 `Content-Type` that the middleware will parse.
 
 ```js
-var express = require('express')
-var bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var app = express()
+const app = express();
 
 // parse various different custom JSON types as JSON
-app.use(bodyParser.json({ type: 'application/*+json' }))
+app.use(bodyParser.json({ type: 'application/*+json' }));
 
 // parse some custom thing into a Buffer
-app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
+app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
 
 // parse an HTML body into a string
-app.use(bodyParser.text({ type: 'text/html' }))
+app.use(bodyParser.text({ type: 'text/html' }));
 ```
 
 ## License
