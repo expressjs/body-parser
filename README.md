@@ -396,9 +396,6 @@ const jsonParser = bodyParser.json();
 
 // create application/x-www-form-urlencoded parser
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
-var
-var
-var
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function(req, res) {
 	res.send('welcome, ' + req.body.username);
