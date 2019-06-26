@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: http-errors@1.7.3
+    - deps: inherits@2.0.4
   * deps: raw-body@2.4.1
     - deps: http-errors@1.7.3
   * deps: type-is@~1.6.18
