@@ -1,6 +1,8 @@
 unreleased
 ==========
 
+  * deps: raw-body@2.4.1
+    - deps: http-errors@1.7.3
   * deps: type-is@~1.6.18
 
 1.19.0 / 2019-04-25
