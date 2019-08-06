@@ -5,6 +5,7 @@ unreleased
     - deps: inherits@2.0.4
   * deps: raw-body@2.4.1
     - deps: http-errors@1.7.3
+  * deps: safe-buffer@5.2.0
   * deps: type-is@~1.6.18
 
 1.19.0 / 2019-04-25
