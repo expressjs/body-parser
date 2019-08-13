@@ -248,9 +248,9 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should error from verify', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x00) throw new Error('no leading null')
-      }})
+      } })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
@@ -259,12 +259,12 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should allow custom codes', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] !== 0x00) return
         var err = new Error('no leading null')
         err.status = 400
         throw err
-      }})
+      } })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
@@ -273,9 +273,9 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should allow pass-through', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x00) throw new Error('no leading null')
-      }})
+      } })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
@@ -341,7 +341,7 @@ describe('bodyParser.raw()', function () {
       test.expect(200, 'buf:6e616d653de8aeba', done)
     })
 
-    it('should fail on unknown encoding', function (done) {
+    it('should 415 on unknown encoding', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/octet-stream')

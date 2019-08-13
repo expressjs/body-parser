@@ -390,9 +390,9 @@ describe('bodyParser.json()', function () {
     })
 
     it('should error from verify', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -402,9 +402,9 @@ describe('bodyParser.json()', function () {
     })
 
     it('should error with type = "entity.verify.failed"', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -415,12 +415,12 @@ describe('bodyParser.json()', function () {
     })
 
     it('should allow custom codes', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] !== 0x5b) return
         var err = new Error('no arrays')
         err.status = 400
         throw err
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -430,12 +430,12 @@ describe('bodyParser.json()', function () {
     })
 
     it('should allow custom type', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] !== 0x5b) return
         var err = new Error('no arrays')
         err.type = 'foo.bar'
         throw err
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -446,9 +446,9 @@ describe('bodyParser.json()', function () {
     })
 
     it('should include original body on error object', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -459,9 +459,9 @@ describe('bodyParser.json()', function () {
     })
 
     it('should allow pass-through', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -471,9 +471,9 @@ describe('bodyParser.json()', function () {
     })
 
     it('should work with different charsets', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x5b) throw new Error('no arrays')
-      }})
+      } })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-16')
@@ -482,9 +482,9 @@ describe('bodyParser.json()', function () {
     })
 
     it('should 415 on unknown charset prior to verify', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         throw new Error('unexpected verify call')
-      }})
+      } })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=x-bogus')

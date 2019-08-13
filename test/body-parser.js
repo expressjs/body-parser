@@ -63,9 +63,11 @@ describe('bodyParser()', function () {
             return
           }
 
-          res.statusCode = req.body.user === 'tobi'
-            ? 201
-            : 400
+          res.statusCode = req.headers['x-expect-method'] === req.method
+            ? req.body.user === 'tobi'
+              ? 201
+              : 400
+            : 405
           res.end()
         })
       })
@@ -80,6 +82,8 @@ describe('bodyParser()', function () {
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
         request(this.server)[method]('/')
           .set('Content-Type', 'application/json')
+          .set('Content-Length', '15')
+          .set('X-Expect-Method', method.toUpperCase())
           .send('{"user":"tobi"}')
           .expect(201, done)
       })
@@ -110,9 +114,9 @@ describe('bodyParser()', function () {
 
   describe('with verify option', function () {
     it('should apply to json', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
-      }})
+      } })
 
       request(server)
         .post('/')
@@ -122,9 +126,9 @@ describe('bodyParser()', function () {
     })
 
     it('should apply to urlencoded', function (done) {
-      var server = createServer({verify: function (req, res, buf) {
+      var server = createServer({ verify: function (req, res, buf) {
         if (buf[0] === 0x20) throw new Error('no leading space')
-      }})
+      } })
 
       request(server)
         .post('/')
