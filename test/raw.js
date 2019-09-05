@@ -248,9 +248,11 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should error from verify', function (done) {
-      var server = createServer({ verify: function (req, res, buf) {
-        if (buf[0] === 0x00) throw new Error('no leading null')
-      } })
+      var server = createServer({
+        verify: function (req, res, buf) {
+          if (buf[0] === 0x00) throw new Error('no leading null')
+        }
+      })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
@@ -259,12 +261,14 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should allow custom codes', function (done) {
-      var server = createServer({ verify: function (req, res, buf) {
-        if (buf[0] !== 0x00) return
-        var err = new Error('no leading null')
-        err.status = 400
-        throw err
-      } })
+      var server = createServer({
+        verify: function (req, res, buf) {
+          if (buf[0] !== 0x00) return
+          var err = new Error('no leading null')
+          err.status = 400
+          throw err
+        }
+      })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
@@ -273,9 +277,11 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should allow pass-through', function (done) {
-      var server = createServer({ verify: function (req, res, buf) {
-        if (buf[0] === 0x00) throw new Error('no leading null')
-      } })
+      var server = createServer({
+        verify: function (req, res, buf) {
+          if (buf[0] === 0x00) throw new Error('no leading null')
+        }
+      })
 
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
