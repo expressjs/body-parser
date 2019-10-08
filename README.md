@@ -300,6 +300,13 @@ contained an encoding but the "inflation" option was set to `false`. The
 `'encoding.unsupported'`, and the `charset` property will be set to the
 encoding that is unsupported.
 
+### entity parse failed
+
+This error will occur when the request contained an entity that could not be
+parsed by the middleware. The `status` property is set to `400`, the `type`
+property is set to `'entity.parse.failed'`, and the `body` property is set to
+the entity value that failed parsing.
+
 ### request aborted
 
 This error will occur when the request is aborted by the client before reading
