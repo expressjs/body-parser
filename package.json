@@ -30,7 +30,7 @@
     "eslint-plugin-standard": "4.0.1",
     "istanbul": "0.4.5",
     "methods": "1.1.2",
-    "mocha": "6.2.0",
+    "mocha": "6.2.1",
     "safe-buffer": "5.2.0",
     "supertest": "4.0.2"
   },
