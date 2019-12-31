@@ -1,3 +1,7 @@
+os:
+  - linux
+  - osx
+  - windows
 language: node_js
 node_js:
   - "0.8"
@@ -15,6 +19,7 @@ node_js:
   - "10.16"
   - "11.15"
   - "12.4"
+  - "13.5"
 sudo: false
 cache:
   directories:
