@@ -29,10 +29,10 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.0",
     "istanbul": "0.4.5",
-    "methods": "1.1.2",
+    "methods": "^1.1.2",
     "mocha": "6.1.4",
     "safe-buffer": "5.1.2",
-    "supertest": "4.0.2"
+    "supertest": "^4.0.2"
   },
   "files": [
     "lib/",
