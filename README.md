@@ -281,14 +281,15 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 ## Errors
 
-The middlewares provided by this module create errors depending on the error
-condition during parsing. The errors will typically have a `status`/`statusCode`
-property that contains the suggested HTTP response code, an `expose` property
-to determine if the `message` property should be displayed to the client, a
-`type` property to determine the type of error without matching against the
-`message`, and a `body` property containing the read body, if available.
+The middlewares provided by this module create errors using the
+[`http-errors` module](https://www.npmjs.com/package/http-errors). The errors
+will typically have a `status`/`statusCode` property that contains the suggested
+HTTP response code, an `expose` property to determine if the `message` property
+should be displayed to the client, a `type` property to determine the type of
+error without matching against the `message`, and a `body` property containing
+the read body, if available.
 
-The following are the common errors emitted, though any error can come through
+The following are the common errors created, though any error can come through
 for various reasons.
 
 ### content encoding unsupported
