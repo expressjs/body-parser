@@ -100,10 +100,10 @@ describe('bodyParser.json()', function () {
         return { foo: 'bar' }
       }
     }))
-    .post('/')
-    .set('Content-Type', 'application/json')
-    .send('{"str":')
-    .expect(200, '{"foo":"bar"}', done)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"str":')
+      .expect(200, '{"foo":"bar"}', done)
   })
 
   describe('when JSON is invalid', function () {
