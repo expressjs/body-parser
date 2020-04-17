@@ -82,6 +82,17 @@ Object.defineProperty(exports, 'urlencoded', {
 })
 
 /**
+ * Generic parser used to build parsers.
+ * @public
+ */
+
+Object.defineProperty(exports, 'generic', {
+  configurable: true,
+  enumerable: true,
+  get: createParserGetter('generic')
+})
+
+/**
  * Create a middleware to parse json and urlencoded bodies.
  *
  * @param {object} [options]
@@ -149,6 +160,9 @@ function loadParser (parserName) {
       break
     case 'urlencoded':
       parser = require('./lib/types/urlencoded')
+      break
+    case 'generic':
+      parser = require('./lib/generic-parser')
       break
   }
 
