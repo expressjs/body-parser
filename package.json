@@ -45,7 +45,7 @@
   },
   "scripts": {
     "lint": "eslint --plugin markdown --ext js,md .",
-    "test": "mocha --require test/support/env --reporter spec --check-leaks --bail test/",
+    "test": "mocha --require test/support/env --reporter spec --check-leaks --globals __core-js_shared__ --bail test/",
     "test-cov": "nyc --reporter=html --reporter=text npm test",
     "test-travis": "nyc --reporter=text npm test"
   }
