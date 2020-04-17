@@ -29,10 +29,10 @@ describe('bodyParser.urlencoded()', function () {
     request(createServer({
       parser: function (input) { return input.toUpperCase() }
     }))
-    .post('/')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send('user=tobi')
-    .expect(200, '"USER=TOBI"', done)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=tobi')
+      .expect(200, '"USER=TOBI"', done)
   })
 
   it('should 400 when invalid content-length', function (done) {
