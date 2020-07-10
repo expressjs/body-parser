@@ -64,8 +64,8 @@ The various errors returned by this module are described in the
 
 Returns middleware that only parses `json` and only looks at requests where
 the `Content-Type` header matches the `type` option. This parser accepts any
-Unicode encoding of the body and supports automatic inflation of `gzip` and
-`deflate` encodings.
+Unicode encoding of the body and supports automatic inflation of `gzip`,
+`br` (brotli) and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`).
@@ -119,7 +119,8 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
 requests where the `Content-Type` header matches the `type` option. This
-parser supports automatic inflation of `gzip` and `deflate` encodings.
+parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate`
+encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a `Buffer` object
@@ -164,7 +165,8 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 Returns middleware that parses all bodies as a string and only looks at
 requests where the `Content-Type` header matches the `type` option. This
-parser supports automatic inflation of `gzip` and `deflate` encodings.
+parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate`
+encodings.
 
 A new `body` string containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a string of the
@@ -214,7 +216,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 Returns middleware that only parses `urlencoded` bodies and only looks at
 requests where the `Content-Type` header matches the `type` option. This
 parser accepts only UTF-8 encoding of the body and supports automatic
-inflation of `gzip` and `deflate` encodings.
+inflation of `gzip`, `br` (brotli) and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This object will contain
