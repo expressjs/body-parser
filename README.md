@@ -16,6 +16,9 @@ before trusting. For example, `req.body.foo.toString()` may fail in multiple
 ways, for example the `foo` property may not be there or may not be a string,
 and `toString` may not be a function and instead a string or other user input.
 
+**Note** Brotli provides better and faster compression then gzip or deflate,
+but is supported only since Node.js versions v11.7.0 and v10.16.0.
+
 [Learn about the anatomy of an HTTP transaction in Node.js](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/).
 
 _This does not handle multipart bodies_, due to their complex and typically
@@ -68,8 +71,8 @@ The various errors returned by this module are described in the
 
 Returns middleware that only parses `json` and only looks at requests where
 the `Content-Type` header matches the `type` option. This parser accepts any
-Unicode encoding of the body and supports automatic inflation of `gzip` and
-`deflate` encodings.
+Unicode encoding of the body and supports automatic inflation of `gzip`,
+`br` (brotli) and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`).
@@ -123,7 +126,8 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
 requests where the `Content-Type` header matches the `type` option. This
-parser supports automatic inflation of `gzip` and `deflate` encodings.
+parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate`
+encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a `Buffer` object
@@ -168,7 +172,8 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 Returns middleware that parses all bodies as a string and only looks at
 requests where the `Content-Type` header matches the `type` option. This
-parser supports automatic inflation of `gzip` and `deflate` encodings.
+parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate`
+encodings.
 
 A new `body` string containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a string of the
@@ -218,7 +223,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 Returns middleware that only parses `urlencoded` bodies and only looks at
 requests where the `Content-Type` header matches the `type` option. This
 parser accepts only UTF-8 encoding of the body and supports automatic
-inflation of `gzip` and `deflate` encodings.
+inflation of `gzip`, `br` (brotli) and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This object will contain

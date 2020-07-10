@@ -6,6 +6,12 @@ var request = require('supertest')
 
 var bodyParser = require('..')
 
+/**
+ * @const
+ * whether current node version has brotli support
+ */
+var hasBrotliSupport = 'brotli' in process.versions
+
 describe('bodyParser.text()', function () {
   before(function () {
     this.server = createServer()
@@ -405,6 +411,24 @@ describe('bodyParser.text()', function () {
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('789ccb4bcc4d55c82c5678b16e17001a6f050e', 'hex'))
       test.expect(200, '"name is 论"', done)
+    })
+
+    var brotlit = hasBrotliSupport ? it : it.skip
+    brotlit('should support brotli encoding', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'br')
+      test.set('Content-Type', 'text/plain')
+      test.write(Buffer.from('0b05806e616d6520697320e8aeba03', 'hex'))
+      test.expect(200, '"name is 论"', done)
+    })
+
+    var nobrotlit = hasBrotliSupport ? it.skip : it
+    nobrotlit('should throw 415 if there\'s no brotli support', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'br')
+      test.set('Content-Type', 'text/plain')
+      test.write(Buffer.from('0b05806e616d6520697320e8aeba03', 'hex'))
+      test.expect(415, 'unsupported content encoding "br"', done)
     })
 
     it('should be case-insensitive', function (done) {
