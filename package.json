@@ -41,7 +41,7 @@
     "index.js"
   ],
   "engines": {
-    "node": ">= 0.12"
+    "node": ">= 0.8"
   },
   "scripts": {
     "lint": "eslint --plugin markdown --ext js,md .",

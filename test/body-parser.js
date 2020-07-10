@@ -6,7 +6,7 @@ var request = require('supertest')
 var testAsyncHooks = false
 try {
   var asyncHooks = require('async_hooks')
-  testAsyncHooks = true
+  testAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
 } catch (ignored) {
 }
 
