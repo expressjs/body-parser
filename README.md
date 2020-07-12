@@ -16,8 +16,7 @@ before trusting. For example, `req.body.foo.toString()` may fail in multiple
 ways, for example the `foo` property may not be there or may not be a string,
 and `toString` may not be a function and instead a string or other user input.
 
-**Note** Brotli provides better and faster compression then gzip or deflate,
-but is supported only since Node.js versions v11.7.0 and v10.16.0.
+**Note** Brotli is supported only since Node.js versions v11.7.0 and v10.16.0.
 
 [Learn about the anatomy of an HTTP transaction in Node.js](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/).
 
