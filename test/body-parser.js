@@ -3,10 +3,10 @@ var http = require('http')
 var methods = require('methods')
 var request = require('supertest')
 
-var testAsyncHooks = false
+var whenAsyncHooksAreSupportedIt = it.skip
 try {
   var asyncHooks = require('async_hooks')
-  testAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
+  whenAsyncHooksAreSupportedIt = typeof asyncHooks.AsyncLocalStorage === 'function' ? it : it.skip
 } catch (ignored) {
 }
 
@@ -58,30 +58,28 @@ describe('bodyParser()', function () {
       .expect(200, '{"user":"tobi"}', done)
   })
 
-  if (testAsyncHooks) {
-    it('should work with async hooks', function (done) {
-      var _bodyParser = bodyParser()
-      var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+  whenAsyncHooksAreSupportedIt('should work with async hooks', function (done) {
+    var _bodyParser = bodyParser()
+    var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
 
-      var server = http.createServer(function (req, res) {
-        const store = {
-          contextMaintained: true
-        }
-        asyncLocalStorage.run(store, function () {
-          _bodyParser(req, res, function (err) {
-            res.statusCode = err ? (err.status || 500) : 200
-            res.end(err ? err.message : JSON.stringify(asyncLocalStorage.getStore()))
-          })
+    var server = http.createServer(function (req, res) {
+      const store = {
+        contextMaintained: true
+      }
+      asyncLocalStorage.run(store, function () {
+        _bodyParser(req, res, function (err) {
+          res.statusCode = err ? (err.status || 500) : 200
+          res.end(err ? err.message : JSON.stringify(asyncLocalStorage.getStore()))
         })
       })
-
-      request(server)
-        .post('/')
-        .set('Content-Type', 'application/json')
-        .send('{"user":"tobi"}')
-        .expect(200, '{"contextMaintained":true}', done)
     })
-  }
+
+    request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user":"tobi"}')
+      .expect(200, '{"contextMaintained":true}', done)
+  })
 
   describe('http methods', function () {
     before(function () {
