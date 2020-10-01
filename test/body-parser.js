@@ -3,6 +3,13 @@ var http = require('http')
 var methods = require('methods')
 var request = require('supertest')
 
+var describeWhenAsyncHooksAreSupported = describe.skip
+try {
+  var asyncHooks = require('async_hooks')
+  describeWhenAsyncHooksAreSupported = typeof asyncHooks.AsyncLocalStorage === 'function' ? describe : describe.skip
+} catch (ignored) {
+}
+
 var bodyParser = require('..')
 
 describe('bodyParser()', function () {
@@ -49,6 +56,57 @@ describe('bodyParser()', function () {
       .set('Content-Type', 'application/json')
       .send('{"user":"tobi"}')
       .expect(200, '{"user":"tobi"}', done)
+  })
+
+  describeWhenAsyncHooksAreSupported('used with async hooks', function () {
+    it('should maintain context when parsing was successful', function (done) {
+      var _bodyParser = bodyParser()
+      var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+
+      var server = http.createServer(function (req, res) {
+        const store = {
+          contextMaintained: true
+        }
+        asyncLocalStorage.run(store, function () {
+          _bodyParser(req, res, function (err) {
+            res.statusCode = err ? (err.status || 500) : 200
+            res.end(err ? err.message : JSON.stringify(asyncLocalStorage.getStore()))
+          })
+        })
+      })
+
+      request(server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"contextMaintained":true}', done)
+    })
+
+    it('should maintain context when parsing has failed', function (done) {
+      var _bodyParser = bodyParser.text()
+      var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+
+      var server = http.createServer(function (req, res) {
+        const store = {
+          contextMaintained: true
+        }
+        asyncLocalStorage.run(store, function () {
+          _bodyParser(req, res, function (err) {
+            if (!err) {
+              res.statusCode = 500
+              res.end('parsing was expeced to fail, but it succeeded')
+            }
+            res.end(JSON.stringify(asyncLocalStorage.getStore()))
+          })
+        })
+      })
+
+      request(server)
+        .post('/')
+        .set('Content-Type', 'text/plain; charset=x-fake')
+        .send('user is tobi')
+        .expect(200, '{"contextMaintained":true}', done)
+    })
   })
 
   describe('http methods', function () {
