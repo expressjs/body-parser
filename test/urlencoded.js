@@ -63,7 +63,7 @@ describe('bodyParser.urlencoded()', function () {
           .expect(200, '{"¢":"½"}', done)
       })
 
-      it('should parse x-www-form-urlencoded with an unspecified iso-8859-1 encoding when the utf-8 sentinel has a value of %26%2310003%3B', function (done) {
+      it('should parse x-www-form-urlencoded with an unspecified iso-8859-1 encoding when the utf8 sentinel has a value of %26%2310003%3B', function (done) {
         var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
@@ -72,7 +72,7 @@ describe('bodyParser.urlencoded()', function () {
           .expect(200, '{"user":"Ã¸"}', done)
       })
 
-      it('should parse x-www-form-urlencoded with an unspecified utf-8 encoding when the utf-8 sentinel has a value of %E2%9C%93 and the defaultCharset is iso-8859-1', function (done) {
+      it('should parse x-www-form-urlencoded with an unspecified utf-8 encoding when the utf8 sentinel has a value of %E2%9C%93 and the defaultCharset is iso-8859-1', function (done) {
         var server = createServer({ charsetSentinel: true, extended: extended })
         request(server)
           .post('/')
