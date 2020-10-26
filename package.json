@@ -16,22 +16,22 @@
     "http-errors": "1.7.3",
     "iconv-lite": "0.4.24",
     "on-finished": "~2.3.0",
-    "qs": "6.9.1",
+    "qs": "6.9.3",
     "raw-body": "2.4.1",
     "type-is": "~1.6.18"
   },
   "devDependencies": {
-    "eslint": "6.0.0",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.18.0",
-    "eslint-plugin-markdown": "1.0.0",
-    "eslint-plugin-node": "9.1.0",
+    "eslint": "6.8.0",
+    "eslint-config-standard": "14.1.1",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-markdown": "1.0.2",
+    "eslint-plugin-node": "9.2.0",
     "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.0",
-    "istanbul": "0.4.5",
+    "eslint-plugin-standard": "4.0.1",
     "methods": "1.1.2",
-    "mocha": "6.1.4",
-    "safe-buffer": "5.1.2",
+    "mocha": "7.1.1",
+    "nyc": "15.0.0",
+    "safe-buffer": "5.2.0",
     "supertest": "4.0.2"
   },
   "files": [
@@ -46,7 +46,7 @@
   "scripts": {
     "lint": "eslint --plugin markdown --ext js,md .",
     "test": "mocha --require test/support/env --reporter spec --check-leaks --bail test/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/"
+    "test-cov": "nyc --reporter=html --reporter=text npm test",
+    "test-travis": "nyc --reporter=text npm test"
   }
 }

@@ -10,12 +10,12 @@ node_js:
   - "5.12"
   - "6.17"
   - "7.10"
-  - "8.16"
+  - "8.17"
   - "9.11"
-  - "10.16"
+  - "10.19"
   - "11.15"
-  - "12.7"
-sudo: false
+  - "12.16"
+  - "13.11"
 cache:
   directories:
     - node_modules
@@ -67,14 +67,18 @@ before_install:
     if node_version_lt '8.0'; then npm_remove_module_re '^eslint(-|$)'
     fi
   - |
-    # Configure istanbul for coverage
-    if node_version_lt '0.10'; then npm_remove_module_re '^istanbul$'
-    fi
-  - |
     # Configure mocha for testing
     if   node_version_lt '0.10'; then npm_use_module 'mocha' '2.5.3'
     elif node_version_lt '4.0' ; then npm_use_module 'mocha' '3.5.3'
     elif node_version_lt '6.0' ; then npm_use_module 'mocha' '5.2.0'
+    elif node_version_lt '8.0' ; then npm_use_module 'mocha' '6.2.2'
+    fi
+  - |
+    # Configure nyc for coverage
+    if   node_version_lt '0.10'; then npm_remove_module_re '^nyc$'
+    elif node_version_lt '4.0' ; then npm_use_module 'nyc' '10.3.2'
+    elif node_version_lt '6.0' ; then npm_use_module 'nyc' '11.9.0'
+    elif node_version_lt '8.0' ; then npm_use_module 'nyc' '14.1.1'
     fi
   - |
     # Configure supertest for http calls
@@ -95,8 +99,8 @@ before_scrpt:
     npm -s ls ||:
 script:
   - |
-    # Run test script, depending on istanbul install
-    if npm_module_installed 'istanbul'; then npm run-script test-travis
+    # Run test script, depending on nyc install
+    if npm_module_installed 'nyc'; then npm run-script test-travis
     else npm test
     fi
   - |
@@ -105,8 +109,8 @@ script:
     fi
 after_script:
   - |
-    # Upload coverage to coveralls if exists
-    if [[ -e ./coverage/lcov.info ]]; then
+    # Upload coverage to coveralls
+    if [[ -d .nyc_output ]]; then
       npm install --save-dev coveralls@2
-      coveralls < ./coverage/lcov.info
+      nyc report --reporter=text-lcov | coveralls
     fi
