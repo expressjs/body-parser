@@ -86,7 +86,7 @@ jobs:
           node-version: "12.22"
 
         - name: Node.js 13.x
-          node-version: "13.11"
+          node-version: "13.14"
 
         - name: Node.js 14.x
           node-version: "14.18"
