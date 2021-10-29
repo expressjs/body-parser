@@ -77,7 +77,7 @@ jobs:
           node-version: "9.11"
 
         - name: Node.js 10.x
-          node-version: "10.19"
+          node-version: "10.24"
 
         - name: Node.js 11.x
           node-version: "11.15"
