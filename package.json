@@ -32,7 +32,7 @@
     "mocha": "8.4.0",
     "nyc": "15.1.0",
     "safe-buffer": "5.2.1",
-    "supertest": "4.0.2"
+    "supertest": "6.1.6"
   },
   "files": [
     "lib/",
