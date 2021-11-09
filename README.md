@@ -49,8 +49,6 @@ $ npm install body-parser
 
 ## API
 
-<!-- eslint-disable no-unused-vars -->
-
 ```js
 var bodyParser = require('body-parser')
 ```
