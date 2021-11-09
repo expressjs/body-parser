@@ -119,6 +119,8 @@ jobs:
           nvm use ${{ matrix.node-version }}
           sed -i '1s;^.*$;'"$(printf '#!%q' "$(nvm which npm)")"';' "$(readlink -f "$(which npm)")"
           npm config set strict-ssl false
+          npm install -g --prefix "$(which node)/../.." npm@1.2.8000
+          sed -i '1s;^.*$;'"$(printf '#!%q' "$(nvm which npm)")"';' "$(readlink -f "$(which npm)")"
         fi
         dirname "$(nvm which ${{ matrix.node-version }})" >> "$GITHUB_PATH"
 

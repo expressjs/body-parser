@@ -12,6 +12,7 @@ unreleased
     - deps: depd@2.0.0
     - deps: statuses@2.0.1
   * deps: on-finished@2.4.1
+  * deps: qs@6.10.3
   * deps: raw-body@2.5.1
     - deps: http-errors@2.0.0
 
