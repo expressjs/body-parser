@@ -101,6 +101,9 @@ jobs:
         - name: Node.js 16.x
           node-version: "16.13"
 
+        - name: Node.js 17.x
+          node-version: "17.1"
+
     steps:
     - uses: actions/checkout@v2
 
