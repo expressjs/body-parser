@@ -1,4 +1,11 @@
 root: true
-extends: standard
+extends:
+  - standard
+  - plugin:markdown/recommended
+plugins:
+  - markdown
+overrides:
+  - files: '**/*.md'
+    processor: 'markdown/markdown'
 rules:
   no-param-reassign: error

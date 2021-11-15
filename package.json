@@ -16,23 +16,23 @@
     "http-errors": "1.7.3",
     "iconv-lite": "0.4.24",
     "on-finished": "~2.3.0",
-    "qs": "6.9.4",
+    "qs": "6.9.6",
     "raw-body": "2.4.1",
     "type-is": "~1.6.18"
   },
   "devDependencies": {
-    "eslint": "6.8.0",
+    "eslint": "7.32.0",
     "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.20.1",
-    "eslint-plugin-markdown": "1.0.2",
-    "eslint-plugin-node": "9.2.0",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.1",
+    "eslint-plugin-import": "2.25.2",
+    "eslint-plugin-markdown": "2.2.1",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.3.1",
+    "eslint-plugin-standard": "4.1.0",
     "methods": "1.1.2",
-    "mocha": "7.1.1",
-    "nyc": "15.0.0",
-    "safe-buffer": "5.2.0",
-    "supertest": "4.0.2"
+    "mocha": "9.1.3",
+    "nyc": "15.1.0",
+    "safe-buffer": "5.2.1",
+    "supertest": "6.1.6"
   },
   "files": [
     "lib/",
@@ -44,9 +44,9 @@
     "node": ">= 0.8"
   },
   "scripts": {
-    "lint": "eslint --plugin markdown --ext js,md .",
+    "lint": "eslint .",
     "test": "mocha --require test/support/env --reporter spec --check-leaks --bail test/",
-    "test-cov": "nyc --reporter=html --reporter=text npm test",
-    "test-travis": "nyc --reporter=text npm test"
+    "test-ci": "nyc --reporter=lcov --reporter=text npm test",
+    "test-cov": "nyc --reporter=html --reporter=text npm test"
   }
 }
