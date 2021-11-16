@@ -27,6 +27,9 @@ jobs:
         - Node.js 12.x
         - Node.js 13.x
         - Node.js 14.x
+        - Node.js 15.x
+        - Node.js 16.x
+        - Node.js 17.x
 
         include:
         - name: Node.js 0.8
