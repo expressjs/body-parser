@@ -1,8 +1,10 @@
 unreleased
 ==========
 
-  * deps: http-errors@1.7.3
+  * deps: http-errors@1.8.1
     - deps: inherits@2.0.4
+    - deps: toidentifier@1.0.1
+    - deps: setprototypeof@1.2.0
   * deps: qs@6.9.6
   * deps: raw-body@2.4.2
     - deps: bytes@3.1.1
