@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: bytes@3.1.1
   * deps: http-errors@1.8.1
     - deps: inherits@2.0.4
     - deps: toidentifier@1.0.1
