@@ -1,5 +1,5 @@
-2.x
-===
+2.0.0-beta.1 / 2021-12-17
+=========================
 
   * `req.body` is no longer always initialized to `{}`
     - it is left `undefined` unless a body is parsed
