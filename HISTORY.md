@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: qs@6.9.7
+    * Fix handling of `__proto__` keys
+
 1.19.1 / 2021-12-10
 ===================
 

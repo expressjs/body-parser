@@ -16,7 +16,7 @@
     "http-errors": "1.8.1",
     "iconv-lite": "0.4.24",
     "on-finished": "~2.3.0",
-    "qs": "6.9.6",
+    "qs": "6.9.7",
     "raw-body": "2.4.2",
     "type-is": "~1.6.18"
   },
