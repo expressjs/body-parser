@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * deps: bytes@3.1.2
   * deps: qs@6.9.7
     * Fix handling of `__proto__` keys
 
