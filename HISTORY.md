@@ -4,6 +4,8 @@ unreleased
   * deps: bytes@3.1.2
   * deps: qs@6.9.7
     * Fix handling of `__proto__` keys
+  * deps: raw-body@2.4.3
+    - deps: bytes@3.1.2
 
 1.19.1 / 2021-12-10
 ===================
