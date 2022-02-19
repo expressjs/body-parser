@@ -1,3 +1,8 @@
+2.x
+===
+
+This incorporates all changes after 1.19.1 up to 1.19.2.
+
 2.0.0-beta.1 / 2021-12-17
 =========================
 
@@ -5,6 +10,15 @@
     - it is left `undefined` unless a body is parsed
   * `urlencoded` parser now defaults `extended` to `false`
   * Use `on-finished` to determine when body read
+
+1.19.2 / 2022-02-15
+===================
+
+  * deps: bytes@3.1.2
+  * deps: qs@6.9.7
+    * Fix handling of `__proto__` keys
+  * deps: raw-body@2.4.3
+    - deps: bytes@3.1.2
 
 1.19.1 / 2021-12-10
 ===================

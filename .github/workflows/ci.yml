@@ -61,11 +61,11 @@ jobs:
 
         - name: Node.js 6.x
           node-version: "6.17"
-          npm-i: mocha@6.2.2 nyc@14.1.1
+          npm-i: mocha@6.2.2 nyc@14.1.1 supertest@6.1.6
 
         - name: Node.js 7.x
           node-version: "7.10"
-          npm-i: mocha@6.2.2 nyc@14.1.1
+          npm-i: mocha@6.2.2 nyc@14.1.1 supertest@6.1.6
 
         - name: Node.js 8.x
           node-version: "8.17"
@@ -90,16 +90,16 @@ jobs:
           node-version: "13.14"
 
         - name: Node.js 14.x
-          node-version: "14.18"
+          node-version: "14.19"
 
         - name: Node.js 15.x
           node-version: "15.14"
 
         - name: Node.js 16.x
-          node-version: "16.13"
+          node-version: "16.14"
 
         - name: Node.js 17.x
-          node-version: "17.2"
+          node-version: "17.5"
 
     steps:
     - uses: actions/checkout@v2
@@ -146,6 +146,7 @@ jobs:
       run: |
         if npm -ps ls nyc | grep -q nyc; then
           npm run test-ci
+          cp coverage/lcov.info "coverage/${{ matrix.name }}.lcov"
         else
           npm test
         fi
@@ -155,19 +156,43 @@ jobs:
       run: npm run lint
 
     - name: Collect code coverage
-      uses: coverallsapp/github-action@master
+      if: steps.list_env.outputs.nyc != ''
+      run: |
+        if [[ -d ./coverage ]]; then
+          mv ./coverage "./${{ matrix.name }}"
+          mkdir ./coverage
+          mv "./${{ matrix.name }}" "./coverage/${{ matrix.name }}"
+        fi
+
+    - name: Upload code coverage
+      uses: actions/upload-artifact@v2
       if: steps.list_env.outputs.nyc != ''
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        flag-name: run-${{ matrix.test_number }}
-        parallel: true
+        name: coverage
+        path: ./coverage
+        retention-days: 1
 
   coverage:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - name: Uploade code coverage
+    - uses: actions/checkout@v2
+
+    - name: Install lcov
+      shell: bash
+      run: sudo apt-get -y install lcov
+
+    - name: Collect coverage reports
+      uses: actions/download-artifact@v2
+      with:
+        name: coverage
+        path: ./coverage
+
+    - name: Merge coverage reports
+      shell: bash
+      run: find ./coverage -name lcov.info -exec printf '-a %q\n' {} \; | xargs lcov -o ./coverage/lcov.info
+
+    - name: Upload coverage report
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.github_token }}
-        parallel-finished: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}

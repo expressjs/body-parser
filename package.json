@@ -9,30 +9,30 @@
   "license": "MIT",
   "repository": "expressjs/body-parser",
   "dependencies": {
-    "bytes": "3.1.1",
+    "bytes": "3.1.2",
     "content-type": "~1.0.4",
     "debug": "2.6.9",
     "depd": "~1.1.2",
     "http-errors": "1.8.1",
     "iconv-lite": "0.4.24",
     "on-finished": "~2.3.0",
-    "qs": "6.9.6",
-    "raw-body": "2.4.2",
+    "qs": "6.9.7",
+    "raw-body": "2.4.3",
     "type-is": "~1.6.18"
   },
   "devDependencies": {
     "eslint": "7.32.0",
     "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.25.3",
+    "eslint-plugin-import": "2.25.4",
     "eslint-plugin-markdown": "2.2.1",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "5.2.0",
     "eslint-plugin-standard": "4.1.0",
     "methods": "1.1.2",
-    "mocha": "9.1.3",
+    "mocha": "9.2.0",
     "nyc": "15.1.0",
     "safe-buffer": "5.2.1",
-    "supertest": "6.1.6"
+    "supertest": "6.2.2"
   },
   "files": [
     "lib/",
