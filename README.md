@@ -55,9 +55,7 @@ var bodyParser = require('body-parser')
 
 The `bodyParser` object exposes various factories to create middlewares. All
 middlewares will populate the `req.body` property with the parsed body when
-the `Content-Type` request header matches the `type` option, or an empty
-object (`{}`) if there was no body to parse, the `Content-Type` was not matched,
-or an error occurred.
+the `Content-Type` request header matches the `type` option.
 
 The various errors returned by this module are described in the
 [errors section](#errors).
