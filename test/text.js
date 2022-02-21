@@ -160,7 +160,7 @@ describe('bodyParser.text()', function () {
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'text/plain')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
-        test.expect(415, 'content encoding unsupported', done)
+        test.expect(415, '[encoding.unsupported] content encoding unsupported', done)
       })
     })
 
@@ -290,7 +290,7 @@ describe('bodyParser.text()', function () {
         .post('/')
         .set('Content-Type', 'text/plain')
         .send(' user is tobi')
-        .expect(403, 'no leading space', done)
+        .expect(403, '[entity.verify.failed] no leading space', done)
     })
 
     it('should allow custom codes', function (done) {
@@ -307,7 +307,7 @@ describe('bodyParser.text()', function () {
         .post('/')
         .set('Content-Type', 'text/plain')
         .send(' user is tobi')
-        .expect(400, 'no leading space', done)
+        .expect(400, '[entity.verify.failed] no leading space', done)
     })
 
     it('should allow pass-through', function (done) {
@@ -334,7 +334,7 @@ describe('bodyParser.text()', function () {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
-      test.expect(415, 'unsupported charset "X-BOGUS"', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
     })
   })
 
@@ -376,7 +376,7 @@ describe('bodyParser.text()', function () {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
-      test.expect(415, 'unsupported charset "X-BOGUS"', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
     })
   })
 
@@ -429,7 +429,7 @@ describe('bodyParser.text()', function () {
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding "nulls"', done)
+      test.expect(415, '[encoding.unsupported] unsupported content encoding "nulls"', done)
     })
   })
 })
@@ -442,7 +442,7 @@ function createServer (opts) {
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
       res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : JSON.stringify(req.body))
+      res.end(err ? ('[' + err.type + '] ' + err.message) : JSON.stringify(req.body))
     })
   })
 }

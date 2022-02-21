@@ -124,7 +124,7 @@ describe('bodyParser()', function () {
         .post('/')
         .set('Content-Type', 'application/json')
         .send(' {"user":"tobi"}')
-        .expect(403, 'no leading space', done)
+        .expect(403, '[entity.verify.failed] no leading space', done)
     })
 
     it('should apply to urlencoded', function (done) {
@@ -138,7 +138,7 @@ describe('bodyParser()', function () {
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(' user=tobi')
-        .expect(403, 'no leading space', done)
+        .expect(403, '[entity.verify.failed] no leading space', done)
     })
   })
 })
@@ -149,7 +149,7 @@ function createServer (opts) {
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
       res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : JSON.stringify(req.body))
+      res.end(err ? ('[' + err.type + '] ' + err.message) : JSON.stringify(req.body))
     })
   })
 }

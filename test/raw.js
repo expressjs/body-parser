@@ -141,7 +141,7 @@ describe('bodyParser.raw()', function () {
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
-        test.expect(415, 'content encoding unsupported', done)
+        test.expect(415, '[encoding.unsupported] content encoding unsupported', done)
       })
     })
 
@@ -266,7 +266,7 @@ describe('bodyParser.raw()', function () {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('000102', 'hex'))
-      test.expect(403, 'no leading null', done)
+      test.expect(403, '[entity.verify.failed] no leading null', done)
     })
 
     it('should allow custom codes', function (done) {
@@ -282,7 +282,7 @@ describe('bodyParser.raw()', function () {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('000102', 'hex'))
-      test.expect(400, 'no leading null', done)
+      test.expect(400, '[entity.verify.failed] no leading null', done)
     })
 
     it('should allow pass-through', function (done) {
@@ -361,7 +361,7 @@ describe('bodyParser.raw()', function () {
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding "nulls"', done)
+      test.expect(415, '[encoding.unsupported] unsupported content encoding "nulls"', done)
     })
   })
 })
@@ -375,7 +375,7 @@ function createServer (opts) {
     _bodyParser(req, res, function (err) {
       if (err) {
         res.statusCode = err.status || 500
-        res.end(err.message)
+        res.end('[' + err.type + '] ' + err.message)
         return
       }
 
