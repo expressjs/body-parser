@@ -384,6 +384,16 @@ describe('bodyParser.raw()', function () {
       test.expect('x-store-foo', 'bar')
       test.end(done)
     })
+
+    it('should presist store when limit exceeded', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/octet-stream')
+        .send('the user is ' + Buffer.alloc(1024 * 100, '.').toString())
+        .expect(413)
+        .expect('x-store-foo', 'bar')
+        .end(done)
+    })
   })
 
   describe('charset', function () {

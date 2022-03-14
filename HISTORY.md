@@ -3,6 +3,7 @@ unreleased
 
   * Prevent loss of async hooks context
   * Prevent hanging when request already read
+  * deps: on-finished@2.4.1
   * deps: raw-body@2.5.1
     - deps: http-errors@2.0.0
 
