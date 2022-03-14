@@ -342,6 +342,14 @@ to this middleware. This module operates directly on bytes only and you cannot
 call `req.setEncoding` when using this module. The `status` property is set to
 `500` and the `type` property is set to `'stream.encoding.set'`.
 
+### stream is not readable
+
+This error will occur when the request is no longer readable when this middleware
+attempts to read it. This typically means something other than a middleware from
+this module read the reqest body already and the middleware was also configured to
+read the same request. The `status` property is set to `500` and the `type`
+property is set to `'stream.not.readable'`.
+
 ### too many parameters
 
 This error will occur when the content of the request exceeds the configured

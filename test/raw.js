@@ -1,10 +1,15 @@
 
 var assert = require('assert')
+var asyncHooks = tryRequire('async_hooks')
 var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
 
 var bodyParser = require('..')
+
+var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
+  ? describe
+  : describe.skip
 
 describe('bodyParser.raw()', function () {
   before(function () {
@@ -48,6 +53,22 @@ describe('bodyParser.raw()', function () {
       .set('Transfer-Encoding', 'chunked')
       .send('')
       .expect(200, 'buf:', done)
+  })
+
+  it('should 500 if stream not readable', function (done) {
+    var rawParser = bodyParser.raw()
+    var server = createServer(function (req, res, next) {
+      req.on('end', function () {
+        rawParser(req, res, next)
+      })
+      req.resume()
+    })
+
+    request(server)
+      .post('/')
+      .set('Content-Type', 'application/octet-stream')
+      .send('the user is tobi')
+      .expect(500, '[stream.not.readable] stream is not readable', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -299,6 +320,72 @@ describe('bodyParser.raw()', function () {
     })
   })
 
+  describeAsyncHooks('async local storage', function () {
+    before(function () {
+      var rawParser = bodyParser.raw()
+      var store = { foo: 'bar' }
+
+      this.server = createServer(function (req, res, next) {
+        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+
+        asyncLocalStorage.run(store, function () {
+          rawParser(req, res, function (err) {
+            var local = asyncLocalStorage.getStore()
+
+            if (local) {
+              res.setHeader('x-store-foo', String(local.foo))
+            }
+
+            next(err)
+          })
+        })
+      })
+    })
+
+    it('should presist store', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/octet-stream')
+        .send('the user is tobi')
+        .expect(200)
+        .expect('x-store-foo', 'bar')
+        .expect('buf:746865207573657220697320746f6269')
+        .end(done)
+    })
+
+    it('should presist store when unmatched content-type', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/fizzbuzz')
+        .send('buzz')
+        .expect(200)
+        .expect('x-store-foo', 'bar')
+        .expect('{}')
+        .end(done)
+    })
+
+    it('should presist store when inflated', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/octet-stream')
+      test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
+      test.expect(200)
+      test.expect('x-store-foo', 'bar')
+      test.expect('buf:6e616d653de8aeba')
+      test.end(done)
+    })
+
+    it('should presist store when inflate error', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/octet-stream')
+      test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad6080000', 'hex'))
+      test.expect(400)
+      test.expect('x-store-foo', 'bar')
+      test.end(done)
+    })
+  })
+
   describe('charset', function () {
     before(function () {
       this.server = createServer()
@@ -387,4 +474,12 @@ function createServer (opts) {
       res.end(JSON.stringify(req.body))
     })
   })
+}
+
+function tryRequire (name) {
+  try {
+    return require(name)
+  } catch (e) {
+    return {}
+  }
 }

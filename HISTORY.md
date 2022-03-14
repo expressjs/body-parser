@@ -1,3 +1,11 @@
+unreleased
+==========
+
+  * Prevent loss of async hooks context
+  * Prevent hanging when request already read
+  * deps: raw-body@2.5.1
+    - deps: http-errors@2.0.0
+
 1.19.2 / 2022-02-15
 ===================
 
