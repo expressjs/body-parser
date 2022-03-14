@@ -3,6 +3,9 @@ unreleased
 
   * Prevent loss of async hooks context
   * Prevent hanging when request already read
+  * deps: depd@2.0.0
+    - Replace internal `eval` usage with `Function` constructor
+    - Use instance methods on `process` to check for listeners
   * deps: http-errors@2.0.0
     - deps: depd@2.0.0
     - deps: statuses@2.0.1

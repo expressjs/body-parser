@@ -12,7 +12,7 @@
     "bytes": "3.1.2",
     "content-type": "~1.0.4",
     "debug": "2.6.9",
-    "depd": "~1.1.2",
+    "depd": "2.0.0",
     "http-errors": "2.0.0",
     "iconv-lite": "0.4.24",
     "on-finished": "2.4.1",
