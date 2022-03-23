@@ -44,6 +44,14 @@ describe('bodyParser.json()', function () {
       .expect(200, '{}', done)
   })
 
+  it('should 400 when only whitespace', function (done) {
+    request(createServer())
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('  \n')
+      .expect(400, '[entity.parse.failed] ' + parseError(' '), done)
+  })
+
   it('should 400 when invalid content-length', function (done) {
     var jsonParser = bodyParser.json()
     var server = createServer(function (req, res, next) {
