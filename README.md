@@ -461,4 +461,4 @@ app.use(bodyParser.text({ type: 'text/html' }))
 [downloads-image]: https://img.shields.io/npm/dm/body-parser.svg
 [downloads-url]: https://npmjs.org/package/body-parser
 [github-actions-ci-image]: https://img.shields.io/github/workflow/status/expressjs/body-parser/ci/master?label=ci
-[github-actions-ci-url]: https://github.com/expressjs/body-parser?query=workflow%3Aci
+[github-actions-ci-url]: https://github.com/expressjs/body-parser/actions/workflows/ci.yml
