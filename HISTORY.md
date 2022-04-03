@@ -2,6 +2,7 @@ unreleased
 ==========
 
   * Fix error message for json parse whitespace in `strict`
+  * Fix internal error when inflated body exceeds limit
   * Prevent loss of async hooks context
   * Prevent hanging when request already read
   * deps: depd@2.0.0

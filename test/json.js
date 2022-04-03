@@ -193,6 +193,15 @@ describe('bodyParser.json()', function () {
       test.write(buf)
       test.expect(413, done)
     })
+
+    it('should not error when inflating', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(Buffer.from('1f8b080000000000000aab562a2e2952b252d21b05a360148c58a0540b0066f7ce1e0a0400', 'hex'))
+      test.expect(413, done)
+    })
   })
 
   describe('with inflate option', function () {

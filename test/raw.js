@@ -149,6 +149,15 @@ describe('bodyParser.raw()', function () {
       test.write(buf)
       test.expect(413, done)
     })
+
+    it('should not error when inflating', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/octet-stream')
+      test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a147040400', 'hex'))
+      test.expect(413, done)
+    })
   })
 
   describe('with inflate option', function () {

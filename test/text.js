@@ -168,6 +168,17 @@ describe('bodyParser.text()', function () {
       test.write(buf)
       test.expect(413, done)
     })
+
+    it('should not error when inflating', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'text/plain')
+      test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a1470404', 'hex'))
+      setTimeout(function () {
+        test.expect(413, done)
+      }, 100)
+    })
   })
 
   describe('with inflate option', function () {

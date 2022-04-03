@@ -314,6 +314,15 @@ describe('bodyParser.urlencoded()', function () {
       test.write(buf)
       test.expect(413, done)
     })
+
+    it('should not error when inflating', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(Buffer.from('1f8b080000000000000a2b2e29b2d51b05a360148c580000a0351f92040400', 'hex'))
+      test.expect(413, done)
+    })
   })
 
   describe('with parameterLimit option', function () {
