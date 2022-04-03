@@ -40,6 +40,7 @@
     "lib/",
     "LICENSE",
     "HISTORY.md",
+    "SECURITY.md",
     "index.js"
   ],
   "engines": {
