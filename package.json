@@ -26,7 +26,7 @@
     "eslint": "8.23.0",
     "eslint-config-standard": "14.1.1",
     "eslint-plugin-import": "2.25.4",
-    "eslint-plugin-markdown": "2.2.1",
+    "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.0.1",
     "eslint-plugin-standard": "4.1.0",
