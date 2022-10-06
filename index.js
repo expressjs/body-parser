@@ -91,16 +91,15 @@ Object.defineProperty(exports, 'urlencoded', {
  */
 
 function bodyParser (options) {
-  var opts = {}
-
-  // exclude type option
-  if (options) {
-    for (var prop in options) {
-      if (prop !== 'type') {
-        opts[prop] = options[prop]
-      }
+  // use default type for parsers
+  var opts = Object.create(options || null, {
+    type: {
+      configurable: true,
+      enumerable: true,
+      value: undefined,
+      writable: true
     }
-  }
+  })
 
   var _urlencoded = exports.urlencoded(opts)
   var _json = exports.json(opts)
