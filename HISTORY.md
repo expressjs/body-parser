@@ -1,5 +1,5 @@
-unreleased
-==========
+1.20.1 / 2022-10-06
+===================
 
   * deps: qs@6.11.0
   * perf: remove unnecessary object clone
