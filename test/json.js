@@ -245,7 +245,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('true')
-          .expect(400, '[entity.parse.failed] ' + parseError('#rue').replace('#', 't'), done)
+          .expect(400, '[entity.parse.failed] ' + parseError('#rue', true).replace('#', 't'), done)
       })
     })
 
@@ -273,7 +273,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('true')
-          .expect(400, '[entity.parse.failed] ' + parseError('#rue').replace('#', 't'), done)
+          .expect(400, '[entity.parse.failed] ' + parseError('#rue', true).replace('#', 't'), done)
       })
 
       it('should not parse primitives with leading whitespaces', function (done) {
@@ -281,7 +281,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('    true')
-          .expect(400, '[entity.parse.failed] ' + parseError('    #rue').replace('#', 't'), done)
+          .expect(400, '[entity.parse.failed] ' + parseError('    #rue', true).replace('#', 't'), done)
       })
 
       it('should allow leading whitespaces in JSON', function (done) {
@@ -299,7 +299,7 @@ describe('bodyParser.json()', function () {
           .set('X-Error-Property', 'stack')
           .send('true')
           .expect(400)
-          .expect(shouldContainInBody(parseError('#rue').replace('#', 't')))
+          .expect(shouldContainInBody(parseError('#rue', true).replace('#', 't')))
           .end(done)
       })
     })
@@ -732,9 +732,9 @@ function createServer (opts) {
   })
 }
 
-function parseError (str) {
+function parseError (str, first = false) {
   try {
-    JSON.parse(str); throw new SyntaxError('strict violation')
+    JSON.parse(first ? /^(\s*.)/.exec(str)[1] : str); throw new SyntaxError('strict violation')
   } catch (e) {
     return e.message
   }
