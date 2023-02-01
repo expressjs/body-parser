@@ -1,3 +1,9 @@
+unreleased
+==========
+
+  * deps: content-type@~1.0.5
+    - perf: skip value escaping when unnecessary
+
 1.20.1 / 2022-10-06
 ===================
 

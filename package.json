@@ -10,7 +10,7 @@
   "repository": "expressjs/body-parser",
   "dependencies": {
     "bytes": "3.1.2",
-    "content-type": "~1.0.4",
+    "content-type": "~1.0.5",
     "debug": "2.6.9",
     "depd": "2.0.0",
     "destroy": "1.2.0",
