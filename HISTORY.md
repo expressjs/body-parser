@@ -1,6 +1,7 @@
 unreleased
 ==========
 
+  * Fix strict json error message on Node.js 19+
   * deps: content-type@~1.0.5
     - perf: skip value escaping when unnecessary
   * deps: raw-body@2.5.2
