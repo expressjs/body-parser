@@ -3,6 +3,7 @@ unreleased
 
   * deps: content-type@~1.0.5
     - perf: skip value escaping when unnecessary
+  * deps: raw-body@2.5.2
 
 1.20.1 / 2022-10-06
 ===================
