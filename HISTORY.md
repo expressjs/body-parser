@@ -1,7 +1,7 @@
 2.x
 ===
 
-This incorporates all changes after 1.19.1 up to 1.19.2.
+This incorporates all changes after 1.19.1 up to 1.20.2.
 
 2.0.0-beta.1 / 2021-12-17
 =========================
@@ -10,6 +10,38 @@ This incorporates all changes after 1.19.1 up to 1.19.2.
     - it is left `undefined` unless a body is parsed
   * `urlencoded` parser now defaults `extended` to `false`
   * Use `on-finished` to determine when body read
+
+1.20.2 / 2023-02-21
+===================
+
+  * Fix strict json error message on Node.js 19+
+  * deps: content-type@~1.0.5
+    - perf: skip value escaping when unnecessary
+  * deps: raw-body@2.5.2
+
+1.20.1 / 2022-10-06
+===================
+
+  * deps: qs@6.11.0
+  * perf: remove unnecessary object clone
+
+1.20.0 / 2022-04-02
+===================
+
+  * Fix error message for json parse whitespace in `strict`
+  * Fix internal error when inflated body exceeds limit
+  * Prevent loss of async hooks context
+  * Prevent hanging when request already read
+  * deps: depd@2.0.0
+    - Replace internal `eval` usage with `Function` constructor
+    - Use instance methods on `process` to check for listeners
+  * deps: http-errors@2.0.0
+    - deps: depd@2.0.0
+    - deps: statuses@2.0.1
+  * deps: on-finished@2.4.1
+  * deps: qs@6.10.3
+  * deps: raw-body@2.5.1
+    - deps: http-errors@2.0.0
 
 1.19.2 / 2022-02-15
 ===================

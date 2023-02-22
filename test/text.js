@@ -1,10 +1,15 @@
 
 var assert = require('assert')
+var asyncHooks = tryRequire('async_hooks')
 var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
 
 var bodyParser = require('..')
+
+var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
+  ? describe
+  : describe.skip
 
 describe('bodyParser.text()', function () {
   before(function () {
@@ -48,6 +53,22 @@ describe('bodyParser.text()', function () {
       .set('Transfer-Encoding', 'chunked')
       .send('')
       .expect(200, '""', done)
+  })
+
+  it('should handle consumed stream', function (done) {
+    var textParser = bodyParser.text()
+    var server = createServer(function (req, res, next) {
+      req.on('end', function () {
+        textParser(req, res, next)
+      })
+      req.resume()
+    })
+
+    request(server)
+      .post('/')
+      .set('Content-Type', 'text/plain')
+      .send('user is tobi')
+      .expect(200, 'undefined', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -147,6 +168,17 @@ describe('bodyParser.text()', function () {
       test.write(buf)
       test.expect(413, done)
     })
+
+    it('should not error when inflating', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'text/plain')
+      test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a1470404', 'hex'))
+      setTimeout(function () {
+        test.expect(413, done)
+      }, 100)
+    })
   })
 
   describe('with inflate option', function () {
@@ -160,7 +192,7 @@ describe('bodyParser.text()', function () {
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'text/plain')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
-        test.expect(415, 'content encoding unsupported', done)
+        test.expect(415, '[encoding.unsupported] content encoding unsupported', done)
       })
     })
 
@@ -290,7 +322,7 @@ describe('bodyParser.text()', function () {
         .post('/')
         .set('Content-Type', 'text/plain')
         .send(' user is tobi')
-        .expect(403, 'no leading space', done)
+        .expect(403, '[entity.verify.failed] no leading space', done)
     })
 
     it('should allow custom codes', function (done) {
@@ -307,7 +339,7 @@ describe('bodyParser.text()', function () {
         .post('/')
         .set('Content-Type', 'text/plain')
         .send(' user is tobi')
-        .expect(400, 'no leading space', done)
+        .expect(400, '[entity.verify.failed] no leading space', done)
     })
 
     it('should allow pass-through', function (done) {
@@ -334,7 +366,83 @@ describe('bodyParser.text()', function () {
       var test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
-      test.expect(415, 'unsupported charset "X-BOGUS"', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
+    })
+  })
+
+  describeAsyncHooks('async local storage', function () {
+    before(function () {
+      var textParser = bodyParser.text()
+      var store = { foo: 'bar' }
+
+      this.server = createServer(function (req, res, next) {
+        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+
+        asyncLocalStorage.run(store, function () {
+          textParser(req, res, function (err) {
+            var local = asyncLocalStorage.getStore()
+
+            if (local) {
+              res.setHeader('x-store-foo', String(local.foo))
+            }
+
+            next(err)
+          })
+        })
+      })
+    })
+
+    it('should presist store', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send('user is tobi')
+        .expect(200)
+        .expect('x-store-foo', 'bar')
+        .expect('"user is tobi"')
+        .end(done)
+    })
+
+    it('should presist store when unmatched content-type', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/fizzbuzz')
+        .send('buzz')
+        .expect(200)
+        .expect('x-store-foo', 'bar')
+        .expect('undefined')
+        .end(done)
+    })
+
+    it('should presist store when inflated', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'text/plain')
+      test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
+      test.expect(200)
+      test.expect('x-store-foo', 'bar')
+      test.expect('"name is 论"')
+      test.end(done)
+    })
+
+    it('should presist store when inflate error', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'text/plain')
+      test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b0000', 'hex'))
+      test.expect(400)
+      test.expect('x-store-foo', 'bar')
+      test.end(done)
+    })
+
+    it('should presist store when limit exceeded', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'text/plain')
+        .send('user is ' + Buffer.alloc(1024 * 100, '.').toString())
+        .expect(413)
+        .expect('x-store-foo', 'bar')
+        .end(done)
     })
   })
 
@@ -376,7 +484,7 @@ describe('bodyParser.text()', function () {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
-      test.expect(415, 'unsupported charset "X-BOGUS"', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
     })
   })
 
@@ -429,7 +537,7 @@ describe('bodyParser.text()', function () {
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding "nulls"', done)
+      test.expect(415, '[encoding.unsupported] unsupported content encoding "nulls"', done)
     })
   })
 })
@@ -442,7 +550,18 @@ function createServer (opts) {
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {
       res.statusCode = err ? (err.status || 500) : 200
-      res.end(err ? err.message : (JSON.stringify(req.body) || typeof req.body))
+      res.end(err
+        ? ('[' + err.type + '] ' + err.message)
+        : (JSON.stringify(req.body) || typeof req.body)
+      )
     })
   })
+}
+
+function tryRequire (name) {
+  try {
+    return require(name)
+  } catch (e) {
+    return {}
+  }
 }
