@@ -1,5 +1,5 @@
-unreleased
-==========
+1.20.2 / 2023-02-21
+===================
 
   * Fix strict json error message on Node.js 19+
   * deps: content-type@~1.0.5
