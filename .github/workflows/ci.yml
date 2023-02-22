@@ -88,12 +88,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Install Node.js ${{ matrix.node-version }}
-      shell: bash -eo pipefail -l {0}
-      run: |
-        nvm install --default ${{ matrix.node-version }}
-        dirname "$(nvm which ${{ matrix.node-version }})" >> "$GITHUB_PATH"
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
 
     - name: Configure npm
       run: |
