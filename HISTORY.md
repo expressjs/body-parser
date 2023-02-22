@@ -3,6 +3,7 @@
 
 This incorporates all changes after 1.19.1 up to 1.20.2.
 
+  * Remove deprecated `bodyParser()` combination middleware
   * deps: debug@3.1.0
     - Add `DEBUG_HIDE_DATE` environment variable
     - Change timer to per-namespace instead of global
