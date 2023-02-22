@@ -1,9 +1,9 @@
 
-var http = require('http')
-var methods = require('methods')
-var request = require('supertest')
+const http = require('http')
+const methods = require('methods')
+const request = require('supertest')
 
-var bodyParser = require('..')
+const bodyParser = require('..')
 
 describe('bodyParser()', function () {
   before(function () {
@@ -33,11 +33,11 @@ describe('bodyParser()', function () {
   })
 
   it('should handle duplicated middleware', function (done) {
-    var _bodyParser = bodyParser()
-    var server = http.createServer(function (req, res) {
+    const _bodyParser = bodyParser()
+    const server = http.createServer(function (req, res) {
       _bodyParser(req, res, function (err0) {
         _bodyParser(req, res, function (err1) {
-          var err = err0 || err1
+          const err = err0 || err1
           res.statusCode = err ? (err.status || 500) : 200
           res.end(err ? err.message : JSON.stringify(req.body))
         })
@@ -53,7 +53,7 @@ describe('bodyParser()', function () {
 
   describe('http methods', function () {
     before(function () {
-      var _bodyParser = bodyParser()
+      const _bodyParser = bodyParser()
 
       this.server = http.createServer(function (req, res) {
         _bodyParser(req, res, function (err) {
@@ -114,7 +114,7 @@ describe('bodyParser()', function () {
 
   describe('with verify option', function () {
     it('should apply to json', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x20) throw new Error('no leading space')
         }
@@ -128,7 +128,7 @@ describe('bodyParser()', function () {
     })
 
     it('should apply to urlencoded', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x20) throw new Error('no leading space')
         }
@@ -144,7 +144,7 @@ describe('bodyParser()', function () {
 })
 
 function createServer (opts) {
-  var _bodyParser = bodyParser(opts)
+  const _bodyParser = bodyParser(opts)
 
   return http.createServer(function (req, res) {
     _bodyParser(req, res, function (err) {

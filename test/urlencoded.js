@@ -1,13 +1,13 @@
 
-var assert = require('assert')
-var asyncHooks = tryRequire('async_hooks')
-var Buffer = require('safe-buffer').Buffer
-var http = require('http')
-var request = require('supertest')
+const assert = require('assert')
+const asyncHooks = tryRequire('async_hooks')
+const Buffer = require('safe-buffer').Buffer
+const http = require('http')
+const request = require('supertest')
 
-var bodyParser = require('..')
+const bodyParser = require('..')
 
-var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
+const describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
   ? describe
   : describe.skip
 
@@ -25,8 +25,8 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   it('should 400 when invalid content-length', function (done) {
-    var urlencodedParser = bodyParser.urlencoded()
-    var server = createServer(function (req, res, next) {
+    const urlencodedParser = bodyParser.urlencoded()
+    const server = createServer(function (req, res, next) {
       req.headers['content-length'] = '20' // bad length
       urlencodedParser(req, res, next)
     })
@@ -57,8 +57,8 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   it('should handle consumed stream', function (done) {
-    var urlencodedParser = bodyParser.urlencoded()
-    var server = createServer(function (req, res, next) {
+    const urlencodedParser = bodyParser.urlencoded()
+    const server = createServer(function (req, res, next) {
       req.on('end', function () {
         urlencodedParser(req, res, next)
       })
@@ -73,8 +73,8 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   it('should handle duplicated middleware', function (done) {
-    var urlencodedParser = bodyParser.urlencoded()
-    var server = createServer(function (req, res, next) {
+    const urlencodedParser = bodyParser.urlencoded()
+    const server = createServer(function (req, res, next) {
       urlencodedParser(req, res, function (err) {
         if (err) return next(err)
         urlencodedParser(req, res, next)
@@ -165,9 +165,9 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse array index notation with large array', function (done) {
-        var str = 'f[0]=0'
+        let str = 'f[0]=0'
 
-        for (var i = 1; i < 500; i++) {
+        for (let i = 1; i < 500; i++) {
           str += '&f[' + i + ']=' + i.toString(16)
         }
 
@@ -176,7 +176,7 @@ describe('bodyParser.urlencoded()', function () {
           .set('Content-Type', 'application/x-www-form-urlencoded')
           .send(str)
           .expect(function (res) {
-            var obj = JSON.parse(res.text)
+            const obj = JSON.parse(res.text)
             assert.strictEqual(Object.keys(obj).length, 1)
             assert.strictEqual(Array.isArray(obj.f), true)
             assert.strictEqual(obj.f.length, 500)
@@ -193,9 +193,9 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse deep object', function (done) {
-        var str = 'foo'
+        let str = 'foo'
 
-        for (var i = 0; i < 500; i++) {
+        for (let i = 0; i < 500; i++) {
           str += '[p]'
         }
 
@@ -206,12 +206,12 @@ describe('bodyParser.urlencoded()', function () {
           .set('Content-Type', 'application/x-www-form-urlencoded')
           .send(str)
           .expect(function (res) {
-            var obj = JSON.parse(res.text)
+            const obj = JSON.parse(res.text)
             assert.strictEqual(Object.keys(obj).length, 1)
             assert.strictEqual(typeof obj.foo, 'object')
 
-            var depth = 0
-            var ref = obj.foo
+            let depth = 0
+            let ref = obj.foo
             while ((ref = ref.p)) { depth++ }
             assert.strictEqual(depth, 500)
           })
@@ -227,7 +227,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not accept content-encoding', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/x-www-form-urlencoded')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -241,7 +241,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should accept content-encoding', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/x-www-form-urlencoded')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -252,7 +252,7 @@ describe('bodyParser.urlencoded()', function () {
 
   describe('with limit option', function () {
     it('should 413 when over limit with Content-Length', function (done) {
-      var buf = Buffer.alloc(1024, '.')
+      const buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: '1kb' }))
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -262,9 +262,9 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
-      var buf = Buffer.alloc(1024, '.')
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(1024, '.')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.set('Transfer-Encoding', 'chunked')
       test.write('str=')
@@ -273,8 +273,8 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should 413 when inflated body over limit', function (done) {
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000a2b2e29b2d51b05a360148c580000a0351f9204040000', 'hex'))
@@ -282,7 +282,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should accept number of bytes', function (done) {
-      var buf = Buffer.alloc(1024, '.')
+      const buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: 1024 }))
         .post('/')
         .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -291,9 +291,9 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should not change when options altered', function (done) {
-      var buf = Buffer.alloc(1024, '.')
-      var options = { limit: '1kb' }
-      var server = createServer(options)
+      const buf = Buffer.alloc(1024, '.')
+      const options = { limit: '1kb' }
+      const server = createServer(options)
 
       options.limit = '100kb'
 
@@ -305,9 +305,9 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should not hang response', function (done) {
-      var buf = Buffer.alloc(10240, '.')
-      var server = createServer({ limit: '8kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(10240, '.')
+      const server = createServer({ limit: '8kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(buf)
       test.write(buf)
@@ -316,8 +316,8 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should not error when inflating', function (done) {
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000a2b2e29b2d51b05a360148c580000a0351f92040400', 'hex'))
@@ -494,7 +494,7 @@ describe('bodyParser.urlencoded()', function () {
 
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           return req.headers['content-type'] === 'application/vnd.something'
@@ -508,19 +508,19 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should work without content-type', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           return true
         }
 
-        var test = request(server).post('/')
+        const test = request(server).post('/')
         test.write('user=tobi')
         test.expect(200, '{"user":"tobi"}', done)
       })
 
       it('should not invoke without a body', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           throw new Error('oops!')
@@ -540,7 +540,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should error from verify', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x20) throw new Error('no leading space')
         }
@@ -554,10 +554,10 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should allow custom codes', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] !== 0x20) return
-          var err = new Error('no leading space')
+          const err = new Error('no leading space')
           err.status = 400
           throw err
         }
@@ -571,10 +571,10 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should allow custom type', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] !== 0x20) return
-          var err = new Error('no leading space')
+          const err = new Error('no leading space')
           err.type = 'foo.bar'
           throw err
         }
@@ -588,7 +588,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should allow pass-through', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x5b) throw new Error('no arrays')
         }
@@ -602,13 +602,13 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should 415 on unknown charset prior to verify', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           throw new Error('unexpected verify call')
         }
       })
 
-      var test = request(server).post('/')
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
       test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
@@ -617,15 +617,15 @@ describe('bodyParser.urlencoded()', function () {
 
   describeAsyncHooks('async local storage', function () {
     before(function () {
-      var urlencodedParser = bodyParser.urlencoded()
-      var store = { foo: 'bar' }
+      const urlencodedParser = bodyParser.urlencoded()
+      const store = { foo: 'bar' }
 
       this.server = createServer(function (req, res, next) {
-        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+        const asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
 
         asyncLocalStorage.run(store, function () {
           urlencodedParser(req, res, function (err) {
-            var local = asyncLocalStorage.getStore()
+            const local = asyncLocalStorage.getStore()
 
             if (local) {
               res.setHeader('x-store-foo', String(local.foo))
@@ -660,7 +660,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should presist store when inflated', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -671,7 +671,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should presist store when inflate error', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad6080000', 'hex'))
@@ -697,14 +697,14 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should parse utf-8', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should parse when content-length != char length', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8')
       test.set('Content-Length', '7')
       test.write(Buffer.from('746573743dc3a5', 'hex'))
@@ -712,14 +712,14 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should default to utf-8', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should fail on unknown charset', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded; charset=koi8-r')
       test.write(Buffer.from('6e616d653dcec5d4', 'hex'))
       test.expect(415, '[charset.unsupported] unsupported charset "KOI8-R"', done)
@@ -732,14 +732,14 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should parse without encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
     it('should support identity encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
@@ -747,7 +747,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should support gzip encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -755,7 +755,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should support deflate encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'deflate')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('789ccb4bcc4db57db16e17001068042f', 'hex'))
@@ -763,7 +763,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should be case-insensitive', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -771,7 +771,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     it('should 415 on unknown encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('000000000000', 'hex'))
@@ -781,7 +781,7 @@ describe('bodyParser.urlencoded()', function () {
 })
 
 function createManyParams (count) {
-  var str = ''
+  let str = ''
 
   if (count === 0) {
     return str
@@ -789,8 +789,8 @@ function createManyParams (count) {
 
   str += '0=0'
 
-  for (var i = 1; i < count; i++) {
-    var n = i.toString(36)
+  for (let i = 1; i < count; i++) {
+    const n = i.toString(36)
     str += '&' + n + '=' + n
   }
 
@@ -798,7 +798,7 @@ function createManyParams (count) {
 }
 
 function createServer (opts) {
-  var _bodyParser = typeof opts !== 'function'
+  const _bodyParser = typeof opts !== 'function'
     ? bodyParser.urlencoded(opts)
     : opts
 

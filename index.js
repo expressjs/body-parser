@@ -11,14 +11,14 @@
  * @private
  */
 
-var deprecate = require('depd')('body-parser')
+const deprecate = require('depd')('body-parser')
 
 /**
  * Cache of loaded parsers.
  * @private
  */
 
-var parsers = Object.create(null)
+const parsers = Object.create(null)
 
 /**
  * @typedef Parsers
@@ -92,7 +92,7 @@ Object.defineProperty(exports, 'urlencoded', {
 
 function bodyParser (options) {
   // use default type for parsers
-  var opts = Object.create(options || null, {
+  const opts = Object.create(options || null, {
     type: {
       configurable: true,
       enumerable: true,
@@ -101,8 +101,8 @@ function bodyParser (options) {
     }
   })
 
-  var _urlencoded = exports.urlencoded(opts)
-  var _json = exports.json(opts)
+  const _urlencoded = exports.urlencoded(opts)
+  const _json = exports.json(opts)
 
   return function bodyParser (req, res, next) {
     _json(req, res, function (err) {
@@ -129,7 +129,7 @@ function createParserGetter (name) {
  */
 
 function loadParser (parserName) {
-  var parser = parsers[parserName]
+  let parser = parsers[parserName]
 
   if (parser !== undefined) {
     return parser
