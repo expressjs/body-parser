@@ -3,6 +3,9 @@
 
 This incorporates all changes after 1.19.1 up to 1.20.2.
 
+  * deps: raw-body@3.0.0-beta.1
+    - deps: iconv-lite@0.5.2
+
 2.0.0-beta.1 / 2021-12-17
 =========================
 
