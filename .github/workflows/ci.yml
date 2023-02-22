@@ -159,19 +159,14 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        if npm -ps ls nyc | grep -q nyc; then
-          npm run test-ci
-          cp coverage/lcov.info "coverage/${{ matrix.name }}.lcov"
-        else
-          npm test
-        fi
+        npm run test-ci
+        cp coverage/lcov.info "coverage/${{ matrix.name }}.lcov"
 
     - name: Lint code
       if: steps.list_env.outputs.eslint != ''
       run: npm run lint
 
     - name: Collect code coverage
-      if: steps.list_env.outputs.nyc != ''
       run: |
         if [[ -d ./coverage ]]; then
           mv ./coverage "./${{ matrix.name }}"
@@ -181,7 +176,6 @@ jobs:
 
     - name: Upload code coverage
       uses: actions/upload-artifact@v3
-      if: steps.list_env.outputs.nyc != ''
       with:
         name: coverage
         path: ./coverage
