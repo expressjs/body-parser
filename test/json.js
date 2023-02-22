@@ -616,6 +616,13 @@ describe('bodyParser.json()', function () {
       test.expect(200, '{"name":"论"}', done)
     })
 
+    it('should parse utf-32', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Type', 'application/json; charset=utf-32')
+      test.write(Buffer.from('fffe00007b000000220000006e000000610000006d00000065000000220000003a00000022000000ba8b0000220000007d000000', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
     it('should parse when content-length != char length', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-8')
