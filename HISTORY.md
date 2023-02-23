@@ -1,5 +1,5 @@
-2.x
-===
+2.0.0-beta.2 / 2023-02-23
+=========================
 
 This incorporates all changes after 1.19.1 up to 1.20.2.
 
