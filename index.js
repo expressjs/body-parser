@@ -7,13 +7,6 @@
 'use strict'
 
 /**
- * Module dependencies.
- * @private
- */
-
-var deprecate = require('depd')('body-parser')
-
-/**
  * Cache of loaded parsers.
  * @private
  */
@@ -34,8 +27,7 @@ var parsers = Object.create(null)
  * @type {Parsers}
  */
 
-exports = module.exports = deprecate.function(bodyParser,
-  'bodyParser: use individual json/urlencoded middlewares')
+exports = module.exports = bodyParser
 
 /**
  * JSON parser.
@@ -90,26 +82,8 @@ Object.defineProperty(exports, 'urlencoded', {
  * @public
  */
 
-function bodyParser (options) {
-  // use default type for parsers
-  var opts = Object.create(options || null, {
-    type: {
-      configurable: true,
-      enumerable: true,
-      value: undefined,
-      writable: true
-    }
-  })
-
-  var _urlencoded = exports.urlencoded(opts)
-  var _json = exports.json(opts)
-
-  return function bodyParser (req, res, next) {
-    _json(req, res, function (err) {
-      if (err) return next(err)
-      _urlencoded(req, res, next)
-    })
-  }
+function bodyParser () {
+  throw new Error('The bodyParser() generic has been split into individual middleware to use instead.')
 }
 
 /**

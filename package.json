@@ -1,7 +1,7 @@
 {
   "name": "body-parser",
   "description": "Node.js body parsing middleware",
-  "version": "1.20.2",
+  "version": "2.0.0-beta.2",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
     "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)"
@@ -11,14 +11,13 @@
   "dependencies": {
     "bytes": "3.1.2",
     "content-type": "~1.0.5",
-    "debug": "2.6.9",
-    "depd": "2.0.0",
+    "debug": "3.1.0",
     "destroy": "1.2.0",
     "http-errors": "2.0.0",
-    "iconv-lite": "0.4.24",
+    "iconv-lite": "0.5.2",
     "on-finished": "2.4.1",
     "qs": "6.11.0",
-    "raw-body": "2.5.2",
+    "raw-body": "3.0.0-beta.1",
     "type-is": "~1.6.18",
     "unpipe": "1.0.0"
   },
@@ -44,8 +43,7 @@
     "index.js"
   ],
   "engines": {
-    "node": ">= 0.8",
-    "npm": "1.2.8000 || >= 1.4.16"
+    "node": ">= 0.10"
   },
   "scripts": {
     "lint": "eslint .",

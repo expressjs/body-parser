@@ -55,9 +55,7 @@ var bodyParser = require('body-parser')
 
 The `bodyParser` object exposes various factories to create middlewares. All
 middlewares will populate the `req.body` property with the parsed body when
-the `Content-Type` request header matches the `type` option, or an empty
-object (`{}`) if there was no body to parse, the `Content-Type` was not matched,
-or an error occurred.
+the `Content-Type` request header matches the `type` option.
 
 The various errors returned by this module are described in the
 [errors section](#errors).
@@ -237,9 +235,7 @@ encoded into the URL-encoded format, allowing for a JSON-like experience
 with URL-encoded. For more information, please
 [see the qs library](https://www.npmjs.org/package/qs#readme).
 
-Defaults to `true`, but using the default has been deprecated. Please
-research into the difference between `qs` and `querystring` and choose the
-appropriate setting.
+Defaults to `false`.
 
 ##### inflate
 
@@ -388,7 +384,7 @@ var bodyParser = require('body-parser')
 var app = express()
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded())
 
 // parse application/json
 app.use(bodyParser.json())
@@ -396,7 +392,7 @@ app.use(bodyParser.json())
 app.use(function (req, res) {
   res.setHeader('Content-Type', 'text/plain')
   res.write('you posted:\n')
-  res.end(JSON.stringify(req.body, null, 2))
+  res.end(String(JSON.stringify(req.body, null, 2)))
 })
 ```
 
@@ -416,15 +412,17 @@ var app = express()
 var jsonParser = bodyParser.json()
 
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded()
 
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
+  if (!req.body || !req.body.username) res.sendStatus(400)
   res.send('welcome, ' + req.body.username)
 })
 
 // POST /api/users gets JSON bodies
 app.post('/api/users', jsonParser, function (req, res) {
+  if (!req.body) res.sendStatus(400)
   // create user in req.body
 })
 ```
