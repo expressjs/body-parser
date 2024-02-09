@@ -92,15 +92,15 @@ to `'100kb'`.
 ##### parser
 
 The `parser` option can be used to supply a custom JSON parser used to 
-convert the request body to a Javascript object. If a `reviver` is 
-supplied, it is supplied as the second argument to this function.
+convert the request body to a Javascript object. If the `reviver` option 
+is supplied, it is used as the second argument to this function.
 
 Defaults to `JSON.parse`.
 
 ##### reviver
 
-The `reviver` option is passed directly to `JSON.parse` as the second
-argument. You can find more information on this argument
+The `reviver` option is passed directly to `JSON.parse` (or custom parser) 
+as the second argument. You can find more information on this argument
 [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
 
 ##### strict
