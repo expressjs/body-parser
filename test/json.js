@@ -305,6 +305,38 @@ describe('bodyParser.json()', function () {
     })
   })
 
+  describe('with reviver option', function () {
+    it('should use custom reviver', function (done) {
+      request(createServer({
+        reviver: function () {
+          return 'bar'
+        }
+      }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"foo":""}')
+        .expect(200, '"bar"', done)
+    })
+
+  })
+
+  describe('with parser option', function () {
+    it('should use custom parser and pass reviver to it', function (done) {
+      request(createServer({
+        parser: function (body, reviver) {
+          return { foo: reviver() }
+        },
+        reviver: function () {
+          return 'bar'
+        }
+      }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"str":""}')
+        .expect(200, '{"foo":"bar"}', done)
+    })
+  })
+
   describe('with type option', function () {
     describe('when "application/vnd.api+json"', function () {
       before(function () {

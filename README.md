@@ -89,6 +89,14 @@ specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
 
+##### parser
+
+The `parser` option can be used to supply a custom JSON parser used to 
+convert the request body to a Javascript object. If a `reviver` is 
+supplied, it is supplied as the second argument to this function.
+
+Defaults to `JSON.parse`.
+
 ##### reviver
 
 The `reviver` option is passed directly to `JSON.parse` as the second
