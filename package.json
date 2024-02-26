@@ -1,6 +1,6 @@
 {
-  "name": "body-parser",
-  "description": "Node.js body parsing middleware",
+  "name": "body-parser-bigint",
+  "description": "Node.js body parsing middleware with bigint support",
   "version": "1.20.2",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
@@ -15,6 +15,7 @@
     "depd": "2.0.0",
     "destroy": "1.2.0",
     "http-errors": "2.0.0",
+    "json-bigint": "^1.0.0",
     "iconv-lite": "0.4.24",
     "on-finished": "2.4.1",
     "qs": "6.11.0",
