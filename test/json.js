@@ -4,6 +4,7 @@ var asyncHooks = tryRequire('async_hooks')
 var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
+var JSONBig = require('json-bigint')
 
 var bodyParser = require('..')
 
@@ -136,7 +137,7 @@ describe('bodyParser.json()', function () {
         .post('/')
         .set('Content-Type', 'application/json')
         .set('Content-Length', '1034')
-        .send(JSON.stringify({ str: buf.toString() }))
+        .send(JSONBig.stringify({ str: buf.toString() }))
         .expect(413, '[entity.too.large] request entity too large', done)
     })
 
@@ -165,7 +166,7 @@ describe('bodyParser.json()', function () {
       request(createServer({ limit: 1024 }))
         .post('/')
         .set('Content-Type', 'application/json')
-        .send(JSON.stringify({ str: buf.toString() }))
+        .send(JSONBig.stringify({ str: buf.toString() }))
         .expect(413, done)
     })
 
@@ -179,7 +180,7 @@ describe('bodyParser.json()', function () {
       request(server)
         .post('/')
         .set('Content-Type', 'application/json')
-        .send(JSON.stringify({ str: buf.toString() }))
+        .send(JSONBig.stringify({ str: buf.toString() }))
         .expect(413, done)
     })
 
@@ -710,6 +711,25 @@ describe('bodyParser.json()', function () {
       test.expect(413, done)
     })
   })
+
+  describe('with big integers', function () {
+    it('should parse big integers', function (done) {
+      request(createServer())
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":0.123456789123456729123456789123456729123456789123456729}')
+        .expect(200, '{"user":0.123456789123456729123456789123456729123456789123456729}', done)
+    })
+
+    it('should parse regular numbers', function (done) {
+      request(createServer())
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":0.123}')
+        .expect(200, '{"user":0.123}', done)
+    })
+
+  })
 })
 
 function createServer (opts) {
@@ -726,7 +746,7 @@ function createServer (opts) {
           : ('[' + err.type + '] ' + err.message))
       } else {
         res.statusCode = 200
-        res.end(JSON.stringify(req.body))
+        res.end(JSONBig.stringify(req.body))
       }
     })
   })
@@ -734,7 +754,7 @@ function createServer (opts) {
 
 function parseError (str) {
   try {
-    JSON.parse(str); throw new SyntaxError('strict violation')
+    JSONBig.parse(str); throw new SyntaxError('strict violation')
   } catch (e) {
     return e.message
   }
