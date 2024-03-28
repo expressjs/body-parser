@@ -20,6 +20,14 @@ describe('bodyParser.json()', function () {
       .expect(200, '{"user":"tobi"}', done)
   })
 
+  it('should parse JSON that contains tabs', function (done) {
+    request(createServer())
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"fullname":"Abderrahim	Oukhrib"}')
+      .expect(200, '{"fullname":"Abderrahim  Oukhrib"}', done)
+  })
+
   it('should handle Content-Length: 0', function (done) {
     request(createServer())
       .get('/')
