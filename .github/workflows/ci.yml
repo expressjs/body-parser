@@ -32,6 +32,9 @@ jobs:
         - Node.js 17.x
         - Node.js 18.x
         - Node.js 19.x
+        - Node.js 20.x
+        - Node.js 21.x
+        - Node.js 22.x
 
         include:
         - name: Node.js 0.8
@@ -77,11 +80,11 @@ jobs:
 
         - name: Node.js 8.x
           node-version: "8.17"
-          npm-i: mocha@7.2.0
+          npm-i: mocha@7.2.0 nyc@14.1.1
 
         - name: Node.js 9.x
           node-version: "9.11"
-          npm-i: mocha@7.2.0
+          npm-i: mocha@7.2.0 nyc@14.1.1
 
         - name: Node.js 10.x
           node-version: "10.24"
@@ -117,8 +120,17 @@ jobs:
         - name: Node.js 19.x
           node-version: "19.7"
 
+        - name: Node.js 20.x
+          node-version: "20.12"
+
+        - name: Node.js 21.x
+          node-version: "21.7"
+
+        - name: Node.js 22.x
+          node-version: "22.0"
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Node.js ${{ matrix.node-version }}
       shell: bash -eo pipefail -l {0}
@@ -209,7 +221,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install lcov
       shell: bash
