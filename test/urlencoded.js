@@ -1,3 +1,4 @@
+'use strict'
 
 var assert = require('assert')
 var asyncHooks = tryRequire('async_hooks')
@@ -56,7 +57,7 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{}', done)
   })
 
-  it('should 500 if stream not readable', function (done) {
+  it('should handle consumed stream', function (done) {
     var urlencodedParser = bodyParser.urlencoded()
     var server = createServer(function (req, res, next) {
       req.on('end', function () {
@@ -69,7 +70,7 @@ describe('bodyParser.urlencoded()', function () {
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user=tobi')
-      .expect(500, '[stream.not.readable] stream is not readable', done)
+      .expect(200, 'undefined', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -88,12 +89,12 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{"user":"tobi"}', done)
   })
 
-  it('should parse extended syntax', function (done) {
+  it('should not parse extended syntax', function (done) {
     request(this.server)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user[name][first]=Tobi')
-      .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+      .expect(200, '{"user[name][first]":"Tobi"}', done)
   })
 
   describe('with extended option', function () {
@@ -456,7 +457,7 @@ describe('bodyParser.urlencoded()', function () {
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
           .send('user=tobi')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -488,7 +489,7 @@ describe('bodyParser.urlencoded()', function () {
           .post('/')
           .set('Content-Type', 'application/x-foo')
           .send('user=tobi')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -655,7 +656,7 @@ describe('bodyParser.urlencoded()', function () {
         .send('buzz')
         .expect(200)
         .expect('x-store-foo', 'bar')
-        .expect('{}')
+        .expect('undefined')
         .end(done)
     })
 
@@ -809,7 +810,7 @@ function createServer (opts) {
         res.end('[' + err.type + '] ' + err.message)
       } else {
         res.statusCode = 200
-        res.end(JSON.stringify(req.body))
+        res.end(JSON.stringify(req.body) || typeof req.body)
       }
     })
   })

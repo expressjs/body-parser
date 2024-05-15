@@ -1,3 +1,4 @@
+'use strict'
 
 var assert = require('assert')
 var asyncHooks = tryRequire('async_hooks')
@@ -55,7 +56,7 @@ describe('bodyParser.raw()', function () {
       .expect(200, 'buf:', done)
   })
 
-  it('should 500 if stream not readable', function (done) {
+  it('should handle consumed stream', function (done) {
     var rawParser = bodyParser.raw()
     var server = createServer(function (req, res, next) {
       req.on('end', function () {
@@ -68,7 +69,7 @@ describe('bodyParser.raw()', function () {
       .post('/')
       .set('Content-Type', 'application/octet-stream')
       .send('the user is tobi')
-      .expect(500, '[stream.not.readable] stream is not readable', done)
+      .expect(200, 'undefined', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -207,7 +208,7 @@ describe('bodyParser.raw()', function () {
         var test = request(this.server).post('/')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('000102', 'hex'))
-        test.expect(200, '{}', done)
+        test.expect(200, 'undefined', done)
       })
     })
 
@@ -236,7 +237,7 @@ describe('bodyParser.raw()', function () {
         var test = request(this.server).post('/')
         test.set('Content-Type', 'application/x-foo')
         test.write(Buffer.from('000102', 'hex'))
-        test.expect(200, '{}', done)
+        test.expect(200, 'undefined', done)
       })
     })
 
@@ -369,7 +370,7 @@ describe('bodyParser.raw()', function () {
         .send('buzz')
         .expect(200)
         .expect('x-store-foo', 'bar')
-        .expect('{}')
+        .expect('undefined')
         .end(done)
     })
 
@@ -490,7 +491,7 @@ function createServer (opts) {
         return
       }
 
-      res.end(JSON.stringify(req.body))
+      res.end(JSON.stringify(req.body) || typeof req.body)
     })
   })
 }

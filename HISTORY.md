@@ -1,3 +1,29 @@
+2.0.0-beta.2 / 2023-02-23
+=========================
+
+This incorporates all changes after 1.19.1 up to 1.20.2.
+
+  * Remove deprecated `bodyParser()` combination middleware
+  * deps: debug@3.1.0
+    - Add `DEBUG_HIDE_DATE` environment variable
+    - Change timer to per-namespace instead of global
+    - Change non-TTY date format
+    - Remove `DEBUG_FD` environment variable support
+    - Support 256 namespace colors
+  * deps: iconv-lite@0.5.2
+    - Add encoding cp720
+    - Add encoding UTF-32
+  * deps: raw-body@3.0.0-beta.1
+
+2.0.0-beta.1 / 2021-12-17
+=========================
+
+  * Drop support for Node.js 0.8
+  * `req.body` is no longer always initialized to `{}`
+    - it is left `undefined` unless a body is parsed
+  * `urlencoded` parser now defaults `extended` to `false`
+  * Use `on-finished` to determine when body read
+
 1.20.2 / 2023-02-21
 ===================
 

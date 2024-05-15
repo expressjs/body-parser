@@ -1,3 +1,4 @@
+'use strict'
 
 var assert = require('assert')
 var asyncHooks = tryRequire('async_hooks')
@@ -41,7 +42,7 @@ describe('bodyParser.json()', function () {
       .get('/')
       .set('Content-Type', 'application/json')
       .unset('Transfer-Encoding')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
   })
 
   it('should 400 when only whitespace', function (done) {
@@ -66,7 +67,7 @@ describe('bodyParser.json()', function () {
       .expect(400, /content length/, done)
   })
 
-  it('should 500 if stream not readable', function (done) {
+  it('should handle consumed request', function (done) {
     var jsonParser = bodyParser.json()
     var server = createServer(function (req, res, next) {
       req.on('end', function () {
@@ -79,7 +80,7 @@ describe('bodyParser.json()', function () {
       .post('/')
       .set('Content-Type', 'application/json')
       .send('{"user":"tobi"}')
-      .expect(500, '[stream.not.readable] stream is not readable', done)
+      .expect(200, 'undefined', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -324,7 +325,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('{"user":"tobi"}')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -356,7 +357,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/x-json')
           .send('{"user":"tobi"}')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -551,7 +552,7 @@ describe('bodyParser.json()', function () {
         .send('buzz')
         .expect(200)
         .expect('x-store-foo', 'bar')
-        .expect('{}')
+        .expect('undefined')
         .end(done)
     })
 
@@ -613,6 +614,13 @@ describe('bodyParser.json()', function () {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-16')
       test.write(Buffer.from('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should parse utf-32', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Type', 'application/json; charset=utf-32')
+      test.write(Buffer.from('fffe00007b000000220000006e000000610000006d00000065000000220000003a00000022000000ba8b0000220000007d000000', 'hex'))
       test.expect(200, '{"name":"论"}', done)
     })
 
@@ -726,7 +734,7 @@ function createServer (opts) {
           : ('[' + err.type + '] ' + err.message))
       } else {
         res.statusCode = 200
-        res.end(JSON.stringify(req.body))
+        res.end(JSON.stringify(req.body) || typeof req.body)
       }
     })
   })
