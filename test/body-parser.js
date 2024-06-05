@@ -73,11 +73,24 @@ describe('bodyParser()', function () {
       })
     })
 
-    methods.slice().sort().forEach(function (method) {
-      if (method === 'connect') {
-        // except CONNECT
-        return
+    function getMajorVersion (versionString) {
+      return versionString.split('.')[0]
+    }
+
+    function shouldSkipQuery (versionString) {
+      // Temporarily skipping this test on 21
+      // update this implementation to run on those release lines on supported versions once they exist
+      // upstream tracking https://github.com/nodejs/node/pull/51719
+      // express tracking issue: https://github.com/expressjs/express/issues/5615
+      var majorsToSkip = {
+        21: true
       }
+      return majorsToSkip[getMajorVersion(versionString)]
+    }
+
+    methods.slice().sort().forEach(function (method) {
+      if (method === 'connect') return
+      if (method === 'query' && shouldSkipQuery(process.versions.node)) return
 
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
         request(this.server)[method]('/')
