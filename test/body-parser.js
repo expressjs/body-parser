@@ -78,21 +78,20 @@ describe('bodyParser()', function () {
     }
 
     function shouldSkipQuery (versionString) {
-      // Temporarily skipping this test on 21
-      // update this implementation to run on those release lines on supported versions once they exist
-      // upstream tracking https://github.com/nodejs/node/pull/51719
+      // Skipping HTTP QUERY tests on Node 21, it is reported in http.METHODS on 21.7.2 but not supported
+      // update this implementation to run on supported versions of 21 once they exist
+      // upstream tracking https://github.com/nodejs/node/issues/51562
       // express tracking issue: https://github.com/expressjs/express/issues/5615
-      var majorsToSkip = {
-        21: true
-      }
-      return majorsToSkip[getMajorVersion(versionString)]
+      return getMajorVersion(versionString) == 21
     }
 
     methods.slice().sort().forEach(function (method) {
       if (method === 'connect') return
-      if (method === 'query' && shouldSkipQuery(process.versions.node)) return
 
       it('should support ' + method.toUpperCase() + ' requests', function (done) {
+        if (method === 'query' && shouldSkipQuery(process.versions.node)) {
+          this.skip()
+        }
         request(this.server)[method]('/')
           .set('Content-Type', 'application/json')
           .set('Content-Length', '15')
