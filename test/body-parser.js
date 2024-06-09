@@ -82,7 +82,7 @@ describe('bodyParser()', function () {
       // update this implementation to run on supported versions of 21 once they exist
       // upstream tracking https://github.com/nodejs/node/issues/51562
       // express tracking issue: https://github.com/expressjs/express/issues/5615
-      return getMajorVersion(versionString) == 21
+      return getMajorVersion(versionString) === '21'
     }
 
     methods.slice().sort().forEach(function (method) {
