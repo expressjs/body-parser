@@ -1,10 +1,16 @@
+'use strict'
 
 var assert = require('assert')
+var asyncHooks = tryRequire('async_hooks')
 var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
 
 var bodyParser = require('..')
+
+var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
+  ? describe
+  : describe.skip
 
 describe('bodyParser.json()', function () {
   it('should parse JSON', function (done) {
@@ -36,7 +42,15 @@ describe('bodyParser.json()', function () {
       .get('/')
       .set('Content-Type', 'application/json')
       .unset('Transfer-Encoding')
-      .expect(200, '{}', done)
+      .expect(200, 'undefined', done)
+  })
+
+  it('should 400 when only whitespace', function (done) {
+    request(createServer())
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('  \n')
+      .expect(400, '[entity.parse.failed] ' + parseError(' '), done)
   })
 
   it('should 400 when invalid content-length', function (done) {
@@ -51,6 +65,22 @@ describe('bodyParser.json()', function () {
       .set('Content-Type', 'application/json')
       .send('{"str":')
       .expect(400, /content length/, done)
+  })
+
+  it('should handle consumed request', function (done) {
+    var jsonParser = bodyParser.json()
+    var server = createServer(function (req, res, next) {
+      req.on('end', function () {
+        jsonParser(req, res, next)
+      })
+      req.resume()
+    })
+
+    request(server)
+      .post('/')
+      .set('Content-Type', 'application/json')
+      .send('{"user":"tobi"}')
+      .expect(200, 'undefined', done)
   })
 
   it('should handle duplicated middleware', function (done) {
@@ -79,7 +109,7 @@ describe('bodyParser.json()', function () {
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{:')
-        .expect(400, parseError('{:'), done)
+        .expect(400, '[entity.parse.failed] ' + parseError('{:'), done)
     })
 
     it('should 400 for incomplete', function (done) {
@@ -87,16 +117,7 @@ describe('bodyParser.json()', function () {
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user"')
-        .expect(400, parseError('{"user"'), done)
-    })
-
-    it('should error with type = "entity.parse.failed"', function (done) {
-      request(this.server)
-        .post('/')
-        .set('Content-Type', 'application/json')
-        .set('X-Error-Property', 'type')
-        .send(' {"user"')
-        .expect(400, 'entity.parse.failed', done)
+        .expect(400, '[entity.parse.failed] ' + parseError('{"user"'), done)
     })
 
     it('should include original body on error object', function (done) {
@@ -117,18 +138,7 @@ describe('bodyParser.json()', function () {
         .set('Content-Type', 'application/json')
         .set('Content-Length', '1034')
         .send(JSON.stringify({ str: buf.toString() }))
-        .expect(413, done)
-    })
-
-    it('should error with type = "entity.too.large"', function (done) {
-      var buf = Buffer.alloc(1024, '.')
-      request(createServer({ limit: '1kb' }))
-        .post('/')
-        .set('Content-Type', 'application/json')
-        .set('Content-Length', '1034')
-        .set('X-Error-Property', 'type')
-        .send(JSON.stringify({ str: buf.toString() }))
-        .expect(413, 'entity.too.large', done)
+        .expect(413, '[entity.too.large] request entity too large', done)
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
@@ -139,6 +149,15 @@ describe('bodyParser.json()', function () {
       test.set('Transfer-Encoding', 'chunked')
       test.write('{"str":')
       test.write('"' + buf.toString() + '"}')
+      test.expect(413, done)
+    })
+
+    it('should 413 when inflated body over limit', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(Buffer.from('1f8b080000000000000aab562a2e2952b252d21b05a360148c58a0540b0066f7ce1e0a040000', 'hex'))
       test.expect(413, done)
     })
 
@@ -175,6 +194,15 @@ describe('bodyParser.json()', function () {
       test.write(buf)
       test.expect(413, done)
     })
+
+    it('should not error when inflating', function (done) {
+      var server = createServer({ limit: '1kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(Buffer.from('1f8b080000000000000aab562a2e2952b252d21b05a360148c58a0540b0066f7ce1e0a0400', 'hex'))
+      test.expect(413, done)
+    })
   })
 
   describe('with inflate option', function () {
@@ -188,7 +216,7 @@ describe('bodyParser.json()', function () {
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/json')
         test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
-        test.expect(415, 'content encoding unsupported', done)
+        test.expect(415, '[encoding.unsupported] content encoding unsupported', done)
       })
     })
 
@@ -218,7 +246,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('true')
-          .expect(400, parseError('#rue').replace('#', 't'), done)
+          .expect(400, '[entity.parse.failed] ' + parseError('#rue').replace(/#/g, 't'), done)
       })
     })
 
@@ -246,7 +274,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('true')
-          .expect(400, parseError('#rue').replace('#', 't'), done)
+          .expect(400, '[entity.parse.failed] ' + parseError('#rue').replace(/#/g, 't'), done)
       })
 
       it('should not parse primitives with leading whitespaces', function (done) {
@@ -254,7 +282,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('    true')
-          .expect(400, parseError('    #rue').replace('#', 't'), done)
+          .expect(400, '[entity.parse.failed] ' + parseError('    #rue').replace(/#/g, 't'), done)
       })
 
       it('should allow leading whitespaces in JSON', function (done) {
@@ -265,15 +293,6 @@ describe('bodyParser.json()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
-      it('should error with type = "entity.parse.failed"', function (done) {
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/json')
-          .set('X-Error-Property', 'type')
-          .send('true')
-          .expect(400, 'entity.parse.failed', done)
-      })
-
       it('should include correct message in stack trace', function (done) {
         request(this.server)
           .post('/')
@@ -281,7 +300,7 @@ describe('bodyParser.json()', function () {
           .set('X-Error-Property', 'stack')
           .send('true')
           .expect(400)
-          .expect(shouldContainInBody(parseError('#rue').replace('#', 't')))
+          .expect(shouldContainInBody(parseError('#rue').replace(/#/g, 't')))
           .end(done)
       })
     })
@@ -306,7 +325,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/json')
           .send('{"user":"tobi"}')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -338,7 +357,7 @@ describe('bodyParser.json()', function () {
           .post('/')
           .set('Content-Type', 'application/x-json')
           .send('{"user":"tobi"}')
-          .expect(200, '{}', done)
+          .expect(200, 'undefined', done)
       })
     })
 
@@ -400,22 +419,7 @@ describe('bodyParser.json()', function () {
         .post('/')
         .set('Content-Type', 'application/json')
         .send('["tobi"]')
-        .expect(403, 'no arrays', done)
-    })
-
-    it('should error with type = "entity.verify.failed"', function (done) {
-      var server = createServer({
-        verify: function (req, res, buf) {
-          if (buf[0] === 0x5b) throw new Error('no arrays')
-        }
-      })
-
-      request(server)
-        .post('/')
-        .set('Content-Type', 'application/json')
-        .set('X-Error-Property', 'type')
-        .send('["tobi"]')
-        .expect(403, 'entity.verify.failed', done)
+        .expect(403, '[entity.verify.failed] no arrays', done)
     })
 
     it('should allow custom codes', function (done) {
@@ -432,7 +436,7 @@ describe('bodyParser.json()', function () {
         .post('/')
         .set('Content-Type', 'application/json')
         .send('["tobi"]')
-        .expect(400, 'no arrays', done)
+        .expect(400, '[entity.verify.failed] no arrays', done)
     })
 
     it('should allow custom type', function (done) {
@@ -448,9 +452,8 @@ describe('bodyParser.json()', function () {
       request(server)
         .post('/')
         .set('Content-Type', 'application/json')
-        .set('X-Error-Property', 'type')
         .send('["tobi"]')
-        .expect(403, 'foo.bar', done)
+        .expect(403, '[foo.bar] no arrays', done)
     })
 
     it('should include original body on error object', function (done) {
@@ -505,7 +508,93 @@ describe('bodyParser.json()', function () {
       var test = request(server).post('/')
       test.set('Content-Type', 'application/json; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
-      test.expect(415, 'unsupported charset "X-BOGUS"', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
+    })
+  })
+
+  describeAsyncHooks('async local storage', function () {
+    before(function () {
+      var jsonParser = bodyParser.json()
+      var store = { foo: 'bar' }
+
+      this.server = createServer(function (req, res, next) {
+        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+
+        asyncLocalStorage.run(store, function () {
+          jsonParser(req, res, function (err) {
+            var local = asyncLocalStorage.getStore()
+
+            if (local) {
+              res.setHeader('x-store-foo', String(local.foo))
+            }
+
+            next(err)
+          })
+        })
+      })
+    })
+
+    it('should presist store', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(200)
+        .expect('x-store-foo', 'bar')
+        .expect('{"user":"tobi"}')
+        .end(done)
+    })
+
+    it('should presist store when unmatched content-type', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/fizzbuzz')
+        .send('buzz')
+        .expect(200)
+        .expect('x-store-foo', 'bar')
+        .expect('undefined')
+        .end(done)
+    })
+
+    it('should presist store when inflated', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(Buffer.from('1f8b080000000000000bab56ca4bcc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.expect(200)
+      test.expect('x-store-foo', 'bar')
+      test.expect('{"name":"论"}')
+      test.end(done)
+    })
+
+    it('should presist store when inflate error', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/json')
+      test.write(Buffer.from('1f8b080000000000000bab56cc4d55b2527ab16e97522d00515be1cc0e000000', 'hex'))
+      test.expect(400)
+      test.expect('x-store-foo', 'bar')
+      test.end(done)
+    })
+
+    it('should presist store when parse error', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":')
+        .expect(400)
+        .expect('x-store-foo', 'bar')
+        .end(done)
+    })
+
+    it('should presist store when limit exceeded', function (done) {
+      request(this.server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"' + Buffer.alloc(1024 * 100, '.').toString() + '"}')
+        .expect(413)
+        .expect('x-store-foo', 'bar')
+        .end(done)
     })
   })
 
@@ -528,6 +617,13 @@ describe('bodyParser.json()', function () {
       test.expect(200, '{"name":"论"}', done)
     })
 
+    it('should parse utf-32', function (done) {
+      var test = request(this.server).post('/')
+      test.set('Content-Type', 'application/json; charset=utf-32')
+      test.write(Buffer.from('fffe00007b000000220000006e000000610000006d00000065000000220000003a00000022000000ba8b0000220000007d000000', 'hex'))
+      test.expect(200, '{"name":"论"}', done)
+    })
+
     it('should parse when content-length != char length', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-8')
@@ -547,15 +643,7 @@ describe('bodyParser.json()', function () {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'application/json; charset=koi8-r')
       test.write(Buffer.from('7b226e616d65223a22cec5d4227d', 'hex'))
-      test.expect(415, 'unsupported charset "KOI8-R"', done)
-    })
-
-    it('should error with type = "charset.unsupported"', function (done) {
-      var test = request(this.server).post('/')
-      test.set('Content-Type', 'application/json; charset=koi8-r')
-      test.set('X-Error-Property', 'type')
-      test.write(Buffer.from('7b226e616d65223a22cec5d4227d', 'hex'))
-      test.expect(415, 'charset.unsupported', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "KOI8-R"', done)
     })
   })
 
@@ -608,16 +696,7 @@ describe('bodyParser.json()', function () {
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/json')
       test.write(Buffer.from('000000000000', 'hex'))
-      test.expect(415, 'unsupported content encoding "nulls"', done)
-    })
-
-    it('should error with type = "encoding.unsupported"', function (done) {
-      var test = request(this.server).post('/')
-      test.set('Content-Encoding', 'nulls')
-      test.set('Content-Type', 'application/json')
-      test.set('X-Error-Property', 'type')
-      test.write(Buffer.from('000000000000', 'hex'))
-      test.expect(415, 'encoding.unsupported', done)
+      test.expect(415, '[encoding.unsupported] unsupported content encoding "nulls"', done)
     })
 
     it('should 400 on malformed encoding', function (done) {
@@ -650,10 +729,12 @@ function createServer (opts) {
     _bodyParser(req, res, function (err) {
       if (err) {
         res.statusCode = err.status || 500
-        res.end(err[req.headers['x-error-property'] || 'message'])
+        res.end(req.headers['x-error-property']
+          ? err[req.headers['x-error-property']]
+          : ('[' + err.type + '] ' + err.message))
       } else {
         res.statusCode = 200
-        res.end(JSON.stringify(req.body))
+        res.end(JSON.stringify(req.body) || typeof req.body)
       }
     })
   })
@@ -671,5 +752,13 @@ function shouldContainInBody (str) {
   return function (res) {
     assert.ok(res.text.indexOf(str) !== -1,
       'expected \'' + res.text + '\' to contain \'' + str + '\'')
+  }
+}
+
+function tryRequire (name) {
+  try {
+    return require(name)
+  } catch (e) {
+    return {}
   }
 }

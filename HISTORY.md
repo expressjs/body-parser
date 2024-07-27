@@ -1,11 +1,82 @@
-unreleased
-==========
+2.0.0-beta.2 / 2023-02-23
+=========================
 
-  * deps: http-errors@1.7.3
+This incorporates all changes after 1.19.1 up to 1.20.2.
+
+  * Remove deprecated `bodyParser()` combination middleware
+  * deps: debug@3.1.0
+    - Add `DEBUG_HIDE_DATE` environment variable
+    - Change timer to per-namespace instead of global
+    - Change non-TTY date format
+    - Remove `DEBUG_FD` environment variable support
+    - Support 256 namespace colors
+  * deps: iconv-lite@0.5.2
+    - Add encoding cp720
+    - Add encoding UTF-32
+  * deps: raw-body@3.0.0-beta.1
+
+2.0.0-beta.1 / 2021-12-17
+=========================
+
+  * Drop support for Node.js 0.8
+  * `req.body` is no longer always initialized to `{}`
+    - it is left `undefined` unless a body is parsed
+  * `urlencoded` parser now defaults `extended` to `false`
+  * Use `on-finished` to determine when body read
+
+1.20.2 / 2023-02-21
+===================
+
+  * Fix strict json error message on Node.js 19+
+  * deps: content-type@~1.0.5
+    - perf: skip value escaping when unnecessary
+  * deps: raw-body@2.5.2
+
+1.20.1 / 2022-10-06
+===================
+
+  * deps: qs@6.11.0
+  * perf: remove unnecessary object clone
+
+1.20.0 / 2022-04-02
+===================
+
+  * Fix error message for json parse whitespace in `strict`
+  * Fix internal error when inflated body exceeds limit
+  * Prevent loss of async hooks context
+  * Prevent hanging when request already read
+  * deps: depd@2.0.0
+    - Replace internal `eval` usage with `Function` constructor
+    - Use instance methods on `process` to check for listeners
+  * deps: http-errors@2.0.0
+    - deps: depd@2.0.0
+    - deps: statuses@2.0.1
+  * deps: on-finished@2.4.1
+  * deps: qs@6.10.3
+  * deps: raw-body@2.5.1
+    - deps: http-errors@2.0.0
+
+1.19.2 / 2022-02-15
+===================
+
+  * deps: bytes@3.1.2
+  * deps: qs@6.9.7
+    * Fix handling of `__proto__` keys
+  * deps: raw-body@2.4.3
+    - deps: bytes@3.1.2
+
+1.19.1 / 2021-12-10
+===================
+
+  * deps: bytes@3.1.1
+  * deps: http-errors@1.8.1
     - deps: inherits@2.0.4
+    - deps: toidentifier@1.0.1
+    - deps: setprototypeof@1.2.0
   * deps: qs@6.9.6
-  * deps: raw-body@2.4.1
-    - deps: http-errors@1.7.3
+  * deps: raw-body@2.4.2
+    - deps: bytes@3.1.1
+    - deps: http-errors@1.8.1
   * deps: safe-buffer@5.2.1
   * deps: type-is@~1.6.18
 

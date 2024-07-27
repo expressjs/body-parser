@@ -1,7 +1,7 @@
 {
   "name": "body-parser",
   "description": "Node.js body parsing middleware",
-  "version": "1.19.0",
+  "version": "2.0.0-beta.2",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
     "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)"
@@ -9,39 +9,41 @@
   "license": "MIT",
   "repository": "expressjs/body-parser",
   "dependencies": {
-    "bytes": "3.1.0",
-    "content-type": "~1.0.4",
-    "debug": "2.6.9",
-    "depd": "~1.1.2",
-    "http-errors": "1.7.3",
-    "iconv-lite": "0.4.24",
-    "on-finished": "~2.3.0",
-    "qs": "6.9.6",
-    "raw-body": "2.4.1",
-    "type-is": "~1.6.18"
+    "bytes": "3.1.2",
+    "content-type": "~1.0.5",
+    "debug": "3.1.0",
+    "destroy": "1.2.0",
+    "http-errors": "2.0.0",
+    "iconv-lite": "0.5.2",
+    "on-finished": "2.4.1",
+    "qs": "6.11.0",
+    "raw-body": "^3.0.0",
+    "type-is": "~1.6.18",
+    "unpipe": "1.0.0"
   },
   "devDependencies": {
-    "eslint": "7.32.0",
+    "eslint": "8.34.0",
     "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.25.2",
-    "eslint-plugin-markdown": "2.2.1",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.3.1",
+    "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-standard": "4.1.0",
     "methods": "1.1.2",
-    "mocha": "9.1.3",
+    "mocha": "10.2.0",
     "nyc": "15.1.0",
     "safe-buffer": "5.2.1",
-    "supertest": "6.1.6"
+    "supertest": "6.3.3"
   },
   "files": [
     "lib/",
     "LICENSE",
     "HISTORY.md",
+    "SECURITY.md",
     "index.js"
   ],
   "engines": {
-    "node": ">= 0.8"
+    "node": ">= 0.10"
   },
   "scripts": {
     "lint": "eslint .",

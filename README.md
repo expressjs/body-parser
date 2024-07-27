@@ -1,8 +1,8 @@
 # body-parser
 
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
-[![Build Status][github-actions-ci-image]][github-actions-ci-url]
+[![NPM Version][npm-version-image]][npm-url]
+[![NPM Downloads][npm-downloads-image]][npm-url]
+[![Build Status][ci-image]][ci-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
 
 Node.js body parsing middleware.
@@ -55,9 +55,7 @@ var bodyParser = require('body-parser')
 
 The `bodyParser` object exposes various factories to create middlewares. All
 middlewares will populate the `req.body` property with the parsed body when
-the `Content-Type` request header matches the `type` option, or an empty
-object (`{}`) if there was no body to parse, the `Content-Type` was not matched,
-or an error occurred.
+the `Content-Type` request header matches the `type` option.
 
 The various errors returned by this module are described in the
 [errors section](#errors).
@@ -235,9 +233,7 @@ URL-encoded format, allowing for a JSON-like experience with URL-encoded. For
 more information, please [see the qs
 library](https://www.npmjs.org/package/qs#readme).
 
-Defaults to `true`, but using the default has been deprecated. Please
-research into the difference between `qs` and `querystring` and choose the
-appropriate setting.
+Defaults to `false`.
 
 ##### inflate
 
@@ -357,6 +353,14 @@ to this middleware. This module operates directly on bytes only and you cannot
 call `req.setEncoding` when using this module. The `status` property is set to
 `500` and the `type` property is set to `'stream.encoding.set'`.
 
+### stream is not readable
+
+This error will occur when the request is no longer readable when this middleware
+attempts to read it. This typically means something other than a middleware from
+this module read the request body already and the middleware was also configured to
+read the same request. The `status` property is set to `500` and the `type`
+property is set to `'stream.not.readable'`.
+
 ### too many parameters
 
 This error will occur when the content of the request exceeds the configured
@@ -395,7 +399,7 @@ var bodyParser = require('body-parser')
 var app = express()
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded())
 
 // parse application/json
 app.use(bodyParser.json())
@@ -403,7 +407,7 @@ app.use(bodyParser.json())
 app.use(function (req, res) {
   res.setHeader('Content-Type', 'text/plain')
   res.write('you posted:\n')
-  res.end(JSON.stringify(req.body, null, 2))
+  res.end(String(JSON.stringify(req.body, null, 2)))
 })
 ```
 
@@ -423,15 +427,17 @@ var app = express()
 var jsonParser = bodyParser.json()
 
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded()
 
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
+  if (!req.body || !req.body.username) res.sendStatus(400)
   res.send('welcome, ' + req.body.username)
 })
 
 // POST /api/users gets JSON bodies
 app.post('/api/users', jsonParser, function (req, res) {
+  if (!req.body) res.sendStatus(400)
   // create user in req.body
 })
 ```
@@ -461,11 +467,12 @@ app.use(bodyParser.text({ type: 'text/html' }))
 
 [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/body-parser.svg
-[npm-url]: https://npmjs.org/package/body-parser
-[coveralls-image]: https://img.shields.io/coveralls/expressjs/body-parser/master.svg
+[ci-image]: https://badgen.net/github/checks/expressjs/body-parser/master?label=ci
+[ci-url]: https://github.com/expressjs/body-parser/actions/workflows/ci.yml
+[coveralls-image]: https://badgen.net/coveralls/c/github/expressjs/body-parser/master
 [coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
-[downloads-image]: https://img.shields.io/npm/dm/body-parser.svg
-[downloads-url]: https://npmjs.org/package/body-parser
-[github-actions-ci-image]: https://img.shields.io/github/workflow/status/expressjs/body-parser/ci/master?label=ci
-[github-actions-ci-url]: https://github.com/expressjs/body-parser?query=workflow%3Aci
+[node-version-image]: https://badgen.net/npm/node/body-parser
+[node-version-url]: https://nodejs.org/en/download
+[npm-downloads-image]: https://badgen.net/npm/dm/body-parser
+[npm-url]: https://npmjs.org/package/body-parser
+[npm-version-image]: https://badgen.net/npm/v/body-parser
