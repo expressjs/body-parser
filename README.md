@@ -274,7 +274,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 ##### defaultCharset
 
 The default charset to parse as, if not specified in content-type. Must be
-either `utf-8` or `iso-8859-1`.
+either `utf-8` or `iso-8859-1`. Defaults to `utf-8`.
 
 ##### charsetSentinel
 
