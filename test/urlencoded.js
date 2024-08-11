@@ -88,12 +88,20 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{"user":"tobi"}', done)
   })
 
-  it('should parse extended syntax', function (done) {
+  it('should parse multiple key instances', function (done) {
+    request(this.server)
+      .post('/')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send('user=Tobi&user=Loki')
+      .expect(200, '{"user":["Tobi","Loki"]}', done)
+  })
+
+  it('should parse not parse nested objects', function (done) {
     request(this.server)
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user[name][first]=Tobi')
-      .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+      .expect(200, '{"user[name][first]":"Tobi"}', done)
   })
 
   describe('with extended option', function () {
@@ -119,103 +127,18 @@ describe('bodyParser.urlencoded()', function () {
       })
     })
 
-    describe('when true', function () {
+    describe('when set to a custom parse function', function () {
       before(function () {
-        this.server = createServer({ extended: true })
+        const parser = () => ({ foo: 'bar' })
+        this.server = createServer({ extended: parser })
       })
 
-      it('should parse multiple key instances', function (done) {
+      it('should parse via custom parser', function (done) {
         request(this.server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('user=Tobi&user=Loki')
-          .expect(200, '{"user":["Tobi","Loki"]}', done)
-      })
-
-      it('should parse extended syntax', function (done) {
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('user[name][first]=Tobi')
-          .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
-      })
-
-      it('should parse parameters with dots', function (done) {
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('user.name=Tobi')
-          .expect(200, '{"user.name":"Tobi"}', done)
-      })
-
-      it('should parse fully-encoded extended syntax', function (done) {
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('user%5Bname%5D%5Bfirst%5D=Tobi')
-          .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
-      })
-
-      it('should parse array index notation', function (done) {
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('foo[0]=bar&foo[1]=baz')
-          .expect(200, '{"foo":["bar","baz"]}', done)
-      })
-
-      it('should parse array index notation with large array', function (done) {
-        var str = 'f[0]=0'
-
-        for (var i = 1; i < 500; i++) {
-          str += '&f[' + i + ']=' + i.toString(16)
-        }
-
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send(str)
-          .expect(function (res) {
-            var obj = JSON.parse(res.text)
-            assert.strictEqual(Object.keys(obj).length, 1)
-            assert.strictEqual(Array.isArray(obj.f), true)
-            assert.strictEqual(obj.f.length, 500)
-          })
-          .expect(200, done)
-      })
-
-      it('should parse array of objects syntax', function (done) {
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send('foo[0][bar]=baz&foo[0][fizz]=buzz&foo[]=done!')
-          .expect(200, '{"foo":[{"bar":"baz","fizz":"buzz"},"done!"]}', done)
-      })
-
-      it('should parse deep object', function (done) {
-        var str = 'foo'
-
-        for (var i = 0; i < 500; i++) {
-          str += '[p]'
-        }
-
-        str += '=bar'
-
-        request(this.server)
-          .post('/')
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send(str)
-          .expect(function (res) {
-            var obj = JSON.parse(res.text)
-            assert.strictEqual(Object.keys(obj).length, 1)
-            assert.strictEqual(typeof obj.foo, 'object')
-
-            var depth = 0
-            var ref = obj.foo
-            while ((ref = ref.p)) { depth++ }
-            assert.strictEqual(depth, 500)
-          })
-          .expect(200, done)
+          .send('a=b')
+          .expect(200, '{"foo":"bar"}', done)
       })
     })
   })
