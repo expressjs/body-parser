@@ -4,6 +4,7 @@
 [![NPM Downloads][npm-downloads-image]][npm-url]
 [![Build Status][ci-image]][ci-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
+[![OpenSSF Scorecard Badge][ossf-scorecard-badge]][ossf-scorecard-visualizer]
 
 Node.js body parsing middleware.
 
@@ -463,3 +464,5 @@ app.use(bodyParser.text({ type: 'text/html' }))
 [npm-downloads-image]: https://badgen.net/npm/dm/body-parser
 [npm-url]: https://npmjs.org/package/body-parser
 [npm-version-image]: https://badgen.net/npm/v/body-parser
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/body-parser/badge
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/body-parser
