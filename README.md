@@ -278,6 +278,10 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+#### depth
+
+The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
+
 ## Errors
 
 The middlewares provided by this module create errors using the
@@ -373,6 +377,10 @@ contained an unsupported encoding. The encoding is contained in the message
 as well as in the `encoding` property. The `status` property is set to `415`,
 the `type` property is set to `'encoding.unsupported'`, and the `encoding`
 property is set to the encoding that is unsupported.
+
+### The input exceeded the depth
+
+This error occurs when using `bodyParser.urlencoded` with the `extended` property set to `true` and the input exceeds the configured `depth` option. The `status` property is set to `400`. It is recommended to review the `depth` option and evaluate if it requires a higher value. When the `depth` option is set to `32` (default value), the error will not be thrown.
 
 ## Examples
 

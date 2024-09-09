@@ -195,7 +195,7 @@ describe('bodyParser.urlencoded()', function () {
       it('should parse deep object', function (done) {
         var str = 'foo'
 
-        for (var i = 0; i < 500; i++) {
+        for (var i = 0; i < 32; i++) {
           str += '[p]'
         }
 
@@ -213,11 +213,89 @@ describe('bodyParser.urlencoded()', function () {
             var depth = 0
             var ref = obj.foo
             while ((ref = ref.p)) { depth++ }
-            assert.strictEqual(depth, 500)
+            assert.strictEqual(depth, 32)
           })
           .expect(200, done)
       })
     })
+  })
+
+
+  describe('with depth option', function () {
+    describe('when custom value set', function () {
+
+      it('should reject non possitive numbers', function () {
+        assert.throws(createServer.bind(null, { extended: true, depth: -1 }),
+          /TypeError: option depth must be a zero or a positive number/)
+        assert.throws(createServer.bind(null, { extended: true, depth: NaN }),
+          /TypeError: option depth must be a zero or a positive number/)
+        assert.throws(createServer.bind(null, { extended: true, depth: "beep" }),
+          /TypeError: option depth must be a zero or a positive number/)
+      })
+
+
+      it('should parse up to the specified depth', function (done) {
+        this.server = createServer({ extended:true,  depth: 10 })
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('a[b][c][d]=value')
+          .expect(200, '{"a":{"b":{"c":{"d":"value"}}}}', done)
+      })
+
+      it('should not parse beyond the specified depth', function (done) {
+        this.server = createServer({ extended:true,  depth: 1 })
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('a[b][c][d][e]=value')
+          .expect(400, '[querystring.parse.rangeError] The input exceeded the depth', done)
+      })
+    })
+    
+
+    describe('when default value', function () {
+      before(function () {
+        this.server = createServer({ })
+      })
+
+      it('should parse deeply nested objects', function (done) {
+        var deepObject = 'a'
+        for (var i = 0; i < 32; i++) {
+          deepObject += '[p]'
+        }
+        deepObject += '=value'
+  
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(deepObject)
+          .expect(function (res) {
+            var obj = JSON.parse(res.text)
+            var depth = 0
+            var ref = obj.a
+            while ((ref = ref.p)) { depth++ }
+            assert.strictEqual(depth, 32)
+          })
+          .expect(200, done)
+      })
+
+      it('should not parse beyond the specified depth', function (done) {
+        var deepObject = 'a';
+        for (var i = 0; i < 33; i++) {
+          deepObject += '[p]';
+        }
+        deepObject += '=value';
+
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send(deepObject)
+          .expect(400, '[querystring.parse.rangeError] The input exceeded the depth', done);
+      });
+  
+    })
+
   })
 
   describe('with inflate option', function () {

@@ -1,6 +1,9 @@
 unreleased
-==========
-  * deps: qs@6.12.3
+===================
+
+  * deps: qs@6.13.0
+  * add `depth` option to customize the depth level in the parser
+  * IMPORTANT: The default `depth` level for parsing URL-encoded data is now `32` (previously was `Infinity`)
 
 1.20.2 / 2023-02-21
 ===================
