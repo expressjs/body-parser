@@ -1,6 +1,6 @@
 unreleased
 =========================
-
+* Propagate changes from 1.20.3 
 * add brotli support #406
 
 2.0.0-beta.2 / 2023-02-23
@@ -29,6 +29,13 @@ This incorporates all changes after 1.19.1 up to 1.20.2.
   * `urlencoded` parser now defaults `extended` to `false`
   * Use `on-finished` to determine when body read
 
+1.20.3 / 2024-09-10
+===================
+
+  * deps: qs@6.13.0
+  * add `depth` option to customize the depth level in the parser
+  * IMPORTANT: The default `depth` level for parsing URL-encoded data is now `32` (previously was `Infinity`)
+ 
 1.20.2 / 2023-02-21
 ===================
 
