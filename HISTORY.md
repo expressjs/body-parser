@@ -1,3 +1,8 @@
+2.0.1 / 2024-09-10
+=========================
+
+* Restore expected behavior `extended` to `false`
+
 2.0.0 / 2024-09-10
 =========================
 * Propagate changes from 1.20.3 
