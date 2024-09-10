@@ -166,7 +166,7 @@ describe('bodyParser.urlencoded()', function () {
       .post('/')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send('user[name][first]=Tobi')
-      .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+      .expect(200, '{"user[name][first]":"Tobi"}', done)
   })
 
   describe('with extended option', function () {
@@ -180,7 +180,7 @@ describe('bodyParser.urlencoded()', function () {
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
           .send('user[name][first]=Tobi')
-          .expect(200, '{"user":{"name":{"first":"Tobi"}}}', done)
+          .expect(200, '{"user[name][first]":"Tobi"}', done)
       })
 
       it('should parse multiple key instances', function (done) {
@@ -295,7 +295,7 @@ describe('bodyParser.urlencoded()', function () {
 
   describe('with depth option', function () {
     describe('when custom value set', function () {
-      it('should reject non possitive numbers', function () {
+      it('should reject non positive numbers', function () {
         assert.throws(createServer.bind(null, { extended: true, depth: -1 }),
           /TypeError: option depth must be a zero or a positive number/)
         assert.throws(createServer.bind(null, { extended: true, depth: NaN }),
@@ -325,7 +325,7 @@ describe('bodyParser.urlencoded()', function () {
 
     describe('when default value', function () {
       before(function () {
-        this.server = createServer({ })
+        this.server = createServer({ extended: true })
       })
 
       it('should parse deeply nested objects', function (done) {
