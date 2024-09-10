@@ -1,7 +1,8 @@
-unreleased
+2.0.0 / 2024-09-10
 =========================
 * Propagate changes from 1.20.3 
 * add brotli support #406
+* Breaking Change: Node.js 18 is the minimum supported version
 
 2.0.0-beta.2 / 2023-02-23
 =========================
