@@ -1,4 +1,4 @@
-unreleased
+2.1.0 / 2024-09-10
 =========================
 * Propagate changes from 1.20.3 
 * add brotli support #406
