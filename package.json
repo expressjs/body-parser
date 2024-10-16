@@ -43,7 +43,7 @@
     "index.js"
   ],
   "engines": {
-    "node": ">= 0.10"
+    "node": ">=18"
   },
   "scripts": {
     "lint": "eslint .",
