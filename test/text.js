@@ -12,10 +12,6 @@ var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
   ? describe
   : describe.skip
 
-var hasBrotliSupport = 'createBrotliDecompress' in require('zlib')
-var brotlit = hasBrotliSupport ? it : it.skip
-var nobrotlit = !hasBrotliSupport ? it : it.skip
-
 describe('bodyParser.text()', function () {
   before(function () {
     this.server = createServer()
@@ -529,20 +525,12 @@ describe('bodyParser.text()', function () {
       test.expect(200, '"name is 论"', done)
     })
 
-    brotlit('should support brotli encoding', function (done) {
+    it('should support brotli encoding', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Encoding', 'br')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('0b05806e616d6520697320e8aeba03', 'hex'))
       test.expect(200, '"name is 论"', done)
-    })
-
-    nobrotlit('should throw 415 if there\'s no brotli support', function (done) {
-      var test = request(this.server).post('/')
-      test.set('Content-Encoding', 'br')
-      test.set('Content-Type', 'text/plain')
-      test.write(Buffer.from('0b05806e616d6520697320e8aeba03', 'hex'))
-      test.expect(415, 'unsupported content encoding "br"', done)
     })
 
     it('should be case-insensitive', function (done) {
