@@ -1,3 +1,8 @@
+unreleased
+=========================
+
+* remove `unpipe` package and use native `unpipe()` method
+
 2.0.1 / 2024-09-10
 =========================
 
