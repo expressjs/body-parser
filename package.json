@@ -28,7 +28,6 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-standard": "4.1.0",
-    "methods": "1.1.2",
     "mocha": "10.2.0",
     "nyc": "15.1.0",
     "safe-buffer": "5.2.1",
