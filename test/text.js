@@ -1,16 +1,12 @@
 'use strict'
 
 var assert = require('assert')
-var asyncHooks = tryRequire('async_hooks')
+var AsyncLocalStorage = require('async_hooks').AsyncLocalStorage
 var Buffer = require('safe-buffer').Buffer
 var http = require('http')
 var request = require('supertest')
 
 var bodyParser = require('..')
-
-var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
-  ? describe
-  : describe.skip
 
 describe('bodyParser.text()', function () {
   before(function () {
@@ -371,13 +367,13 @@ describe('bodyParser.text()', function () {
     })
   })
 
-  describeAsyncHooks('async local storage', function () {
+  describe('async local storage', function () {
     before(function () {
       var textParser = bodyParser.text()
       var store = { foo: 'bar' }
 
       this.server = createServer(function (req, res, next) {
-        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+        var asyncLocalStorage = new AsyncLocalStorage()
 
         asyncLocalStorage.run(store, function () {
           textParser(req, res, function (err) {
@@ -565,12 +561,4 @@ function createServer (opts) {
       )
     })
   })
-}
-
-function tryRequire (name) {
-  try {
-    return require(name)
-  } catch (e) {
-    return {}
-  }
 }
