@@ -1,15 +1,11 @@
 'use strict'
 
 var assert = require('assert')
-var asyncHooks = tryRequire('async_hooks')
+var AsyncLocalStorage = require('async_hooks').AsyncLocalStorage
 var http = require('http')
 var request = require('supertest')
 
 var bodyParser = require('..')
-
-var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
-  ? describe
-  : describe.skip
 
 describe('bodyParser.urlencoded()', function () {
   before(function () {
@@ -755,13 +751,13 @@ describe('bodyParser.urlencoded()', function () {
     })
   })
 
-  describeAsyncHooks('async local storage', function () {
+  describe('async local storage', function () {
     before(function () {
       var urlencodedParser = bodyParser.urlencoded()
       var store = { foo: 'bar' }
 
       this.server = createServer(function (req, res, next) {
-        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+        var asyncLocalStorage = new AsyncLocalStorage()
 
         asyncLocalStorage.run(store, function () {
           urlencodedParser(req, res, function (err) {
@@ -966,13 +962,5 @@ function createServer (opts) {
 function expectKeyCount (count) {
   return function (res) {
     assert.strictEqual(Object.keys(JSON.parse(res.text)).length, count)
-  }
-}
-
-function tryRequire (name) {
-  try {
-    return require(name)
-  } catch (e) {
-    return {}
   }
 }
