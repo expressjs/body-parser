@@ -9,15 +9,16 @@
   "license": "MIT",
   "repository": "expressjs/body-parser",
   "dependencies": {
-    "bytes": "3.1.2",
-    "content-type": "~1.0.5",
-    "debug": "3.1.0",
-    "http-errors": "2.0.0",
-    "iconv-lite": "0.5.2",
-    "on-finished": "2.4.1",
-    "qs": "6.13.0",
+    "bytes": "^3.1.2",
+    "content-type": "^1.0.5",
+    "debug": "^3.1.0",
+    "destroy": "^1.2.0",
+    "http-errors": "^2.0.0",
+    "iconv-lite": "^0.5.2",
+    "on-finished": "^2.4.1",
+    "qs": "^6.14.0",
     "raw-body": "^3.0.0",
-    "type-is": "^2.0.0"
+    "type-is": "^1.6.18"
   },
   "devDependencies": {
     "eslint": "8.34.0",
