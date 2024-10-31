@@ -2,8 +2,10 @@ name: ci
 on:
   push:
     branches:
-    - master
+      - 1.x
   pull_request:
+    branches:
+      - 1.x
 
 jobs:
   test:
@@ -36,6 +38,7 @@ jobs:
         - Node.js 20.x
         - Node.js 21.x
         - Node.js 22.x
+        - Node.js 23.x
 
         include:
         - name: Node.js 0.8
@@ -128,7 +131,10 @@ jobs:
           node-version: "21"
 
         - name: Node.js 22.x
-          node-version: "22.4.1"
+          node-version: "22"
+
+        - name: Node.js 23.x
+          node-version: "23"
 
     steps:
     - uses: actions/checkout@v4
