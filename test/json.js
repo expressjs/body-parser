@@ -1,15 +1,11 @@
 'use strict'
 
 var assert = require('assert')
-var asyncHooks = tryRequire('async_hooks')
+var AsyncLocalStorage = require('async_hooks').AsyncLocalStorage
 var http = require('http')
 var request = require('supertest')
 
 var bodyParser = require('..')
-
-var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
-  ? describe
-  : describe.skip
 
 describe('bodyParser.json()', function () {
   it('should parse JSON', function (done) {
@@ -511,13 +507,13 @@ describe('bodyParser.json()', function () {
     })
   })
 
-  describeAsyncHooks('async local storage', function () {
+  describe('async local storage', function () {
     before(function () {
       var jsonParser = bodyParser.json()
       var store = { foo: 'bar' }
 
       this.server = createServer(function (req, res, next) {
-        var asyncLocalStorage = new asyncHooks.AsyncLocalStorage()
+        var asyncLocalStorage = new AsyncLocalStorage()
 
         asyncLocalStorage.run(store, function () {
           jsonParser(req, res, function (err) {
@@ -759,13 +755,5 @@ function shouldContainInBody (str) {
   return function (res) {
     assert.ok(res.text.indexOf(str) !== -1,
       'expected \'' + res.text + '\' to contain \'' + str + '\'')
-  }
-}
-
-function tryRequire (name) {
-  try {
-    return require(name)
-  } catch (e) {
-    return {}
   }
 }
