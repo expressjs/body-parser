@@ -88,16 +88,27 @@ specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
 
+##### parser
+
+The `parser` option is the function called against the request body to convert
+it to a JavaScript object. If a `reviver` is supplied, it is supplied as the
+second argument to this function.
+
+```
+parser(body, reviver) -> req.body
+```
+
+Defaults to `JSON.parse`.
+
 ##### reviver
 
-The `reviver` option is passed directly to `JSON.parse` as the second
-argument. You can find more information on this argument
+You can find more information on this argument
 [in the MDN documentation about JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Example.3A_Using_the_reviver_parameter).
 
 ##### strict
 
 When set to `true`, will only accept arrays and objects; when `false` will
-accept anything `JSON.parse` accepts. Defaults to `true`.
+accept anything the `parser` accepts. Defaults to `true`.
 
 ##### type
 
@@ -294,6 +305,16 @@ form. Defaults to `false`.
 #### depth
 
 The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
+
+##### parser
+
+The `parser` option, if supplied, is used to in place of the default parser to
+convert the request body into a JavaScript object. If this option is supplied,
+both the `extended` and `parameterLimit` options are ignored.
+
+```
+parser(body) -> req.body
+```
 
 ## Errors
 
