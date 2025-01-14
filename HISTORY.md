@@ -2,6 +2,7 @@ unreleased
 =========================
 
 * deps: type-is@^2.0.0
+* refactor: prefix built-in node module imports
 
 2.0.2 / 2024-10-31
 =========================
