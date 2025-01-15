@@ -91,7 +91,7 @@ to `'100kb'`.
 ##### parser
 
 The `parser` option is the function called against the request body to convert
-it to a Javascript object. If a `reviver` is supplied, it is supplied as the
+it to a JavaScript object. If a `reviver` is supplied, it is supplied as the
 second argument to this function.
 
 ```
@@ -308,7 +308,7 @@ The `depth` option is used to configure the maximum depth of the `qs` library wh
 ##### parser
 
 The `parser` option, if supplied, is used to in place of the default parser to
-convert the request body into a Javascript object. If this option is supplied,
+convert the request body into a JavaScript object. If this option is supplied,
 both the `extended` and `parameterLimit` options are ignored.
 
 ```
