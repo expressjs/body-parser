@@ -1,0 +1,8 @@
+{
+    "dependents": [
+        {
+            "repository": "https://github.com/wiby-test/partial",
+            "pullRequest": false
+        }
+    ]
+}
