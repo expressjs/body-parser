@@ -37,7 +37,7 @@ exports = module.exports = bodyParser
 Object.defineProperty(exports, 'json', {
   configurable: true,
   enumerable: true,
-  get: createParserGetter('json')
+  get: createParserGetter('jsons')
 })
 
 /**
