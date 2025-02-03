@@ -51,7 +51,7 @@ $ npm install body-parser
 ## API
 
 ```js
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 ```
 
 The `bodyParser` object exposes various factories to create middlewares. All
@@ -404,10 +404,10 @@ top-level middleware, which will parse the bodies of all incoming requests.
 This is the simplest setup.
 
 ```js
-var express = require('express')
-var bodyParser = require('body-parser')
+const express = require('express')
+const bodyParser = require('body-parser')
 
-var app = express()
+const app = express()
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded())
@@ -429,16 +429,16 @@ need them. In general, this is the most recommended way to use body-parser with
 Express.
 
 ```js
-var express = require('express')
-var bodyParser = require('body-parser')
+const express = require('express')
+const bodyParser = require('body-parser')
 
-var app = express()
+const app = express()
 
 // create application/json parser
-var jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json()
 
 // create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded()
+const urlencodedParser = bodyParser.urlencoded()
 
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
@@ -459,10 +459,10 @@ All the parsers accept a `type` option which allows you to change the
 `Content-Type` that the middleware will parse.
 
 ```js
-var express = require('express')
-var bodyParser = require('body-parser')
+const express = require('express')
+const bodyParser = require('body-parser')
 
-var app = express()
+const app = express()
 
 // parse various different custom JSON types as JSON
 app.use(bodyParser.json({ type: 'application/*+json' }))
