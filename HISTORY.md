@@ -3,6 +3,7 @@ unreleased
 
 * deps:
   * type-is@^2.0.0
+  * debug@^4.4.0
   * Removed destroy
 * refactor: prefix built-in node module imports
 * use the node require cache instead of custom caching
