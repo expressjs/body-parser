@@ -45,6 +45,7 @@
     "lint": "eslint .",
     "test": "mocha --reporter spec --check-leaks test/",
     "test-ci": "nyc --reporter=lcov --reporter=text npm test",
-    "test-cov": "nyc --reporter=html --reporter=text npm test"
+    "test-cov": "nyc --reporter=html --reporter=text npm test",
+    "test-debug": "npm test -- --timeout 0"
   }
 }
