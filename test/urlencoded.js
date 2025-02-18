@@ -46,7 +46,7 @@ describe('bodyParser.urlencoded()', function () {
   var extendedValues = [true, false]
   extendedValues.forEach(function (extended) {
     describe('in ' + (extended ? 'extended' : 'simple') + ' mode', function () {
-      it.skip('should parse x-www-form-urlencoded with an explicit iso-8859-1 encoding', function (done) {
+      it('should parse x-www-form-urlencoded with an explicit iso-8859-1 encoding', function (done) {
         var server = createServer({ extended: extended })
         request(server)
           .post('/')
