@@ -96,6 +96,13 @@ describe('normalizeOptions(options, defaultType)', () => {
         assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/json', 'content-length': '1024' } }), false)
       })
 
+      it('should accept an array of strings type', () => {
+        const result = normalizeOptions({ type: ['application/xml', 'application/*+json'] }, 'application/json')
+        assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml', 'content-length': '1024' } }), true)
+        assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/ld+json', 'content-length': '1024' } }), true)
+        assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/json', 'content-length': '1024' } }), false)
+      })
+
       it('should accept a type checking function', () => {
         const result = normalizeOptions({ type: () => true }, 'application/json')
         assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml' } }), true)
@@ -114,10 +121,27 @@ describe('normalizeOptions(options, defaultType)', () => {
       }, /defaultType must be provided/)
     })
 
-    it('should throw an error if defaultType is not a string', () => {
-      assert.throws(() => {
-        normalizeOptions({}, 123)
-      }, /defaultType must be provided/)
+    it('should convert string defaultType to a request content-type checking function', () => {
+      const result = normalizeOptions({}, 'application/json')
+      assert.strictEqual(typeof result.shouldParse, 'function')
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/json', 'content-length': '1024' } }), true)
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml', 'content-length': '100' } }), false)
+    })
+
+    it('should convert array of strings defaultType to a request content-type checking function', () => {
+      const result = normalizeOptions({}, ['application/json', 'application/*+json'])
+      assert.strictEqual(typeof result.shouldParse, 'function')
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/json', 'content-length': '1024' } }), true)
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/ld+json', 'content-length': '1024' } }), true)
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml', 'content-length': '100' } }), false)
+    })
+
+    it('should use function defaultType directly as the request content-type checker', () => {
+      const typeFunction = (req) => req.headers['content-type'].endsWith('+json')
+      const result = normalizeOptions({}, typeFunction)
+      assert.strictEqual(result.shouldParse, typeFunction)
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/ld+json' } }), true)
+      assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml' } }), false)
     })
   })
 })
