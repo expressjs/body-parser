@@ -116,6 +116,12 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+##### experimentalZstd
+
+The `experimentalZstd` option enables support for automatic inflation of `zstd`
+(Zstandard) encoded request bodies. Requires Node.js 23.8.0 or later. Defaults
+to `false`.
+
 ### bodyParser.raw([options])
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
@@ -161,6 +167,12 @@ and the request is parsed if it returns a truthy value. Defaults to
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
+
+##### experimentalZstd
+
+The `experimentalZstd` option enables support for automatic inflation of `zstd`
+(Zstandard) encoded request bodies. Requires Node.js 23.8.0 or later. Defaults
+to `false`.
 
 ### bodyParser.text([options])
 
@@ -211,6 +223,12 @@ truthy value. Defaults to `text/plain`.
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
+
+##### experimentalZstd
+
+The `experimentalZstd` option enables support for automatic inflation of `zstd`
+(Zstandard) encoded request bodies. Requires Node.js 23.8.0 or later. Defaults
+to `false`.
 
 ### bodyParser.urlencoded([options])
 
@@ -290,10 +308,15 @@ of `✓`. Defaults to `false`.
 Whether to decode numeric entities such as `&#9786;` when parsing an iso-8859-1
 form. Defaults to `false`.
 
-
-#### depth
+##### depth
 
 The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
+
+##### experimentalZstd
+
+The `experimentalZstd` option enables support for automatic inflation of `zstd`
+(Zstandard) encoded request bodies. Requires Node.js 23.8.0 or later. Defaults
+to `false`.
 
 ## Errors
 
