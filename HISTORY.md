@@ -1,7 +1,9 @@
 unreleased
 =========================
 
-  * refactor: normalize common options for all parsers
+* refactor: normalize common options for all parsers
+* deps:
+  * iconv-lite@^0.6.3
 
 2.1.0 / 2025-02-10
 =========================
