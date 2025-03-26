@@ -65,8 +65,6 @@ jobs:
       contents: read
       checks: write
     steps:
-      - uses: actions/checkout@v4
-
       - name: Install lcov
         shell: bash
         run: sudo apt-get -y install lcov
