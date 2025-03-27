@@ -1,4 +1,4 @@
-unreleased
+2.2.0 / 2025-03-27
 =========================
 
 * refactor: normalize common options for all parsers
