@@ -76,6 +76,11 @@ object after the middleware (i.e. `req.body`).
 The `json` function takes an optional `options` object that may contain any of
 the following keys:
 
+##### defaultCharset
+
+Specify the default character set for the json content if the charset is not
+specified in the `Content-Type` header of the request. Defaults to `utf-8`.
+
 ##### inflate
 
 When set to `true`, then deflated (compressed) bodies will be inflated; when
@@ -291,7 +296,7 @@ Whether to decode numeric entities such as `&#9786;` when parsing an iso-8859-1
 form. Defaults to `false`.
 
 
-#### depth
+##### depth
 
 The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
 
