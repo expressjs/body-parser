@@ -1,3 +1,8 @@
+unreleased
+=========================
+
+* refactor: move common request validation to read function
+
 2.2.0 / 2025-03-27
 =========================
 

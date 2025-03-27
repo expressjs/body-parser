@@ -10,6 +10,7 @@ describe('normalizeOptions(options, defaultType)', () => {
       assert.strictEqual(result.inflate, true)
       assert.strictEqual(result.limit, 100 * 1024) // 100kb in bytes
       assert.strictEqual(result.verify, false)
+      assert.strictEqual(result.defaultCharset, 'utf-8')
       assert.strictEqual(typeof result.shouldParse, 'function')
     }
   })
@@ -19,12 +20,14 @@ describe('normalizeOptions(options, defaultType)', () => {
       inflate: false,
       limit: '200kb',
       type: 'application/xml',
-      verify: () => {}
+      verify: () => {},
+      defaultCharset: 'iso-8859-1'
     }
     const result = normalizeOptions(options, 'application/json')
     assert.strictEqual(result.inflate, false)
     assert.strictEqual(result.limit, 200 * 1024) // 200kb in bytes
     assert.strictEqual(result.verify, options.verify)
+    assert.strictEqual(result.defaultCharset, 'iso-8859-1')
     assert.strictEqual(typeof result.shouldParse, 'function')
   })
 
@@ -41,6 +44,7 @@ describe('normalizeOptions(options, defaultType)', () => {
     assert.strictEqual(result.inflate, false)
     assert.strictEqual(result.limit, 200 * 1024) // 200kb in bytes
     assert.strictEqual(result.verify, options.verify)
+    assert.strictEqual(result.defaultCharset, 'utf-8')
     assert.strictEqual(typeof result.shouldParse, 'function')
     assert.strictEqual(result.additional, undefined)
     assert.strictEqual(result.something, undefined)
@@ -107,6 +111,18 @@ describe('normalizeOptions(options, defaultType)', () => {
         const result = normalizeOptions({ type: () => true }, 'application/json')
         assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml' } }), true)
         assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/json' } }), true)
+      })
+    })
+
+    describe('defaultCharset', () => {
+      it('should return "utf-8" if defaultCharset is not provided', () => {
+        const result = normalizeOptions({}, 'application/json')
+        assert.strictEqual(result.defaultCharset, 'utf-8')
+      })
+
+      it('should accept a defaultCharset', () => {
+        const result = normalizeOptions({ defaultCharset: 'iso-8859-1' }, 'application/json')
+        assert.strictEqual(result.defaultCharset, 'iso-8859-1')
       })
     })
   })
