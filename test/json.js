@@ -722,7 +722,7 @@ describe('bodyParser.json()', function () {
     })
   })
 
-  describe("prototype poisoning", function () {
+  describe('prototype poisoning', function () {
     it('should parse __proto__ when protoAction is set to ignore', function (done) {
       request(createServer({ onProtoPoisoning: 'ignore' }))
         .post('/')
@@ -738,7 +738,7 @@ describe('bodyParser.json()', function () {
         .send('{"user":"tobi","__proto__":{"x":7}}')
         .expect(400, '[entity.parse.failed] Object contains forbidden prototype property', done)
     })
-  
+
     it('should remove prototype poisoning when protoAction is set to remove', function (done) {
       request(createServer({ onProtoPoisoning: 'remove' }))
         .post('/')
