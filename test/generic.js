@@ -13,6 +13,17 @@ const PARSERS = {
   json: (buf, charset) => JSON.parse(buf.toString(charset))
 }
 
+// Tracks if a function was called
+function trackCall (fn) {
+  let called = false
+  const wrapped = function (...args) {
+    called = true
+    return fn?.(...args)
+  }
+  wrapped.called = () => called
+  return wrapped
+}
+
 describe('generic()', function () {
   it('should reject without parse function', function () {
     assert.throws(function () {
