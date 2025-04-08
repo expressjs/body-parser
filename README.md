@@ -335,7 +335,6 @@ function parse(buffer, charset) {
 - **IMPORTANT**: This function MUST be synchronous and return the parsed result directly
   - It cannot be an `async` function
   - It cannot return a Promise
-  - For async parsing libraries, you'll need to use a synchronous alternative
 
 Your parse function will be called even for empty bodies (with a zero-length buffer), but not for requests with no body concept (like GET requests).
 
@@ -565,7 +564,7 @@ Create a custom middleware for parsing XML requests:
 ```js
 const express = require('express')
 const bodyParser = require('body-parser')
-const xmljs = require('xml-js')  // Uses a synchronous XML parser
+const xmljs = require('xml-js')
 
 const app = express()
 
@@ -577,13 +576,11 @@ const xmlParser = bodyParser.generic({
   // Set limits to prevent abuse
   limit: '500kb',
   
-  // Custom synchronous parser function
   parse: function(buf, charset) {
     // Handle empty body case
     if (buf.length === 0) return {}
     
     try {
-      // Convert XML to JS object with configuration
       const result = xmljs.xml2js(buf.toString(charset), {
         compact: true,
         trim: true,
@@ -591,7 +588,6 @@ const xmlParser = bodyParser.generic({
       })
       return result
     } catch (err) {
-      // Standardize parsing errors
       const error = new Error(`Invalid XML: ${err.message}`)
       error.status = 400
       throw error
@@ -676,7 +672,6 @@ const app = express()
 
 // Use with default options
 app.post('/api/csv', csvParser(), function(req, res) {
-  // req.body will have { headers: [...], rows: [...] } structure
   res.json({
     rowCount: req.body.rows.length,
     data: req.body
@@ -686,8 +681,8 @@ app.post('/api/csv', csvParser(), function(req, res) {
 // Or with custom options
 app.post('/api/customcsv', csvParser({
   limit: '250kb',
-  delimiter: ';',     // Use semicolon as delimiter
-  hasHeaders: true    // First row contains column names
+  delimiter: ';',
+  hasHeaders: true
 }), function(req, res) {
   res.json(req.body)
 })
