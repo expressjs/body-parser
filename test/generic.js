@@ -75,7 +75,7 @@ describe('generic()', function () {
         const server = createServer(parseFn)
 
         request(server)
-          .post('/')  // Using POST with empty body
+          .post('/') // Using POST with empty body
           .set('Content-Type', 'text/plain')
           .set('Content-Length', '0')
           .expect(200, '{"empty":true}')
@@ -96,7 +96,7 @@ describe('generic()', function () {
         const server = createServer(parseFn)
 
         request(server)
-          .post('/')  // Using POST with empty body
+          .post('/') // Using POST with empty body
           .set('Content-Type', 'text/plain')
           .set('Transfer-Encoding', 'chunked')
           .expect(200, '{"empty":true}')
@@ -113,9 +113,9 @@ describe('generic()', function () {
         })
 
         const server = createServer(parseFn)
-        
+
         request(server)
-          .get('/')  // GET with no body concept
+          .get('/') // GET with no body concept
           .expect(200, 'undefined')
           .end(function (err) {
             if (err) return done(err)

@@ -323,7 +323,7 @@ The `generic` function takes an `options` object that may contain any of the fol
 **Required.** The `parse` function that converts the raw request body buffer into a JavaScript object. This function receives two arguments:
 
 ```js
-function parse(buffer, charset) {
+function parse (buffer, charset) {
   // Convert Buffer to parsed object
   return parsedObject
 }
@@ -572,14 +572,14 @@ const app = express()
 const xmlParser = bodyParser.generic({
   // Accept both application/xml and text/xml
   type: ['application/xml', 'text/xml', '+xml'],
-  
+
   // Set limits to prevent abuse
   limit: '500kb',
-  
-  parse: function(buf, charset) {
+
+  parse: function (buf, charset) {
     // Handle empty body case
     if (buf.length === 0) return {}
-    
+
     try {
       const result = xmljs.xml2js(buf.toString(charset), {
         compact: true,
@@ -610,41 +610,41 @@ You can also create your own reusable parser module similar to the built-in pars
 const bodyParser = require('body-parser')
 
 // Create a factory function for CSV parsing middleware
-function csvParser(options) {
+function csvParser (options) {
   const opts = options || {}
-  
+
   const delimiter = opts.delimiter || ','
   const hasHeaders = opts.hasHeaders !== false
-  
+
   return bodyParser.generic({
     type: opts.type || ['text/csv', 'application/csv'],
     limit: opts.limit,
     inflate: opts.inflate,
     verify: opts.verify,
-    
-    parse: function(buf, charset) {
+
+    parse: function (buf, charset) {
       // Handle empty body
       if (buf.length === 0) return { rows: [] }
-      
+
       try {
         const csvText = buf.toString(charset)
         const lines = csvText.split(/\r?\n/).filter(line => line.trim())
-        
+
         if (lines.length === 0) return { rows: [] }
-        
+
         if (hasHeaders) {
           const headers = lines[0].split(delimiter)
           const rows = lines.slice(1).map(line => {
             const values = line.split(delimiter)
             const row = {}
-            
+
             headers.forEach((header, i) => {
               row[header] = values[i]
             })
-            
+
             return row
           })
-          
+
           return { headers, rows }
         } else {
           const rows = lines.map(line => line.split(delimiter))
@@ -671,7 +671,7 @@ const csvParser = require('./csv-parser')
 const app = express()
 
 // Use with default options
-app.post('/api/csv', csvParser(), function(req, res) {
+app.post('/api/csv', csvParser(), function (req, res) {
   res.json({
     rowCount: req.body.rows.length,
     data: req.body
@@ -683,7 +683,7 @@ app.post('/api/customcsv', csvParser({
   limit: '250kb',
   delimiter: ';',
   hasHeaders: true
-}), function(req, res) {
+}), function (req, res) {
   res.json(req.body)
 })
 ```
