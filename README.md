@@ -36,6 +36,7 @@ This module provides the following parsers:
   * [Raw body parser](#bodyparserrawoptions)
   * [Text body parser](#bodyparsertextoptions)
   * [URL-encoded form body parser](#bodyparserurlencodedoptions)
+  * [Generic body parser](#bodyparsergenericoptions)
 
 Other body parsers you might be interested in:
 
@@ -295,6 +296,59 @@ form. Defaults to `false`.
 
 The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
 
+### bodyParser.generic([options])
+
+Returns middleware that parses request bodies using a custom parse function and only looks at requests where the `Content-Type` header matches the `type` option. This parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate` encodings.
+
+A new `body` object containing the parsed data is populated on the `request` object after the middleware (i.e. `req.body`). The structure of this object depends on the result of your custom parse function.
+
+#### Options
+
+The `generic` function takes an optional `options` object that may contain any of the following keys:
+
+##### parse
+
+The `parse` function that converts the raw request body buffer into a JavaScript object. This function should take a buffer and an optional charset as arguments and return a JavaScript object.
+
+```js
+function parse(buffer, charset) {
+  // Convert Buffer to parsed object
+  return parsedObject
+}
+```
+
+This option is **required**.
+
+##### type
+
+The `type` option is used to determine what media type the middleware will parse. This option can be a string, array of strings, or a function. If not a function, `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library and this can be an extension name (like `xml`), a mime type (like `application/xml`), or a mime type with a wildcard (like `*/*` or `*/xml`). If a function, the `type` option is called as `fn(req)` and the request is parsed if it returns a truthy value.
+
+This option is **required**.
+
+##### defaultCharset
+
+Specify the default character set for the content if the charset is not specified in the `Content-Type` header of the request. Defaults to `utf-8`.
+
+##### charset
+
+If specified, the charset of the request must match this option. If the request charset doesn't match, a 415 Unsupported Media Type error is returned.
+
+##### inflate
+
+When set to `true`, then deflated (compressed) bodies will be inflated; when `false`, deflated bodies are rejected. Defaults to `true`.
+
+##### limit
+
+Controls the maximum request body size. If this is a number, then the value specifies the number of bytes; if it is a string, the value is passed to the [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults to `'100kb'`.
+
+##### type
+
+The `type` option is used to determine what media type the middleware will parse. This option can be a string, array of strings, or a function. If not a function, `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library and this can be an extension name (like `xml`), a mime type (like `application/xml`), or a mime type with a wildcard (like `*/*` or `*/xml`). If a function, the `type` option is called as `fn(req)` and the request is parsed if it returns a truthy value. This option is **required**.
+
+##### verify
+
+The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`, where `buf` is a `Buffer` of the raw request body and `encoding` is the encoding of the request. The parsing can be aborted by throwing an error.
+
 ## Errors
 
 The middlewares provided by this module create errors using the
@@ -472,6 +526,38 @@ app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
 
 // parse an HTML body into a string
 app.use(bodyParser.text({ type: 'text/html' }))
+```
+
+### Custom parser example
+
+This example demonstrates how to create a custom XML parser using the new generic parser.
+
+```js
+const express = require('express')
+const bodyParser = require('body-parser')
+const { parseString } = require('xml2js')
+const util = require('util')
+
+const app = express()
+
+// Create XML parser middleware
+const xmlParser = bodyParser.generic({
+  type: 'application/xml',
+  parse: function(buf, charset) {
+    // Convert XML to JS object
+    let result
+    parseString(buf.toString(charset), { explicitArray: false }, (err, parsed) => {
+      if (err) throw err
+      result = parsed
+    })
+    return result
+  }
+})
+
+// Parse XML in this route
+app.post('/api/xml', xmlParser, function (req, res) {
+  res.json(req.body)
+})
 ```
 
 ## License
