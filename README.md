@@ -298,17 +298,29 @@ The `depth` option is used to configure the maximum depth of the `qs` library wh
 
 ### bodyParser.generic([options])
 
-Returns middleware that parses request bodies using a custom parse function and only looks at requests where the `Content-Type` header matches the `type` option. This parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate` encodings.
+Returns middleware that enables you to create custom body parsers while inheriting all the common functionality from body-parser. This is the recommended approach for building custom parsers for content types not covered by the built-in parsers.
 
-A new `body` object containing the parsed data is populated on the `request` object after the middleware (i.e. `req.body`). The structure of this object depends on the result of your custom parse function.
+The generic parser handles all the common concerns like:
+- Content-type matching
+- Charset detection and handling
+- Body size limits and validation
+- Decompression (gzip, brotli, deflate)
+- Error standardization
+- Buffer handling
+
+You only need to provide the type to match and the parsing logic specific to your content type.
+
+A new `body` object containing the parsed data is populated on the `request` object after the middleware (i.e. `req.body`). The structure of this object depends on what your custom parse function returns.
+
+See [Custom parser examples](#custom-parser-examples) for examples of creating your own parsers based on the generic parser.
 
 #### Options
 
-The `generic` function takes an optional `options` object that may contain any of the following keys:
+The `generic` function takes an `options` object that may contain any of the following keys:
 
 ##### parse
 
-The `parse` function that converts the raw request body buffer into a JavaScript object. This function should take a buffer and an optional charset as arguments and return a JavaScript object.
+**Required.** The `parse` function that converts the raw request body buffer into a JavaScript object. This function receives two arguments:
 
 ```js
 function parse(buffer, charset) {
@@ -317,13 +329,31 @@ function parse(buffer, charset) {
 }
 ```
 
-This option is **required**.
+- `buffer`: A Buffer containing the raw request body
+- `charset`: The detected charset from Content-Type header or defaultCharset
+- Return value becomes `req.body`
+- **IMPORTANT**: This function MUST be synchronous and return the parsed result directly
+  - It cannot be an `async` function
+  - It cannot return a Promise
+  - For async parsing libraries, you'll need to use a synchronous alternative
+
+Your parse function will be called even for empty bodies (with a zero-length buffer), but not for requests with no body concept (like GET requests).
+
+For empty bodies, consider following these conventions:
+- For JSON-like parsers: Return `{}` (empty object)
+- For text/raw-like parsers: Return the empty buffer/string as-is
 
 ##### type
 
-The `type` option is used to determine what media type the middleware will parse. This option can be a string, array of strings, or a function. If not a function, `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library and this can be an extension name (like `xml`), a mime type (like `application/xml`), or a mime type with a wildcard (like `*/*` or `*/xml`). If a function, the `type` option is called as `fn(req)` and the request is parsed if it returns a truthy value.
+**Required.** The `type` option is used to determine what media type the middleware will parse. This option can be:
 
-This option is **required**.
+- A string mime type (like `application/xml`)
+- An extension name (like `xml`)
+- A mime type with a wildcard (like `*/xml`) 
+- An array of any of the above
+- A function that takes a request and returns a boolean
+
+If not a function, the `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library. If a function, it will be called as `fn(req)` and the request is parsed if it returns a truthy value.
 
 ##### defaultCharset
 
@@ -340,10 +370,6 @@ When set to `true`, then deflated (compressed) bodies will be inflated; when `fa
 ##### limit
 
 Controls the maximum request body size. If this is a number, then the value specifies the number of bytes; if it is a string, the value is passed to the [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults to `'100kb'`.
-
-##### type
-
-The `type` option is used to determine what media type the middleware will parse. This option can be a string, array of strings, or a function. If not a function, `type` option is passed directly to the [type-is](https://www.npmjs.org/package/type-is#readme) library and this can be an extension name (like `xml`), a mime type (like `application/xml`), or a mime type with a wildcard (like `*/*` or `*/xml`). If a function, the `type` option is called as `fn(req)` and the request is parsed if it returns a truthy value. This option is **required**.
 
 ##### verify
 
@@ -528,37 +554,146 @@ app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
 app.use(bodyParser.text({ type: 'text/html' }))
 ```
 
-### Custom parser example
+### Custom parser examples
 
-This example demonstrates how to create a custom XML parser using the new generic parser.
+These examples demonstrate how to create parsers for custom content types while leveraging the generic parser for common HTTP concerns.
+
+#### XML Parser Example
+
+Create a custom middleware for parsing XML requests:
 
 ```js
 const express = require('express')
 const bodyParser = require('body-parser')
-const { parseString } = require('xml2js')
-const util = require('util')
+const xmljs = require('xml-js')  // Uses a synchronous XML parser
 
 const app = express()
 
 // Create XML parser middleware
 const xmlParser = bodyParser.generic({
-  type: 'application/xml',
+  // Accept both application/xml and text/xml
+  type: ['application/xml', 'text/xml', '+xml'],
+  
+  // Set limits to prevent abuse
+  limit: '500kb',
+  
+  // Custom synchronous parser function
   parse: function(buf, charset) {
-    // Convert XML to JS object
-    let result
-    parseString(buf.toString(charset), { explicitArray: false }, (err, parsed) => {
-      if (err) throw err
-      result = parsed
-    })
-    return result
+    // Handle empty body case
+    if (buf.length === 0) return {}
+    
+    try {
+      // Convert XML to JS object with configuration
+      const result = xmljs.xml2js(buf.toString(charset), {
+        compact: true,
+        trim: true,
+        nativeType: true
+      })
+      return result
+    } catch (err) {
+      // Standardize parsing errors
+      const error = new Error(`Invalid XML: ${err.message}`)
+      error.status = 400
+      throw error
+    }
   }
 })
 
-// Parse XML in this route
+// Use parser in routes
 app.post('/api/xml', xmlParser, function (req, res) {
   res.json(req.body)
 })
 ```
+
+
+#### Creating Your Own Parser Module
+
+You can also create your own reusable parser module similar to the built-in parsers:
+
+```js
+const bodyParser = require('body-parser')
+
+// Create a factory function for CSV parsing middleware
+function csvParser(options) {
+  const opts = options || {}
+  
+  const delimiter = opts.delimiter || ','
+  const hasHeaders = opts.hasHeaders !== false
+  
+  return bodyParser.generic({
+    type: opts.type || ['text/csv', 'application/csv'],
+    limit: opts.limit,
+    inflate: opts.inflate,
+    verify: opts.verify,
+    
+    parse: function(buf, charset) {
+      // Handle empty body
+      if (buf.length === 0) return { rows: [] }
+      
+      try {
+        const csvText = buf.toString(charset)
+        const lines = csvText.split(/\r?\n/).filter(line => line.trim())
+        
+        if (lines.length === 0) return { rows: [] }
+        
+        if (hasHeaders) {
+          const headers = lines[0].split(delimiter)
+          const rows = lines.slice(1).map(line => {
+            const values = line.split(delimiter)
+            const row = {}
+            
+            headers.forEach((header, i) => {
+              row[header] = values[i]
+            })
+            
+            return row
+          })
+          
+          return { headers, rows }
+        } else {
+          const rows = lines.map(line => line.split(delimiter))
+          return { rows }
+        }
+      } catch (err) {
+        const error = new Error(`CSV parse error: ${err.message}`)
+        error.status = 400
+        throw error
+      }
+    }
+  })
+}
+
+module.exports = csvParser
+```
+
+Using the custom parser module:
+
+```js
+const express = require('express')
+const csvParser = require('./csv-parser')
+
+const app = express()
+
+// Use with default options
+app.post('/api/csv', csvParser(), function(req, res) {
+  // req.body will have { headers: [...], rows: [...] } structure
+  res.json({
+    rowCount: req.body.rows.length,
+    data: req.body
+  })
+})
+
+// Or with custom options
+app.post('/api/customcsv', csvParser({
+  limit: '250kb',
+  delimiter: ';',     // Use semicolon as delimiter
+  hasHeaders: true    // First row contains column names
+}), function(req, res) {
+  res.json(req.body)
+})
+```
+
+This pattern makes it easy to create reusable, configurable custom parsers that follow the same interface as the built-in parsers.
 
 ## License
 
