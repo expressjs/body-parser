@@ -64,39 +64,65 @@ describe('generic()', function () {
         })
     })
 
-    it('should handle empty body regardless of encoding method', function (done) {
-      let calledWithEmptyBuffer = false
-
-      const parseFn = function (buf, _charset) {
-        calledWithEmptyBuffer = (buf.length === 0)
-        return { empty: true }
-      }
-
-      const server = createServer(parseFn)
-
-      // First test: Content-Length: 0
-      request(server)
-        .get('/')
-        .set('Content-Type', 'text/plain')
-        .set('Content-Length', '0')
-        .expect(200, '{"empty":true}')
-        .end(function (err) {
-          if (err) return done(err)
-          assert(calledWithEmptyBuffer, 'parse function should be called with empty buffer')
-          calledWithEmptyBuffer = false
-
-          // Second test: chunked encoding
-          request(server)
-            .get('/')
-            .set('Content-Type', 'text/plain')
-            .set('Transfer-Encoding', 'chunked')
-            .expect(200, '{"empty":true}')
-            .end(function (err) {
-              if (err) return done(err)
-              assert(calledWithEmptyBuffer, 'parse function should be called with empty buffer')
-              done()
-            })
+    describe('request body handling', function () {
+      it('should call parse function with empty buffer for Content-Length: 0', function (done) {
+        const parseFn = trackCall(function (buf, _charset) {
+          assert.strictEqual(buf.length, 0, 'buffer should be empty')
+          // Return empty object like JSON/URL-encoded parsers do
+          return { empty: true }
         })
+
+        const server = createServer(parseFn)
+
+        request(server)
+          .post('/')  // Using POST with empty body
+          .set('Content-Type', 'text/plain')
+          .set('Content-Length', '0')
+          .expect(200, '{"empty":true}')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(parseFn.called(), 'parse function should be called for empty body')
+            done()
+          })
+      })
+
+      it('should call parse function with empty buffer for chunked encoding', function (done) {
+        const parseFn = trackCall(function (buf, _charset) {
+          assert.strictEqual(buf.length, 0, 'buffer should be empty')
+          // Return empty object like JSON/URL-encoded parsers do
+          return { empty: true }
+        })
+
+        const server = createServer(parseFn)
+
+        request(server)
+          .post('/')  // Using POST with empty body
+          .set('Content-Type', 'text/plain')
+          .set('Transfer-Encoding', 'chunked')
+          .expect(200, '{"empty":true}')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(parseFn.called(), 'parse function should be called for empty body')
+            done()
+          })
+      })
+
+      it('should NOT call parse function for requests with no body concept', function (done) {
+        const parseFn = trackCall(function (buf, _charset) {
+          return { called: true }
+        })
+
+        const server = createServer(parseFn)
+        
+        request(server)
+          .get('/')  // GET with no body concept
+          .expect(200, 'undefined')
+          .end(function (err) {
+            if (err) return done(err)
+            assert.strictEqual(parseFn.called(), false, 'parse function should not be called for no-body requests')
+            done()
+          })
+      })
     })
   })
 
