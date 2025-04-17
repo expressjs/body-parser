@@ -22,7 +22,7 @@
   "devDependencies": {
     "eslint": "8.34.0",
     "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-import": "2.31.0",
     "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.1.1",
