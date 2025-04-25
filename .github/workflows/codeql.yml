@@ -31,6 +31,10 @@ jobs:
       actions: read
       contents: read
       security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript, actions]
 
     steps:
       - name: Checkout repository
@@ -40,7 +44,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@45775bd8235c68ba998cffa5171334d58593da47 # v3.28.15
         with:
-          languages: javascript
+          languages: ${{ matrix.language }}
           config: |
             paths-ignore:
               - test
@@ -65,5 +69,3 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@45775bd8235c68ba998cffa5171334d58593da47 # v3.28.15
-        with:
-          category: "/language:javascript"
