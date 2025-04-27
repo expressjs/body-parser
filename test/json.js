@@ -724,7 +724,7 @@ describe('bodyParser.json()', function () {
 
   describe('prototype poisoning', function () {
     it('should parse __proto__ when protoAction is set to ignore', function (done) {
-      request(createServer({ onProto: { onProtoPoisoning: 'ignore' }}))
+      request(createServer({ onProto: { onProtoPoisoning: 'ignore' } }))
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi","__proto__":{"x":7}}')
@@ -732,7 +732,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should throw when protoAction is set to error', function (done) {
-      request(createServer({ onProto: { onProtoPoisoning: 'error' }}))
+      request(createServer({ onProto: { onProtoPoisoning: 'error' } }))
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi","__proto__":{"x":7}}')
@@ -740,7 +740,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should remove prototype poisoning when protoAction is set to remove', function (done) {
-      request(createServer({ onProto: { onProtoPoisoning: 'remove' }}))
+      request(createServer({ onProto: { onProtoPoisoning: 'remove' } }))
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi","__proto__":{"x":7}}')
@@ -750,7 +750,7 @@ describe('bodyParser.json()', function () {
 
   describe('constructor poisoning', function () {
     it('should parse constructor when protoAction is set to ignore', function (done) {
-      request(createServer({ onProto: { onConstructorPoisoning: 'ignore' }}))
+      request(createServer({ onProto: { onConstructorPoisoning: 'ignore' } }))
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}')
@@ -758,7 +758,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should throw when protoAction is set to error', function (done) {
-      request(createServer({ onProto: { onConstructorPoisoning: 'error' }}))
+      request(createServer({ onProto: { onConstructorPoisoning: 'error' } }))
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}')
@@ -766,7 +766,7 @@ describe('bodyParser.json()', function () {
     })
 
     it('should remove prototype poisoning when protoAction is set to remove', function (done) {
-      request(createServer({ onProto: { onConstructorPoisoning: 'remove' }}))
+      request(createServer({ onProto: { onConstructorPoisoning: 'remove' } }))
         .post('/')
         .set('Content-Type', 'application/json')
         .send('{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}')
