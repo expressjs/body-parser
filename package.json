@@ -14,7 +14,7 @@
     "debug": "^4.4.0",
     "http-errors": "^2.0.0",
     "iconv-lite": "^0.6.3",
-    "on-finished": "^2.4.1",
+    "on-finished": "git+https://github.com/Phillip9587/on-finished.git#stream-finished",
     "qs": "^6.14.0",
     "raw-body": "^3.0.0",
     "type-is": "^2.0.1"
