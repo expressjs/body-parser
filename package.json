@@ -8,6 +8,10 @@
   ],
   "license": "MIT",
   "repository": "expressjs/body-parser",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/express"
+  },
   "dependencies": {
     "bytes": "^3.1.2",
     "content-type": "^1.0.5",
