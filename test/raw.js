@@ -3,9 +3,14 @@
 var assert = require('node:assert')
 var AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
 var http = require('node:http')
+const zlib = require('node:zlib')
 var request = require('supertest')
 
 var bodyParser = require('..')
+
+const hasZstandardSupport = 'createZstdDecompress' in zlib
+const zstandardit = hasZstandardSupport ? it : it.skip
+const nozstandardit = !hasZstandardSupport ? it : it.skip
 
 describe('bodyParser.raw()', function () {
   before(function () {
@@ -456,6 +461,24 @@ describe('bodyParser.raw()', function () {
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('8b03806e616d653de8aeba03', 'hex'))
       test.expect(200, 'buf:6e616d653de8aeba', done)
+    })
+
+    zstandardit('should support zstandard encoding', function (done) {
+      const server = createServer({ experimentalZstd: true, limit: '10kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'zstd')
+      test.set('Content-Type', 'application/octet-stream')
+      test.write(Buffer.from('28b52ffd20084100006e616d653de8aeba', 'hex'))
+      test.expect(200, 'buf:6e616d653de8aeba', done)
+    })
+
+    nozstandardit('should throw 415 if there\'s no zstandard support', function (done) {
+      const server = createServer({ experimentalZstd: true, limit: '10kb' })
+      var test = request(server).post('/')
+      test.set('Content-Encoding', 'zstd')
+      test.set('Content-Type', 'application/octet-stream')
+      test.write(Buffer.from('28b52ffd20084100006e616d653de8aeba', 'hex'))
+      test.expect(415, '[encoding.unsupported] unsupported content encoding "zstd"', done)
     })
 
     it('should be case-insensitive', function (done) {
