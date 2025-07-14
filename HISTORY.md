@@ -35,9 +35,26 @@ unreleased
 
 2.0.0 / 2024-09-10
 =========================
-* Propagate changes from 1.20.3 
-* add brotli support #406
-* Breaking Change: Node.js 18 is the minimum supported version
+
+## Breaking Changes
+* Node.js 18 is the minimum supported version
+* `req.body` is no longer always initialized to `{}`
+  - it is left `undefined` unless a body is parsed
+* Remove deprecated `bodyParser()` combination middleware
+* ~`urlencoded` parser now defaults `extended` to `false`~ as released, this is not the case, fixed in 2.0.1
+* `urlencoded` simple parser now uses `qs` module instead of `querystring` module
+
+## Features
+* Add brotli support #406
+* urlencoded: Add option to customize the depth with a default value of 32
+* urlencoded: Support iso-8859-1, utf8 sentinel, and numeric entities
+* Use `on-finished` to determine when body read
+
+## Dependencies
+* deps: raw-body@^3.0.0
+* deps: qs@6.12.3
+* deps: debug@3.1.0
+* deps: iconv-lite@0.5.2
 
 2.0.0-beta.2 / 2023-02-23
 =========================
