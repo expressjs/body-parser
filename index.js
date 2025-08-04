@@ -13,6 +13,7 @@
  * @property {function} raw
  * @property {function} text
  * @property {function} urlencoded
+ * @property {function} generic
  */
 
 /**
@@ -64,6 +65,17 @@ Object.defineProperty(exports, 'urlencoded', {
   configurable: true,
   enumerable: true,
   get: () => require('./lib/types/urlencoded')
+})
+
+/**
+ * Generic parser for custom body formats.
+ * @public
+ */
+
+Object.defineProperty(exports, 'generic', {
+  configurable: true,
+  enumerable: true,
+  get: () => require('./lib/generic')
 })
 
 /**
