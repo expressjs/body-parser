@@ -721,6 +721,58 @@ describe('bodyParser.json()', function () {
       test.expect(413, done)
     })
   })
+
+  describe('prototype poisoning', function () {
+    it('should parse __proto__ when protoAction is set to ignore', function (done) {
+      request(createServer({ onProto: { onProtoPoisoning: 'ignore' } }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi","__proto__":{"x":7}}')
+        .expect(200, '{"user":"tobi","__proto__":{"x":7}}', done)
+    })
+
+    it('should throw when protoAction is set to error', function (done) {
+      request(createServer({ onProto: { onProtoPoisoning: 'error' } }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi","__proto__":{"x":7}}')
+        .expect(400, '[entity.parse.failed] Object contains forbidden prototype property', done)
+    })
+
+    it('should remove prototype poisoning when protoAction is set to remove', function (done) {
+      request(createServer({ onProto: { onProtoPoisoning: 'remove' } }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi","__proto__":{"x":7}}')
+        .expect(200, '{"user":"tobi"}', done)
+    })
+  })
+
+  describe('constructor poisoning', function () {
+    it('should parse constructor when protoAction is set to ignore', function (done) {
+      request(createServer({ onProto: { onConstructorPoisoning: 'ignore' } }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}')
+        .expect(200, '{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}', done)
+    })
+
+    it('should throw when protoAction is set to error', function (done) {
+      request(createServer({ onProto: { onConstructorPoisoning: 'error' } }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}')
+        .expect(400, '[entity.parse.failed] Object contains forbidden prototype property', done)
+    })
+
+    it('should remove prototype poisoning when protoAction is set to remove', function (done) {
+      request(createServer({ onProto: { onConstructorPoisoning: 'remove' } }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi","constructor":{"prototype":{"bar":"baz"}}}')
+        .expect(200, '{"user":"tobi"}', done)
+    })
+  })
 })
 
 function createServer (opts) {

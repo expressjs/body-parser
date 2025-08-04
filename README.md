@@ -116,6 +116,16 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+##### onProto
+
+###### onProtoPoisoning
+
+Defines what action must be taken when parsing a JSON object with `__proto__`
+
+###### onConstructorPoisoning
+
+Defines what action must be taken when parsing a JSON object with `constructor.prototype` key
+
 ### bodyParser.raw([options])
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
