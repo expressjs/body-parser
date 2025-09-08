@@ -1,6 +1,7 @@
 unreleased
 =========================
 
+* refactor: move common request validation to read function
 * deps: 
   * type-is@^2.0.1
 
