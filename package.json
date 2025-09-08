@@ -8,6 +8,10 @@
   ],
   "license": "MIT",
   "repository": "expressjs/body-parser",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/express"
+  },
   "dependencies": {
     "bytes": "^3.1.2",
     "content-type": "^1.0.5",
@@ -17,16 +21,16 @@
     "on-finished": "^2.4.1",
     "qs": "^6.14.0",
     "raw-body": "^3.0.0",
-    "type-is": "^2.0.0"
+    "type-is": "^2.0.1"
   },
   "devDependencies": {
-    "eslint": "8.34.0",
-    "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-markdown": "3.0.0",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "6.1.1",
-    "eslint-plugin-standard": "4.1.0",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-markdown": "^3.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-standard": "^4.1.0",
     "mocha": "^11.1.0",
     "nyc": "^17.1.0",
     "supertest": "^7.0.0"
