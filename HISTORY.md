@@ -4,6 +4,7 @@ unreleased
 * refactor: move common request validation to read function
 * deps: 
   * type-is@^2.0.1
+  * iconv-lite@^0.7.0
 
 2.2.0 / 2025-03-27
 =========================
