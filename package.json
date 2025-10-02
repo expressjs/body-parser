@@ -20,7 +20,7 @@
     "iconv-lite": "^0.7.0",
     "on-finished": "^2.4.1",
     "qs": "^6.14.0",
-    "raw-body": "^3.0.0",
+    "raw-body": "^3.0.1",
     "type-is": "^2.0.1"
   },
   "devDependencies": {
