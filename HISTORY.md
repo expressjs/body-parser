@@ -5,6 +5,8 @@ unreleased
 * deps: 
   * type-is@^2.0.1
   * iconv-lite@^0.7.0
+    * Handle split surrogate pairs when encoding UTF-8
+    * Avoid false positives in `encodingExists` by using prototype-less objects 
   * raw-body@^3.0.1
 
 2.2.0 / 2025-03-27
