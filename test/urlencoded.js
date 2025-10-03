@@ -43,6 +43,10 @@ describe('bodyParser.urlencoded()', function () {
       .expect(200, '{}', done)
   })
 
+  it('should throw on invalid defaultCharset', function () {
+    assert.throws(createServer.bind(null, { defaultCharset: 'utf-16' }), /TypeError: option defaultCharset must be either utf-8 or iso-8859-1/)
+  })
+
   var extendedValues = [true, false]
   extendedValues.forEach(function (extended) {
     describe('in ' + (extended ? 'extended' : 'simple') + ' mode', function () {
