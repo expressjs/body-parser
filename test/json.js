@@ -288,6 +288,22 @@ describe('bodyParser.json()', function () {
           .expect(200, '{"user":"tobi"}', done)
       })
 
+      it('should handle all RFC 7159 whitespace characters before JSON', function (done) {
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/json')
+          .send('\x20\x09\x0a\x0d{ "user": "tobi" }')
+          .expect(200, '{"user":"tobi"}', done)
+      })
+
+      it('should error on body with only RFC 7159 whitespace characters', function (done) {
+        request(this.server)
+          .post('/')
+          .set('Content-Type', 'application/json')
+          .send('\x20\x09\x0a\x0d')
+          .expect(400, '[entity.parse.failed] ' + parseError('\x20\x09\x0a\x0d'), done)
+      })
+
       it('should include correct message in stack trace', function (done) {
         request(this.server)
           .post('/')
