@@ -483,14 +483,12 @@ app.use(bodyParser.text({ type: 'text/html' }))
 
 [MIT](LICENSE)
 
-[ci-image]: https://badgen.net/github/checks/expressjs/body-parser/master?label=ci
+[ci-image]: https://img.shields.io/github/actions/workflow/status/expressjs/body-parser/ci.yml?branch=master&label=ci
 [ci-url]: https://github.com/expressjs/body-parser/actions/workflows/ci.yml
-[coveralls-image]: https://badgen.net/coveralls/c/github/expressjs/body-parser/master
+[coveralls-image]: https://img.shields.io/coverallsCoverage/github/expressjs/body-parser?branch=master
 [coveralls-url]: https://coveralls.io/r/expressjs/body-parser?branch=master
-[node-version-image]: https://badgen.net/npm/node/body-parser
-[node-version-url]: https://nodejs.org/en/download
-[npm-downloads-image]: https://badgen.net/npm/dm/body-parser
+[npm-downloads-image]: https://img.shields.io/npm/dm/body-parser
 [npm-url]: https://npmjs.org/package/body-parser
-[npm-version-image]: https://badgen.net/npm/v/body-parser
+[npm-version-image]: https://img.shields.io/npm/v/body-parser
 [ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/body-parser/badge
 [ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/body-parser
