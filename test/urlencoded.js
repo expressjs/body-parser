@@ -466,6 +466,14 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   describe('with parameterLimit option', function () {
+    it('should handle empty body with parameterLimit', function (done) {
+      request(createServer({ parameterLimit: 10 }))
+        .post('/')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send('')
+        .expect(200, '{}', done)
+    })
+
     describe('with extended: false', function () {
       it('should reject 0', function () {
         assert.throws(createServer.bind(null, { extended: false, parameterLimit: 0 }),
