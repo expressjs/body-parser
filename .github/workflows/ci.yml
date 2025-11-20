@@ -217,7 +217,7 @@ jobs:
         fi
 
     - name: Upload code coverage
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: steps.list_env.outputs.nyc != ''
       with:
         name: coverage
