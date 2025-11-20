@@ -230,7 +230,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: steps.list_env.outputs.nyc != ''
       with:
-        name: coverage
+        name: build-output-${{ github.run_attempt }}
         path: ./coverage
         retention-days: 1
 
