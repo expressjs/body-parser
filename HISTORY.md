@@ -1,6 +1,7 @@
-unreleased
+2.2.1 / 2025-11-24
 =========================
 
+* Security fix for [GHSA-wqch-xfxh-vrr4](https://github.com/expressjs/body-parser/security/advisories/GHSA-wqch-xfxh-vrr4)
 * refactor: move common request validation to read function
 * deps: 
   * type-is@^2.0.1
