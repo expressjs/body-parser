@@ -1,3 +1,8 @@
+1.20.4 / 2024-11-24
+===================
+
+  * Security fix for [GHSA-wqch-xfxh-vrr4](https://github.com/expressjs/body-parser/security/advisories/GHSA-wqch-xfxh-vrr4)
+
 1.20.3 / 2024-09-10
 ===================
 
