@@ -12,6 +12,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         name:
         - Node.js 0.8
@@ -87,33 +88,34 @@ jobs:
 
         - name: Node.js 8.x
           node-version: "8"
-          npm-i: mocha@7.2.0 nyc@14.1.1
+          npm-i: mocha@7.2.0 nyc@14.1.1 supertest@6.1.6
 
         - name: Node.js 9.x
           node-version: "9"
-          npm-i: mocha@7.2.0 nyc@14.1.1
+          npm-i: mocha@7.2.0 nyc@14.1.1 supertest@6.1.6
 
         - name: Node.js 10.x
           node-version: "10"
-          npm-i: mocha@8.4.0
+          npm-i: mocha@8.4.0 supertest@6.1.6
 
         - name: Node.js 11.x
           node-version: "11"
-          npm-i: mocha@8.4.0
+          npm-i: mocha@8.4.0 supertest@6.1.6
 
         - name: Node.js 12.x
           node-version: "12"
-          npm-i: mocha@9.2.2
+          npm-i: mocha@9.2.2 supertest@6.1.6
 
         - name: Node.js 13.x
           node-version: "13"
-          npm-i: mocha@9.2.2
+          npm-i: mocha@9.2.2 supertest@6.1.6
 
         - name: Node.js 14.x
           node-version: "14"
 
         - name: Node.js 15.x
           node-version: "15"
+          npm-i: "supertest@6.1.6"
 
         - name: Node.js 16.x
           node-version: "16"
