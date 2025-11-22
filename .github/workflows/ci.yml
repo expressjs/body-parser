@@ -1,4 +1,5 @@
 name: ci
+
 on:
   push:
     branches:
@@ -11,6 +12,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         name:
         - Node.js 0.8
@@ -39,6 +41,8 @@ jobs:
         - Node.js 21.x
         - Node.js 22.x
         - Node.js 23.x
+        - Node.js 24.x
+        - Node.js 25.x
 
         include:
         - name: Node.js 0.8
@@ -84,33 +88,34 @@ jobs:
 
         - name: Node.js 8.x
           node-version: "8"
-          npm-i: mocha@7.2.0 nyc@14.1.1
+          npm-i: mocha@7.2.0 nyc@14.1.1 supertest@6.1.6
 
         - name: Node.js 9.x
           node-version: "9"
-          npm-i: mocha@7.2.0 nyc@14.1.1
+          npm-i: mocha@7.2.0 nyc@14.1.1 supertest@6.1.6
 
         - name: Node.js 10.x
           node-version: "10"
-          npm-i: mocha@8.4.0
+          npm-i: mocha@8.4.0 supertest@6.1.6
 
         - name: Node.js 11.x
           node-version: "11"
-          npm-i: mocha@8.4.0
+          npm-i: mocha@8.4.0 supertest@6.1.6
 
         - name: Node.js 12.x
           node-version: "12"
-          npm-i: mocha@9.2.2
+          npm-i: mocha@9.2.2 supertest@6.1.6
 
         - name: Node.js 13.x
           node-version: "13"
-          npm-i: mocha@9.2.2
+          npm-i: mocha@9.2.2 supertest@6.1.6
 
         - name: Node.js 14.x
           node-version: "14"
 
         - name: Node.js 15.x
           node-version: "15"
+          npm-i: "supertest@6.1.6"
 
         - name: Node.js 16.x
           node-version: "16"
@@ -135,6 +140,12 @@ jobs:
 
         - name: Node.js 23.x
           node-version: "23"
+
+        - name: Node.js 24.x
+          node-version: "24"
+
+        - name: Node.js 25.x
+          node-version: "25"
 
     steps:
     - uses: actions/checkout@v4
@@ -207,26 +218,19 @@ jobs:
       if: steps.list_env.outputs.eslint != ''
       run: npm run lint
 
-    - name: Collect code coverage
-      if: steps.list_env.outputs.nyc != ''
-      run: |
-        if [[ -d ./coverage ]]; then
-          mv ./coverage "./${{ matrix.name }}"
-          mkdir ./coverage
-          mv "./${{ matrix.name }}" "./coverage/${{ matrix.name }}"
-        fi
-
     - name: Upload code coverage
-      uses: actions/upload-artifact@v3
-      if: steps.list_env.outputs.nyc != ''
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
       with:
-        name: coverage
-        path: ./coverage
+        name: coverage-node-${{ matrix.node-version }}
+        path: ./coverage/lcov.info
         retention-days: 1
 
   coverage:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     steps:
     - uses: actions/checkout@v4
 
@@ -235,16 +239,16 @@ jobs:
       run: sudo apt-get -y install lcov
 
     - name: Collect coverage reports
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v6
       with:
-        name: coverage
         path: ./coverage
+        pattern: coverage-node-*
 
     - name: Merge coverage reports
       shell: bash
-      run: find ./coverage -name lcov.info -exec printf '-a %q\n' {} \; | xargs lcov -o ./coverage/lcov.info
+      run: find ./coverage -name lcov.info -exec printf '-a %q\n' {} \; | xargs lcov -o ./lcov.info
 
     - name: Upload coverage report
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b # v2.3.6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./lcov.info
