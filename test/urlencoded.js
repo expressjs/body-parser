@@ -466,14 +466,6 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   describe('with parameterLimit option', function () {
-    it('should handle empty body with parameterLimit', function (done) {
-      request(createServer({ parameterLimit: 10 }))
-        .post('/')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send('')
-        .expect(200, '{}', done)
-    })
-
     describe('with extended: false', function () {
       it('should reject 0', function () {
         assert.throws(createServer.bind(null, { extended: false, parameterLimit: 0 }),
@@ -581,6 +573,60 @@ describe('bodyParser.urlencoded()', function () {
           .send(createManyParams(10000))
           .expect(expectKeyCount(10000))
           .expect(200, done)
+      })
+    })
+
+    describe('parameterCount', function () {
+      it('should handle empty string correctly', function (done) {
+        request(createServer({ extended: true, parameterLimit: 10 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('')
+          .expect(200, '{}', done)
+      })
+
+      it('should handle leading ampersand correctly', function (done) {
+        request(createServer({ parameterLimit: 10 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('&a=1&b=2&c=3')
+          .expect(function (res) {
+            var body = JSON.parse(res.text)
+            assert.strictEqual(Object.keys(body).length, 3)
+          })
+          .expect(200, done)
+      })
+
+      it('should handle trailing ampersand correctly', function (done) {
+        request(createServer({ parameterLimit: 10 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('a=1&b=2&c=3&')
+          .expect(function (res) {
+            var body = JSON.parse(res.text)
+            assert.strictEqual(Object.keys(body).length, 3)
+          })
+          .expect(200, done)
+      })
+
+      it('should handle consecutive ampersands correctly', function (done) {
+        request(createServer({ parameterLimit: 10 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('a=1&&b=2')
+          .expect(function (res) {
+            var body = JSON.parse(res.text)
+            assert.strictEqual(Object.keys(body).length, 2)
+          })
+          .expect(200, done)
+      })
+
+      it('should enforce limit correctly with trailing ampersand', function (done) {
+        request(createServer({ parameterLimit: 2 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('a=1&b=2&')
+          .expect(413, '[parameters.too.many] too many parameters', done)
       })
     })
   })
