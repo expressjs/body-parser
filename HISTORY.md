@@ -2,6 +2,9 @@ unreleased
 ===================
 
   * deps: qs@~6.14.0
+  * deps: use tilde notation for dependencies
+  * deps: http-errors@~2.0.1
+  * deps: raw-body@~2.5.3
 
 1.20.3 / 2024-09-10
 ===================
