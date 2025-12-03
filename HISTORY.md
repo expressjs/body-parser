@@ -86,6 +86,14 @@ This incorporates all changes after 1.19.1 up to 1.20.2.
   * `urlencoded` parser now defaults `extended` to `false`
   * Use `on-finished` to determine when body read
 
+1.20.4 / 2025-12-01
+===================
+
+  * deps: qs@~6.14.0
+  * deps: use tilde notation for dependencies
+  * deps: http-errors@~2.0.1
+  * deps: raw-body@~2.5.3
+
 1.20.3 / 2024-09-10
 ===================
 
