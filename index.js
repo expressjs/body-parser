@@ -7,26 +7,23 @@
 'use strict'
 
 /**
- * @typedef Parsers
- * @type {function}
- * @property {function} json
- * @property {function} raw
- * @property {function} text
- * @property {function} urlencoded
+ * @typedef {Object} Parsers
+ * @property {Function} json JSON parser
+ * @property {Function} raw Raw parser
+ * @property {Function} text Text parser
+ * @property {Function} urlencoded URL-encoded parser
  */
 
 /**
  * Module exports.
- * @type {Parsers}
+ * @type {Function & Parsers}
  */
-
 exports = module.exports = bodyParser
 
 /**
  * JSON parser.
  * @public
  */
-
 Object.defineProperty(exports, 'json', {
   configurable: true,
   enumerable: true,
@@ -37,7 +34,6 @@ Object.defineProperty(exports, 'json', {
  * Raw parser.
  * @public
  */
-
 Object.defineProperty(exports, 'raw', {
   configurable: true,
   enumerable: true,
@@ -48,7 +44,6 @@ Object.defineProperty(exports, 'raw', {
  * Text parser.
  * @public
  */
-
 Object.defineProperty(exports, 'text', {
   configurable: true,
   enumerable: true,
@@ -59,7 +54,6 @@ Object.defineProperty(exports, 'text', {
  * URL-encoded parser.
  * @public
  */
-
 Object.defineProperty(exports, 'urlencoded', {
   configurable: true,
   enumerable: true,
@@ -69,12 +63,9 @@ Object.defineProperty(exports, 'urlencoded', {
 /**
  * Create a middleware to parse json and urlencoded bodies.
  *
- * @param {object} [options]
- * @return {function}
  * @deprecated
  * @public
  */
-
 function bodyParser () {
   throw new Error('The bodyParser() generic has been split into individual middleware to use instead.')
 }
