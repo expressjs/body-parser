@@ -1,3 +1,7 @@
+Unreleased
+===================
+* refactor(json): simplify strict mode error string construction 
+
 1.20.4 / 2025-12-01
 ===================
 
