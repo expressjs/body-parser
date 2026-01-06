@@ -19,9 +19,9 @@ and `toString` may not be a function and instead a string or other user input.
 
 [Learn about the anatomy of an HTTP transaction in Node.js](https://nodejs.org/en/learn/http/anatomy-of-an-http-transaction).
 
-_This does not handle multipart bodies_, due to their complex and typically
-large nature. For multipart bodies, you may be interested in the following
-modules:
+_This module provides basic multipart/form-data support for text fields only._
+File fields are automatically dropped. For full file upload support, you may be
+interested in the following modules:
 
   * [busboy](https://www.npmjs.com/package/busboy#readme) and
     [connect-busboy](https://www.npmjs.com/package/connect-busboy#readme)
@@ -33,6 +33,7 @@ modules:
 This module provides the following parsers:
 
   * [JSON body parser](#bodyparserjsonoptions)
+  * [Multipart/form-data body parser](#bodyparsermultipartoptions)
   * [Raw body parser](#bodyparserrawoptions)
   * [Text body parser](#bodyparsertextoptions)
   * [URL-encoded form body parser](#bodyparserurlencodedoptions)
@@ -300,6 +301,54 @@ form. Defaults to `false`.
 
 The `depth` option is used to configure the maximum depth of the `qs` library when `extended` is `true`. This allows you to limit the amount of keys that are parsed and can be useful to prevent certain types of abuse. Defaults to `32`. It is recommended to keep this value as low as possible.
 
+### bodyParser.multipart([options])
+
+Returns middleware that only parses `multipart/form-data` bodies and only looks at
+requests where the `Content-Type` header matches the `type` option. This parser
+extracts text fields and automatically drops file fields. It supports automatic
+inflation of `gzip`, `br` (brotli) and `deflate` encodings.
+
+A new `body` object containing the parsed data is populated on the `request`
+object after the middleware (i.e. `req.body`). This object will contain
+key-value pairs for text fields only. File fields (fields with `filename` in
+their `Content-Disposition` header) are automatically dropped.
+
+#### Options
+
+The `multipart` function takes an optional `options` object that may contain
+any of the following keys:
+
+##### inflate
+
+When set to `true`, then deflated (compressed) bodies will be inflated; when
+`false`, deflated bodies are rejected. Defaults to `true`.
+
+##### limit
+
+Controls the maximum size of individual text fields. If this is a number, then
+the value specifies the number of bytes; if it is a string, the value is passed
+to the [bytes](https://www.npmjs.com/package/bytes) library for parsing.
+Defaults to `'100kb'`. Note: The overall body size limit is automatically set
+higher to allow multiple fields.
+
+##### type
+
+The `type` option is used to determine what media type the middleware will
+parse. This option can be a string, array of strings, or a function. If not
+a function, `type` option is passed directly to the
+[type-is](https://www.npmjs.com/package/type-is#readme) library and this can
+be an extension name (like `multipart`), a mime type (like
+`multipart/form-data`), or a mime type with a wildcard (like `multipart/*`).
+If a function, the `type` option is called as `fn(req)` and the request is parsed
+if it returns a truthy value. Defaults to `multipart/form-data`.
+
+##### verify
+
+The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
+where `buf` is a string containing the field value and `encoding` is the
+encoding of the request. The verification is called for each text field
+individually. The parsing can be aborted by throwing an error.
+
 ## Errors
 
 The middlewares provided by this module create errors using the
@@ -445,10 +494,19 @@ const jsonParser = bodyParser.json()
 // create application/x-www-form-urlencoded parser
 const urlencodedParser = bodyParser.urlencoded()
 
+// create multipart/form-data parser
+const multipartParser = bodyParser.multipart()
+
 // POST /login gets urlencoded bodies
 app.post('/login', urlencodedParser, function (req, res) {
   if (!req.body || !req.body.username) res.sendStatus(400)
   res.send('welcome, ' + req.body.username)
+})
+
+// POST /upload gets multipart bodies (text fields only, files are dropped)
+app.post('/upload', multipartParser, function (req, res) {
+  if (!req.body || !req.body.description) res.sendStatus(400)
+  res.send('uploaded: ' + req.body.description)
 })
 
 // POST /api/users gets JSON bodies
