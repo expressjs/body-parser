@@ -2,6 +2,7 @@
 =========================
 
 * deps: qs@^6.14.1
+* refactor(json): simplify strict mode error string construction
 
 2.2.1 / 2025-11-24
 =========================
