@@ -1,4 +1,4 @@
-Unreleased
+1.20.5 / 2026-04-24
 ===================
 * refactor(json): simplify strict mode error string construction 
 * fix: extended urlencoded parsing of arrays with >100 elements (#716)
