@@ -2,6 +2,7 @@ unreleased
 ========================
 
 * fix: use static exports instead of lazy getters to improve ESM compatibility
+* feat: add subpath exports for individual parsers
 
 2.2.2 / 2026-01-07
 =========================

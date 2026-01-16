@@ -12,6 +12,18 @@
     "type": "opencollective",
     "url": "https://opencollective.com/express"
   },
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json",
+    "./json": "./lib/types/json.js",
+    "./raw": "./lib/types/raw.js",
+    "./text": "./lib/types/text.js",
+    "./urlencoded": "./lib/types/urlencoded.js",
+    "./lib/*": "./lib/*.js",
+    "./lib/*.js": "./lib/*.js",
+    "./lib/types/*": "./lib/types/*.js",
+    "./lib/types/*.js": "./lib/types/*.js"
+  },
   "dependencies": {
     "bytes": "^3.1.2",
     "content-type": "^1.0.5",
