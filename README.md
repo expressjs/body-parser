@@ -51,7 +51,14 @@ $ npm install body-parser
 ## API
 
 ```js
+// Import all parsers
 const bodyParser = require('body-parser')
+
+// Or import individual parsers directly
+const json = require('body-parser/json')
+const urlencoded = require('body-parser/urlencoded')
+const raw = require('body-parser/raw')
+const text = require('body-parser/text')
 ```
 
 The `bodyParser` object exposes various factories to create middlewares. All
