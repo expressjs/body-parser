@@ -1,7 +1,7 @@
 'use strict'
 
-const assert = require('node:assert')
-const { normalizeOptions } = require('../lib/utils.js')
+const assert = require('node:assert/strict')
+const { normalizeOptions, isValidJsonCharset, isValidUrlencodedCharset } = require('../lib/utils.js')
 
 describe('normalizeOptions(options, defaultType)', () => {
   it('should return default options when no options are provided', () => {
@@ -159,5 +159,60 @@ describe('normalizeOptions(options, defaultType)', () => {
       assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/ld+json' } }), true)
       assert.strictEqual(result.shouldParse({ headers: { 'content-type': 'application/xml' } }), false)
     })
+  })
+})
+
+describe('isValidJsonCharset(charset)', () => {
+  it('should return false for missing/empty values', () => {
+    assert.equal(isValidJsonCharset(), false)
+    assert.equal(isValidJsonCharset(undefined), false)
+    assert.equal(isValidJsonCharset(null), false)
+    assert.equal(isValidJsonCharset(''), false)
+  })
+
+  it('should return true for "utf-8"', () => {
+    assert.equal(isValidJsonCharset('utf-8'), true)
+  })
+
+  it('should return false for other utf-* labels (not allowed by RFC 8259)', () => {
+    assert.equal(isValidJsonCharset('utf-7'), false)
+    assert.equal(isValidJsonCharset('utf-16'), false)
+    assert.equal(isValidJsonCharset('utf-32'), false)
+    assert.equal(isValidJsonCharset('utf-16le'), false)
+    assert.equal(isValidJsonCharset('utf-16be'), false)
+    assert.equal(isValidJsonCharset('utf-32le'), false)
+    assert.equal(isValidJsonCharset('utf-32be'), false)
+    assert.equal(isValidJsonCharset('utf-1'), false)
+  })
+
+  it('should return false for non-JSON charsets', () => {
+    assert.equal(isValidJsonCharset('us-ascii'), false)
+    assert.equal(isValidJsonCharset('iso-8859-1'), false)
+    assert.equal(isValidJsonCharset('windows-1252'), false)
+  })
+})
+
+describe('isValidUrlencodedCharset(charset)', () => {
+  it('should return false for missing/empty values', () => {
+    assert.equal(isValidUrlencodedCharset(), false)
+    assert.equal(isValidUrlencodedCharset(undefined), false)
+    assert.equal(isValidUrlencodedCharset(null), false)
+    assert.equal(isValidUrlencodedCharset(''), false)
+  })
+
+  it('should return true for "utf-8" and "iso-8859-1"', () => {
+    assert.equal(isValidUrlencodedCharset('utf-8'), true)
+    assert.equal(isValidUrlencodedCharset('iso-8859-1'), true)
+  })
+
+  it('should return false for other UTF encodings', () => {
+    assert.equal(isValidUrlencodedCharset('utf-16'), false)
+    assert.equal(isValidUrlencodedCharset('utf-32'), false)
+  })
+
+  it('should return false for non-form encodings', () => {
+    assert.equal(isValidUrlencodedCharset('us-ascii'), false)
+    assert.equal(isValidUrlencodedCharset('windows-1252'), false)
+    assert.equal(isValidUrlencodedCharset('shift_jis'), false)
   })
 })
