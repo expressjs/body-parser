@@ -93,6 +93,8 @@ specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
 
+> It’s recommended not to configure a very high limit and to use the default value whenever possible. Allowing larger payloads increases memory usage because of the resources required for decoding and transformations, and it can also lead to longer response times as more data is processed. By ‘very high’, we mean values above the default, for example payloads of 5 MB or more can already start to introduce these risks. With the default limits, these issues do not occur.
+
 ##### reviver
 
 The `reviver` option is passed directly to `JSON.parse` as the second
@@ -149,6 +151,8 @@ specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
 
+> It’s recommended not to configure a very high limit and to use the default value whenever possible. Allowing larger payloads increases memory usage because of the resources required for decoding and transformations, and it can also lead to longer response times as more data is processed. By ‘very high’, we mean values above the default, for example payloads of 5 MB or more can already start to introduce these risks. With the default limits, these issues do not occur.
+
 ##### type
 
 The `type` option is used to determine what media type the middleware will
@@ -199,6 +203,8 @@ Controls the maximum request body size. If this is a number, then the value
 specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
+
+> It’s recommended not to configure a very high limit and to use the default value whenever possible. Allowing larger payloads increases memory usage because of the resources required for decoding and transformations, and it can also lead to longer response times as more data is processed. By ‘very high’, we mean values above the default, for example payloads of 5 MB or more can already start to introduce these risks. With the default limits, these issues do not occur.
 
 ##### type
 
@@ -254,6 +260,8 @@ Controls the maximum request body size. If this is a number, then the value
 specifies the number of bytes; if it is a string, the value is passed to the
 [bytes](https://www.npmjs.com/package/bytes) library for parsing. Defaults
 to `'100kb'`.
+
+> It’s recommended not to configure a very high limit and to use the default value whenever possible. Allowing larger payloads increases memory usage because of the resources required for decoding and transformations, and it can also lead to longer response times as more data is processed. By ‘very high’, we mean values above the default, for example payloads of 5 MB or more can already start to introduce these risks. With the default limits, these issues do not occur.
 
 ##### parameterLimit
 
