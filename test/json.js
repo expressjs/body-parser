@@ -496,19 +496,6 @@ describe('bodyParser.json()', function () {
         .expect(200, '{"user":"tobi"}', done)
     })
 
-    it('should work with different charsets', function (done) {
-      var server = createServer({
-        verify: function (req, res, buf) {
-          if (buf[0] === 0x5b) throw new Error('no arrays')
-        }
-      })
-
-      var test = request(server).post('/')
-      test.set('Content-Type', 'application/json; charset=utf-16')
-      test.write(Buffer.from('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
-      test.expect(200, '{"name":"论"}', done)
-    })
-
     it('should 415 on unknown charset prior to verify', function (done) {
       var server = createServer({
         verify: function (req, res, buf) {
@@ -621,18 +608,18 @@ describe('bodyParser.json()', function () {
       test.expect(200, '{"name":"论"}', done)
     })
 
-    it('should parse utf-16', function (done) {
+    it('should fail on utf-16', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-16')
       test.write(Buffer.from('feff007b0022006e0061006d00650022003a00228bba0022007d', 'hex'))
-      test.expect(200, '{"name":"论"}', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "UTF-16"', done)
     })
 
-    it('should parse utf-32', function (done) {
+    it('should fail on utf-32', function (done) {
       var test = request(this.server).post('/')
       test.set('Content-Type', 'application/json; charset=utf-32')
       test.write(Buffer.from('fffe00007b000000220000006e000000610000006d00000065000000220000003a00000022000000ba8b0000220000007d000000', 'hex'))
-      test.expect(200, '{"name":"论"}', done)
+      test.expect(415, '[charset.unsupported] unsupported charset "UTF-32"', done)
     })
 
     it('should parse when content-length != char length', function (done) {

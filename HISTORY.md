@@ -3,6 +3,7 @@ unreleased
 
 * fix: use static exports instead of lazy getters to improve ESM compatibility
 * feat: add subpath exports for individual parsers
+* feat: JSON parser now only accepts UTF-8 encoding per RFC 8259 section 8.1
 
 2.2.2 / 2026-01-07
 =========================

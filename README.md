@@ -71,9 +71,9 @@ The various errors returned by this module are described in the
 ### bodyParser.json([options])
 
 Returns middleware that only parses `json` and only looks at requests where
-the `Content-Type` header matches the `type` option. This parser accepts any
-Unicode encoding of the body and supports automatic inflation of `gzip`,
-`br` (brotli) and `deflate` encodings.
+the `Content-Type` header matches the `type` option. This parser only accepts
+UTF-8 encoding of the body per [RFC 8259 section 8.1](https://datatracker.ietf.org/doc/html/rfc8259#section-8.1)
+and supports automatic inflation of `gzip`, `br` (brotli) and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`).
