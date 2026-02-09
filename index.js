@@ -12,6 +12,7 @@
  * @property {Function} raw Raw parser
  * @property {Function} text Text parser
  * @property {Function} urlencoded URL-encoded parser
+ * @property {Function} generic Generic parser for custom body formats
  */
 
 /**
@@ -43,6 +44,12 @@ exports.text = require('./lib/types/text')
  * @public
  */
 exports.urlencoded = require('./lib/types/urlencoded')
+
+/**
+ * Generic parser for custom body formats.
+ * @public
+ */
+exports.generic = require('./lib/generic')
 
 /**
  * Create a middleware to parse json and urlencoded bodies.
