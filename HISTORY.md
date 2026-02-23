@@ -3,6 +3,11 @@ unreleased
 
 * fix: use static exports instead of lazy getters to improve ESM compatibility
 * feat: add subpath exports for individual parsers
+* deps:
+  * http-errors@^2.0.1
+  * iconv-lite^0.7.2
+  * qs@^6.15.0
+  * raw-body@^3.0.1
 
 2.2.2 / 2026-01-07
 =========================
