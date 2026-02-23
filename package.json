@@ -12,6 +12,7 @@
     "type": "opencollective",
     "url": "https://opencollective.com/express"
   },
+  "type": "commonjs",
   "exports": {
     ".": "./index.js",
     "./package.json": "./package.json",
