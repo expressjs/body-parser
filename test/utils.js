@@ -71,6 +71,21 @@ describe('normalizeOptions(options, defaultType)', () => {
         assert.strictEqual(result.limit, 100 * 1024) // 100kb in bytes
       })
 
+      it('should return the default limit if limit is undefined', () => {
+        const result = normalizeOptions({ limit: undefined }, 'application/json')
+        assert.strictEqual(result.limit, 100 * 1024) // 100kb in bytes
+      })
+
+      it('should return the default limit if limit is null', () => {
+        const result = normalizeOptions({ limit: null }, 'application/json')
+        assert.strictEqual(result.limit, 100 * 1024) // 100kb in bytes
+      })
+
+      it('should accept zero as valid limit', () => {
+        const result = normalizeOptions({ limit: 0 }, 'application/json')
+        assert.strictEqual(result.limit, 0)
+      })
+
       it('should accept a number limit', () => {
         const result = normalizeOptions({ limit: 1234 }, 'application/json')
         assert.strictEqual(result.limit, 1234)
@@ -81,9 +96,39 @@ describe('normalizeOptions(options, defaultType)', () => {
         assert.strictEqual(result.limit, 200 * 1024) // 200kb in bytes
       })
 
-      it('should return null for an invalid limit', () => {
-        const result = normalizeOptions({ limit: 'invalid' }, 'application/json')
-        assert.strictEqual(result.limit, null)
+      it('should parse a string limit without a unit', () => {
+        const result = normalizeOptions({ limit: '200' }, 'application/json')
+        assert.strictEqual(result.limit, 200) // 200 bytes
+      })
+
+      it('should throw an error for an invalid string limit', () => {
+        assert.throws(() => {
+          normalizeOptions({ limit: 'invalid' }, 'application/json')
+        }, /option limit "invalid" is invalid/)
+        assert.throws(() => {
+          normalizeOptions({ limit: '' }, 'application/json')
+        }, /option limit "" is invalid/)
+      })
+
+      it('should throw an error for a NaN limit', () => {
+        assert.throws(() => {
+          normalizeOptions({ limit: NaN }, 'application/json')
+        }, /option limit "NaN" is invalid/)
+      })
+
+      it('should throw an error for a boolean limit', () => {
+        assert.throws(() => {
+          normalizeOptions({ limit: true }, 'application/json')
+        }, /option limit "true" is invalid/)
+        assert.throws(() => {
+          normalizeOptions({ limit: false }, 'application/json')
+        }, /option limit "false" is invalid/)
+      })
+
+      it('should throw an error for an object limit', () => {
+        assert.throws(() => {
+          normalizeOptions({ limit: { foo: 'bar' } }, 'application/json')
+        }, /option limit "\[object Object\]" is invalid/)
       })
     })
 
