@@ -506,6 +506,31 @@ describe('bodyParser.urlencoded()', function () {
           .expect(expectKeyCount(10000))
           .expect(200, done)
       })
+
+      it('should correctly count parameters for array parsing', function (done) {
+        // Test for off-by-one bug fix (issue #715)
+        // With 110 array elements, there are 110 parameters (109 & chars)
+        // Before fix: parameterCount returned 109, arrayLimit was 109
+        // After fix: parameterCount returns 110, arrayLimit is 110
+        var server = createServer({ extended: true, parameterLimit: 200 })
+        var arrayParams = Array.from({ length: 110 }, function (_, i) {
+          return 'a[' + i + ']=' + (i + 1)
+        }).join('&')
+
+        request(server)
+          .post('/')
+          .type('form')
+          .send(arrayParams)
+          .expect(function (res) {
+            // The body should contain an array 'a' with 110 elements
+            // If parameterCount returns 109 (bug), arrayLimit would be 109,
+            // and qs would convert indices >= 109 to object keys
+            var body = JSON.parse(res.text)
+            assert.ok(Array.isArray(body.a), 'should have array "a", got: ' + res.text.substring(0, 200))
+            assert.strictEqual(body.a.length, 110, 'array should have 110 elements')
+          })
+          .expect(200, done)
+      })
     })
   })
 
