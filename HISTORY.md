@@ -1,6 +1,8 @@
 Unreleased
 ===================
 * refactor(json): simplify strict mode error string construction 
+* fix: extended urlencoded parsing of arrays with >100 elements (#716)
+* deps: qs@~6.14.2
 
 1.20.4 / 2025-12-01
 ===================
