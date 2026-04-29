@@ -130,6 +130,28 @@ describe('normalizeOptions(options, defaultType)', () => {
           normalizeOptions({ limit: { foo: 'bar' } }, 'application/json')
         }, /option limit "\[object Object\]" is invalid/)
       })
+
+      it('should throw an error for negative string limit', () => {
+        assert.throws(() => {
+          normalizeOptions({ limit: '-100kb' }, 'application/json')
+        }, /option limit must be a non-negative number/)
+      })
+
+      it('should throw an error for negative number limit', () => {
+        assert.throws(() => {
+          normalizeOptions({ limit: -1024 }, 'application/json')
+        }, /option limit must be a non-negative number/)
+      })
+
+      it('should accept zero limit', () => {
+        const result = normalizeOptions({ limit: 0 }, 'application/json')
+        assert.strictEqual(result.limit, 0)
+      })
+
+      it('should accept zero string limit', () => {
+        const result = normalizeOptions({ limit: '0kb' }, 'application/json')
+        assert.strictEqual(result.limit, 0)
+      })
     })
 
     describe('type', () => {
