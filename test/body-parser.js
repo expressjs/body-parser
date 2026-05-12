@@ -1,8 +1,8 @@
 'use strict'
 
-var assert = require('node:assert')
+const assert = require('node:assert')
 
-var bodyParser = require('..')
+const bodyParser = require('..')
 
 describe('bodyParser()', function () {
   it('should throw an error', function () {
