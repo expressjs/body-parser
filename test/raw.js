@@ -1,11 +1,11 @@
 'use strict'
 
-var assert = require('node:assert')
-var AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
-var http = require('node:http')
-var request = require('supertest')
+const assert = require('node:assert')
+const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
+const http = require('node:http')
+const request = require('supertest')
 
-var bodyParser = require('..')
+const bodyParser = require('..')
 
 describe('bodyParser.raw()', function () {
   before(function () {
@@ -21,8 +21,8 @@ describe('bodyParser.raw()', function () {
   })
 
   it('should 400 when invalid content-length', function (done) {
-    var rawParser = bodyParser.raw()
-    var server = createServer(function (req, res, next) {
+    const rawParser = bodyParser.raw()
+    const server = createServer(function (req, res, next) {
       req.headers['content-length'] = '20' // bad length
       rawParser(req, res, next)
     })
@@ -52,8 +52,8 @@ describe('bodyParser.raw()', function () {
   })
 
   it('should handle consumed stream', function (done) {
-    var rawParser = bodyParser.raw()
-    var server = createServer(function (req, res, next) {
+    const rawParser = bodyParser.raw()
+    const server = createServer(function (req, res, next) {
       req.on('end', function () {
         rawParser(req, res, next)
       })
@@ -68,8 +68,8 @@ describe('bodyParser.raw()', function () {
   })
 
   it('should handle duplicated middleware', function (done) {
-    var rawParser = bodyParser.raw()
-    var server = createServer(function (req, res, next) {
+    const rawParser = bodyParser.raw()
+    const server = createServer(function (req, res, next) {
       rawParser(req, res, function (err) {
         if (err) return next(err)
         rawParser(req, res, next)
@@ -85,9 +85,9 @@ describe('bodyParser.raw()', function () {
 
   describe('with limit option', function () {
     it('should 413 when over limit with Content-Length', function (done) {
-      var buf = Buffer.alloc(1028, '.')
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(1028, '.')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.set('Content-Length', '1028')
       test.write(buf)
@@ -95,9 +95,9 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
-      var buf = Buffer.alloc(1028, '.')
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(1028, '.')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.set('Transfer-Encoding', 'chunked')
       test.write(buf)
@@ -105,8 +105,8 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should 413 when inflated body over limit', function (done) {
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a14704040000', 'hex'))
@@ -114,31 +114,31 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should accept number of bytes', function (done) {
-      var buf = Buffer.alloc(1028, '.')
-      var server = createServer({ limit: 1024 })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(1028, '.')
+      const server = createServer({ limit: 1024 })
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(buf)
       test.expect(413, done)
     })
 
     it('should not change when options altered', function (done) {
-      var buf = Buffer.alloc(1028, '.')
-      var options = { limit: '1kb' }
-      var server = createServer(options)
+      const buf = Buffer.alloc(1028, '.')
+      const options = { limit: '1kb' }
+      const server = createServer(options)
 
       options.limit = '100kb'
 
-      var test = request(server).post('/')
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(buf)
       test.expect(413, done)
     })
 
     it('should not hang response', function (done) {
-      var buf = Buffer.alloc(10240, '.')
-      var server = createServer({ limit: '8kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(10240, '.')
+      const server = createServer({ limit: '8kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(buf)
       test.write(buf)
@@ -147,8 +147,8 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should not error when inflating', function (done) {
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a147040400', 'hex'))
@@ -163,7 +163,7 @@ describe('bodyParser.raw()', function () {
       })
 
       it('should not accept content-encoding', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -177,7 +177,7 @@ describe('bodyParser.raw()', function () {
       })
 
       it('should accept content-encoding', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -193,14 +193,14 @@ describe('bodyParser.raw()', function () {
       })
 
       it('should parse for custom type', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Type', 'application/vnd+octets')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should ignore standard type', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'undefined', done)
@@ -215,21 +215,21 @@ describe('bodyParser.raw()', function () {
       })
 
       it('should parse "application/octet-stream"', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Type', 'application/octet-stream')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should parse "application/vnd+octets"', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Type', 'application/vnd+octets')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should ignore "application/x-foo"', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Type', 'application/x-foo')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'undefined', done)
@@ -238,32 +238,32 @@ describe('bodyParser.raw()', function () {
 
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           return req.headers['content-type'] === 'application/vnd.octet'
         }
 
-        var test = request(server).post('/')
+        const test = request(server).post('/')
         test.set('Content-Type', 'application/vnd.octet')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should work without content-type', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           return true
         }
 
-        var test = request(server).post('/')
+        const test = request(server).post('/')
         test.write(Buffer.from('000102', 'hex'))
         test.expect(200, 'buf:000102', done)
       })
 
       it('should not invoke without a body', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           throw new Error('oops!')
@@ -283,42 +283,42 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should error from verify', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x00) throw new Error('no leading null')
         }
       })
 
-      var test = request(server).post('/')
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('000102', 'hex'))
       test.expect(403, '[entity.verify.failed] no leading null', done)
     })
 
     it('should allow custom codes', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] !== 0x00) return
-          var err = new Error('no leading null')
+          const err = new Error('no leading null')
           err.status = 400
           throw err
         }
       })
 
-      var test = request(server).post('/')
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('000102', 'hex'))
       test.expect(400, '[entity.verify.failed] no leading null', done)
     })
 
     it('should allow pass-through', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x00) throw new Error('no leading null')
         }
       })
 
-      var test = request(server).post('/')
+      const test = request(server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('0102', 'hex'))
       test.expect(200, 'buf:0102', done)
@@ -327,15 +327,15 @@ describe('bodyParser.raw()', function () {
 
   describe('async local storage', function () {
     before(function () {
-      var rawParser = bodyParser.raw()
-      var store = { foo: 'bar' }
+      const rawParser = bodyParser.raw()
+      const store = { foo: 'bar' }
 
       this.server = createServer(function (req, res, next) {
-        var asyncLocalStorage = new AsyncLocalStorage()
+        const asyncLocalStorage = new AsyncLocalStorage()
 
         asyncLocalStorage.run(store, function () {
           rawParser(req, res, function (err) {
-            var local = asyncLocalStorage.getStore()
+            const local = asyncLocalStorage.getStore()
 
             if (local) {
               res.setHeader('x-store-foo', String(local.foo))
@@ -370,7 +370,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should presist store when inflated', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -381,7 +381,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should presist store when inflate error', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad6080000', 'hex'))
@@ -407,7 +407,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should ignore charset', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/octet-stream; charset=utf-8')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, 'buf:6e616d6520697320e8aeba', done)
@@ -420,14 +420,14 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should parse without encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
       test.expect(200, 'buf:6e616d653de8aeba', done)
     })
 
     it('should support identity encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('6e616d653de8aeba', 'hex'))
@@ -435,7 +435,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should support gzip encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -443,7 +443,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should support deflate encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'deflate')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('789ccb4bcc4db57db16e17001068042f', 'hex'))
@@ -451,7 +451,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should support brotli encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'br')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('8b03806e616d653de8aeba03', 'hex'))
@@ -459,7 +459,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should be case-insensitive', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
@@ -467,7 +467,7 @@ describe('bodyParser.raw()', function () {
     })
 
     it('should 415 on unknown encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'application/octet-stream')
       test.write(Buffer.from('000000000000', 'hex'))
@@ -477,7 +477,7 @@ describe('bodyParser.raw()', function () {
 })
 
 function createServer (opts) {
-  var _bodyParser = typeof opts !== 'function'
+  const _bodyParser = typeof opts !== 'function'
     ? bodyParser.raw(opts)
     : opts
 

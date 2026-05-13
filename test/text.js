@@ -1,11 +1,11 @@
 'use strict'
 
-var assert = require('node:assert')
-var AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
-var http = require('node:http')
-var request = require('supertest')
+const assert = require('node:assert')
+const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
+const http = require('node:http')
+const request = require('supertest')
 
-var bodyParser = require('..')
+const bodyParser = require('..')
 
 describe('bodyParser.text()', function () {
   before(function () {
@@ -21,8 +21,8 @@ describe('bodyParser.text()', function () {
   })
 
   it('should 400 when invalid content-length', function (done) {
-    var textParser = bodyParser.text()
-    var server = createServer(function (req, res, next) {
+    const textParser = bodyParser.text()
+    const server = createServer(function (req, res, next) {
       req.headers['content-length'] = '20' // bad length
       textParser(req, res, next)
     })
@@ -52,8 +52,8 @@ describe('bodyParser.text()', function () {
   })
 
   it('should handle consumed stream', function (done) {
-    var textParser = bodyParser.text()
-    var server = createServer(function (req, res, next) {
+    const textParser = bodyParser.text()
+    const server = createServer(function (req, res, next) {
       req.on('end', function () {
         textParser(req, res, next)
       })
@@ -68,8 +68,8 @@ describe('bodyParser.text()', function () {
   })
 
   it('should handle duplicated middleware', function (done) {
-    var textParser = bodyParser.text()
-    var server = createServer(function (req, res, next) {
+    const textParser = bodyParser.text()
+    const server = createServer(function (req, res, next) {
       textParser(req, res, function (err) {
         if (err) return next(err)
         textParser(req, res, next)
@@ -85,16 +85,16 @@ describe('bodyParser.text()', function () {
 
   describe('with defaultCharset option', function () {
     it('should change default charset', function (done) {
-      var server = createServer({ defaultCharset: 'koi8-r' })
-      var test = request(server).post('/')
+      const server = createServer({ defaultCharset: 'koi8-r' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('6e616d6520697320cec5d4', 'hex'))
       test.expect(200, '"name is нет"', done)
     })
 
     it('should honor content-type charset', function (done) {
-      var server = createServer({ defaultCharset: 'koi8-r' })
-      var test = request(server).post('/')
+      const server = createServer({ defaultCharset: 'koi8-r' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
@@ -103,7 +103,7 @@ describe('bodyParser.text()', function () {
 
   describe('with limit option', function () {
     it('should 413 when over limit with Content-Length', function (done) {
-      var buf = Buffer.alloc(1028, '.')
+      const buf = Buffer.alloc(1028, '.')
       request(createServer({ limit: '1kb' }))
         .post('/')
         .set('Content-Type', 'text/plain')
@@ -113,9 +113,9 @@ describe('bodyParser.text()', function () {
     })
 
     it('should 413 when over limit with chunked encoding', function (done) {
-      var buf = Buffer.alloc(1028, '.')
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(1028, '.')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'text/plain')
       test.set('Transfer-Encoding', 'chunked')
       test.write(buf.toString())
@@ -123,8 +123,8 @@ describe('bodyParser.text()', function () {
     })
 
     it('should 413 when inflated body over limit', function (done) {
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a14704040000', 'hex'))
@@ -132,7 +132,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should accept number of bytes', function (done) {
-      var buf = Buffer.alloc(1028, '.')
+      const buf = Buffer.alloc(1028, '.')
       request(createServer({ limit: 1024 }))
         .post('/')
         .set('Content-Type', 'text/plain')
@@ -141,9 +141,9 @@ describe('bodyParser.text()', function () {
     })
 
     it('should not change when options altered', function (done) {
-      var buf = Buffer.alloc(1028, '.')
-      var options = { limit: '1kb' }
-      var server = createServer(options)
+      const buf = Buffer.alloc(1028, '.')
+      const options = { limit: '1kb' }
+      const server = createServer(options)
 
       options.limit = '100kb'
 
@@ -155,9 +155,9 @@ describe('bodyParser.text()', function () {
     })
 
     it('should not hang response', function (done) {
-      var buf = Buffer.alloc(10240, '.')
-      var server = createServer({ limit: '8kb' })
-      var test = request(server).post('/')
+      const buf = Buffer.alloc(10240, '.')
+      const server = createServer({ limit: '8kb' })
+      const test = request(server).post('/')
       test.set('Content-Type', 'text/plain')
       test.write(buf)
       test.write(buf)
@@ -166,8 +166,8 @@ describe('bodyParser.text()', function () {
     })
 
     it('should not error when inflating', function (done) {
-      var server = createServer({ limit: '1kb' })
-      var test = request(server).post('/')
+      const server = createServer({ limit: '1kb' })
+      const test = request(server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('1f8b080000000000000ad3d31b05a360148c64000087e5a1470404', 'hex'))
@@ -184,7 +184,7 @@ describe('bodyParser.text()', function () {
       })
 
       it('should not accept content-encoding', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'text/plain')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
@@ -198,7 +198,7 @@ describe('bodyParser.text()', function () {
       })
 
       it('should accept content-encoding', function (done) {
-        var test = request(this.server).post('/')
+        const test = request(this.server).post('/')
         test.set('Content-Encoding', 'gzip')
         test.set('Content-Type', 'text/plain')
         test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
@@ -262,7 +262,7 @@ describe('bodyParser.text()', function () {
 
     describe('when a function', function () {
       it('should parse when truthy value returned', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           return req.headers['content-type'] === 'text/vnd.something'
@@ -276,19 +276,19 @@ describe('bodyParser.text()', function () {
       })
 
       it('should work without content-type', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           return true
         }
 
-        var test = request(server).post('/')
+        const test = request(server).post('/')
         test.write('user is tobi')
         test.expect(200, '"user is tobi"', done)
       })
 
       it('should not invoke without a body', function (done) {
-        var server = createServer({ type: accept })
+        const server = createServer({ type: accept })
 
         function accept (req) {
           throw new Error('oops!')
@@ -308,7 +308,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should error from verify', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x20) throw new Error('no leading space')
         }
@@ -322,10 +322,10 @@ describe('bodyParser.text()', function () {
     })
 
     it('should allow custom codes', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] !== 0x20) return
-          var err = new Error('no leading space')
+          const err = new Error('no leading space')
           err.status = 400
           throw err
         }
@@ -339,7 +339,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should allow pass-through', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           if (buf[0] === 0x20) throw new Error('no leading space')
         }
@@ -353,13 +353,13 @@ describe('bodyParser.text()', function () {
     })
 
     it('should 415 on unknown charset prior to verify', function (done) {
-      var server = createServer({
+      const server = createServer({
         verify: function (req, res, buf) {
           throw new Error('unexpected verify call')
         }
       })
 
-      var test = request(server).post('/')
+      const test = request(server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
       test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
@@ -368,15 +368,15 @@ describe('bodyParser.text()', function () {
 
   describe('async local storage', function () {
     before(function () {
-      var textParser = bodyParser.text()
-      var store = { foo: 'bar' }
+      const textParser = bodyParser.text()
+      const store = { foo: 'bar' }
 
       this.server = createServer(function (req, res, next) {
-        var asyncLocalStorage = new AsyncLocalStorage()
+        const asyncLocalStorage = new AsyncLocalStorage()
 
         asyncLocalStorage.run(store, function () {
           textParser(req, res, function (err) {
-            var local = asyncLocalStorage.getStore()
+            const local = asyncLocalStorage.getStore()
 
             if (local) {
               res.setHeader('x-store-foo', String(local.foo))
@@ -411,7 +411,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should presist store when inflated', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
@@ -422,7 +422,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should presist store when inflate error', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b0000', 'hex'))
@@ -448,21 +448,21 @@ describe('bodyParser.text()', function () {
     })
 
     it('should parse utf-8', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
     })
 
     it('should parse codepage charsets', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=koi8-r')
       test.write(Buffer.from('6e616d6520697320cec5d4', 'hex'))
       test.expect(200, '"name is нет"', done)
     })
 
     it('should parse when content-length != char length', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
       test.set('Content-Length', '11')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
@@ -470,14 +470,14 @@ describe('bodyParser.text()', function () {
     })
 
     it('should default to utf-8', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
     })
 
     it('should 415 on unknown charset', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=x-bogus')
       test.write(Buffer.from('00000000', 'hex'))
       test.expect(415, '[charset.unsupported] unsupported charset "X-BOGUS"', done)
@@ -490,14 +490,14 @@ describe('bodyParser.text()', function () {
     })
 
     it('should parse without encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
       test.expect(200, '"name is 论"', done)
     })
 
     it('should support identity encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'identity')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('6e616d6520697320e8aeba', 'hex'))
@@ -505,7 +505,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should support gzip encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'gzip')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
@@ -513,7 +513,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should support deflate encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'deflate')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('789ccb4bcc4d55c82c5678b16e17001a6f050e', 'hex'))
@@ -521,7 +521,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should support brotli encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'br')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('0b05806e616d6520697320e8aeba03', 'hex'))
@@ -529,7 +529,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should be case-insensitive', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'GZIP')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4d55c82c5678b16e170072b3e0200b000000', 'hex'))
@@ -537,7 +537,7 @@ describe('bodyParser.text()', function () {
     })
 
     it('should 415 on unknown encoding', function (done) {
-      var test = request(this.server).post('/')
+      const test = request(this.server).post('/')
       test.set('Content-Encoding', 'nulls')
       test.set('Content-Type', 'text/plain')
       test.write(Buffer.from('000000000000', 'hex'))
@@ -547,7 +547,7 @@ describe('bodyParser.text()', function () {
 })
 
 function createServer (opts) {
-  var _bodyParser = typeof opts !== 'function'
+  const _bodyParser = typeof opts !== 'function'
     ? bodyParser.text(opts)
     : opts
 

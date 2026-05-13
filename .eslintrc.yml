@@ -9,3 +9,4 @@ overrides:
     processor: 'markdown/markdown'
 rules:
   no-param-reassign: error
+  no-var: error
