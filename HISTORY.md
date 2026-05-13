@@ -4,10 +4,12 @@ unreleased
 * fix: use static exports instead of lazy getters to improve ESM compatibility
 * feat: add subpath exports for individual parsers
 * deps:
+  * content-type@^2.0.0
   * http-errors@^2.0.1
   * iconv-lite^0.7.2
   * qs@^6.15.0
   * raw-body@^3.0.1
+  * type-is@^2.1.0
 
 2.2.2 / 2026-01-07
 =========================
@@ -19,11 +21,11 @@ unreleased
 =========================
 
 * Security fix for [GHSA-wqch-xfxh-vrr4](https://github.com/expressjs/body-parser/security/advisories/GHSA-wqch-xfxh-vrr4)
-* deps: 
+* deps:
   * type-is@^2.0.1
   * iconv-lite@^0.7.0
     * Handle split surrogate pairs when encoding UTF-8
-    * Avoid false positives in `encodingExists` by using prototype-less objects 
+    * Avoid false positives in `encodingExists` by using prototype-less objects
   * raw-body@^3.0.1
   * debug@^4.4.3
 
@@ -117,7 +119,7 @@ This incorporates all changes after 1.19.1 up to 1.20.2.
   * deps: qs@6.13.0
   * add `depth` option to customize the depth level in the parser
   * IMPORTANT: The default `depth` level for parsing URL-encoded data is now `32` (previously was `Infinity`)
- 
+
 1.20.2 / 2023-02-21
 ===================
 
