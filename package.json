@@ -32,21 +32,21 @@
     "http-errors": "^2.0.1",
     "iconv-lite": "^0.7.2",
     "on-finished": "^2.4.1",
-    "qs": "^6.15.0",
+    "qs": "^6.15.2",
     "raw-body": "^3.0.2",
     "type-is": "^2.1.0"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-markdown": "^3.0.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-standard": "^4.1.0",
-    "mocha": "^11.1.0",
+    "mocha": "^11.7.6",
     "nyc": "^17.1.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.2.2"
   },
   "files": [
     "lib/",

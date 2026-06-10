@@ -7,8 +7,8 @@ unreleased
   * content-type@^2.0.0
   * http-errors@^2.0.1
   * iconv-lite^0.7.2
-  * qs@^6.15.0
-  * raw-body@^3.0.1
+  * qs@^6.15.2
+  * raw-body@^3.0.2
   * type-is@^2.1.0
 
 2.2.2 / 2026-01-07
