@@ -1,4 +1,4 @@
-unreleased
+2.2.3 / 2026-06-12
 ========================
 
 * fix: use static exports instead of lazy getters to improve ESM compatibility
