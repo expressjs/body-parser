@@ -1,8 +1,11 @@
-unreleased
+2.3.0 / 2026-06-15
 ========================
 
 * fix: use static exports instead of lazy getters to improve ESM compatibility
 * feat: add subpath exports for individual parsers
+* fix: improve `limit` option validation (#698)
+  * Invalid `limit` values (e.g. unparseable strings or `NaN`) now throw instead of being silently ignored, which previously disabled size limit enforcement
+  * `null` and `undefined` fall back to the default 100kb limit
 * deps:
   * content-type@^2.0.0
   * http-errors@^2.0.1
