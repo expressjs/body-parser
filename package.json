@@ -61,5 +61,9 @@
     "test": "mocha --reporter spec --check-leaks test/",
     "test-ci": "nyc --reporter=lcovonly --reporter=text npm test",
     "test-cov": "nyc --reporter=html --reporter=text npm test"
+  },
+  "homepage": "https://github.com/expressjs/body-parser",
+  "bugs": {
+    "url": "https://github.com/expressjs/body-parser/issues"
   }
 }
