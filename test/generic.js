@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('node:assert')
+const iconv = require('iconv-lite')
 const http = require('node:http')
 const request = require('supertest')
 
@@ -8,9 +9,9 @@ const { generic } = require('..')
 
 const PARSERS = {
   // Reverses the input string
-  reverse: (buf, charset) => buf.toString(charset).split('').reverse().join(''),
+  reverse: (body) => body.split('').reverse().join(''),
 
-  json: (buf, charset) => JSON.parse(buf.toString(charset))
+  json: (body) => JSON.parse(body)
 }
 
 // Tracks if a function was called
@@ -37,15 +38,21 @@ describe('generic()', function () {
     }, /option type must be specified for generic parser/)
   })
 
+  it('should reject invalid parseAs option', function () {
+    assert.throws(function () {
+      generic({ parse: function () {}, parseAs: 'json', type: 'text/plain' })
+    }, /option parseAs must be either "buffer" or "string"/)
+  })
+
   describe('core functionality', function () {
     it('should provide request body to parse function and use result as req.body', function (done) {
       const testResult = { parsed: true, id: Date.now() }
       const testBody = 'hello parser'
 
       const parseFn = trackCall(function (body, charset) {
-        const content = body.toString(charset)
-        assert.ok(body instanceof Buffer, 'body should be a Buffer')
-        assert.strictEqual(content, testBody, 'should receive request body content')
+        assert.strictEqual(typeof body, 'string')
+        assert.strictEqual(body, testBody, 'should receive request body content')
+        assert.strictEqual(charset, 'utf-8')
         return testResult
       })
 
@@ -65,11 +72,128 @@ describe('generic()', function () {
         })
     })
 
+    describe('parseAs option', function () {
+      it('should default to string', function (done) {
+        const parseFn = trackCall(function (body, charset) {
+          assert.strictEqual(typeof body, 'string')
+          assert.strictEqual(body, 'hello parser')
+          assert.strictEqual(charset, 'utf-8')
+          return { type: 'string' }
+        })
+
+        const server = createServer(parseFn)
+
+        request(server)
+          .post('/')
+          .set('Content-Type', 'text/plain')
+          .send('hello parser')
+          .expect(200, '{"type":"string"}')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(parseFn.called(), 'parse function should be called')
+            done()
+          })
+      })
+
+      it('should provide buffer when parseAs is buffer', function (done) {
+        const parseFn = trackCall(function (body, charset) {
+          assert.ok(body instanceof Buffer, 'body should be a Buffer')
+          assert.strictEqual(body.toString(charset), 'hello parser')
+          return { type: 'buffer' }
+        })
+
+        const server = createServer({ parseAs: 'buffer' }, parseFn)
+
+        request(server)
+          .post('/')
+          .set('Content-Type', 'text/plain')
+          .send('hello parser')
+          .expect(200, '{"type":"buffer"}')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(parseFn.called(), 'parse function should be called')
+            done()
+          })
+      })
+
+      it('should allow custom parser to decode non-utf-8 buffer when parseAs is buffer', function (done) {
+        const parseFn = trackCall(function (body, charset) {
+          assert.ok(body instanceof Buffer, 'body should be a Buffer')
+          assert.deepStrictEqual([...body], [0x63, 0x61, 0x66, 0xe9])
+          assert.strictEqual(charset, 'iso-8859-1')
+          return { body: iconv.decode(body, charset), charset }
+        })
+
+        const server = createServer({ parseAs: 'buffer' }, parseFn)
+
+        request(server)
+          .post('/')
+          .set('Content-Type', 'text/plain; charset=iso-8859-1')
+          .send(Buffer.from([0x63, 0x61, 0x66, 0xe9]))
+          .expect(200, '{"body":"caf\u00e9","charset":"iso-8859-1"}')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(parseFn.called(), 'parse function should be called')
+            done()
+          })
+      })
+
+      it('should provide decoded string when parseAs is string', function (done) {
+        const parseFn = trackCall(function (body, charset) {
+          assert.strictEqual(typeof body, 'string')
+          assert.strictEqual(body, 'caf\u00e9')
+          assert.strictEqual(charset, 'iso-8859-1')
+          return { body, charset }
+        })
+
+        const server = createServer({ parseAs: 'string' }, parseFn)
+
+        request(server)
+          .post('/')
+          .set('Content-Type', 'text/plain; charset=iso-8859-1')
+          .send(Buffer.from([0x63, 0x61, 0x66, 0xe9]))
+          .expect(200, '{"body":"caf\u00e9","charset":"iso-8859-1"}')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(parseFn.called(), 'parse function should be called')
+            done()
+          })
+      })
+
+      it('should verify raw buffer before decoding parseAs string bodies', function (done) {
+        const verifyFn = trackCall(function (_req, _res, body, charset) {
+          assert.ok(body instanceof Buffer, 'verified body should be a Buffer')
+          assert.deepStrictEqual([...body], [0x63, 0x61, 0x66, 0xe9])
+          assert.strictEqual(charset, 'iso-8859-1')
+        })
+
+        const parseFn = trackCall(function (body, charset) {
+          assert.strictEqual(typeof body, 'string')
+          assert.strictEqual(body, 'caf\u00e9')
+          assert.strictEqual(charset, 'iso-8859-1')
+          return body
+        })
+
+        const server = createServer({ parseAs: 'string', verify: verifyFn }, parseFn)
+
+        request(server)
+          .post('/')
+          .set('Content-Type', 'text/plain; charset=iso-8859-1')
+          .send(Buffer.from([0x63, 0x61, 0x66, 0xe9]))
+          .expect(200, '"caf\u00e9"')
+          .end(function (err) {
+            if (err) return done(err)
+            assert(verifyFn.called(), 'verify function should be called')
+            assert(parseFn.called(), 'parse function should be called')
+            done()
+          })
+      })
+    })
+
     describe('request body handling', function () {
-      it('should call parse function with empty buffer for Content-Length: 0', function (done) {
-        const parseFn = trackCall(function (buf, _charset) {
-          assert.ok(buf instanceof Buffer, 'body should be a Buffer')
-          assert.strictEqual(buf.length, 0, 'buffer should be empty')
+      it('should call parse function with empty string for Content-Length: 0', function (done) {
+        const parseFn = trackCall(function (body, _charset) {
+          assert.strictEqual(body, '')
           // Return empty object like JSON/URL-encoded parsers do
           return { empty: true }
         })
@@ -88,10 +212,9 @@ describe('generic()', function () {
           })
       })
 
-      it('should call parse function with empty buffer for chunked encoding', function (done) {
-        const parseFn = trackCall(function (buf, _charset) {
-          assert.ok(buf instanceof Buffer, 'body should be a Buffer')
-          assert.strictEqual(buf.length, 0, 'buffer should be empty')
+      it('should call parse function with empty string for chunked encoding', function (done) {
+        const parseFn = trackCall(function (body, _charset) {
+          assert.strictEqual(body, '')
           // Return empty object like JSON/URL-encoded parsers do
           return { empty: true }
         })
@@ -111,7 +234,7 @@ describe('generic()', function () {
       })
 
       it('should NOT call parse function for requests with no body concept', function (done) {
-        const parseFn = trackCall(function (buf, _charset) {
+        const parseFn = trackCall(function (_body, _charset) {
           return { called: true }
         })
 
@@ -131,7 +254,7 @@ describe('generic()', function () {
 
   describe('error handling', function () {
     it('should return 400 for parsing errors', function (done) {
-      const server1 = createServer(function (_buf) {
+      const server1 = createServer(function (_body) {
         throw new Error('parse error')
       })
 
@@ -160,9 +283,8 @@ describe('generic()', function () {
     })
 
     it('should 413 when body too large', function (done) {
-      const server = createServer({ limit: '1kb' }, function (buf, charset) {
-        assert.ok(buf instanceof Buffer, 'body should be a Buffer')
-        return buf.toString(charset)
+      const server = createServer({ limit: '1kb' }, function (body) {
+        return body
       })
 
       const largeText = new Array(1024 * 10 + 1).join('x')
@@ -179,7 +301,7 @@ describe('generic()', function () {
     it('should match exact content type', function (done) {
       const server = createServer({
         type: 'text/markdown'
-      }, _buf => 'markdown matched')
+      }, _body => 'markdown matched')
 
       request(server)
         .post('/')
@@ -191,8 +313,8 @@ describe('generic()', function () {
     it('should match custom media type', function (done) {
       const server = createServer({
         type: 'application/vnd.custom+plain'
-      }, function (buf, charset) {
-        return buf.toString(charset)
+      }, function (body) {
+        return body
       })
 
       request(server)
@@ -205,7 +327,7 @@ describe('generic()', function () {
     it('should not parse when content-type does not match', function (done) {
       const server = createServer({
         type: 'text/markdown'
-      }, _buf => 'should not be called')
+      }, _body => 'should not be called')
 
       request(server)
         .post('/')
@@ -217,8 +339,8 @@ describe('generic()', function () {
     it('should handle content-type with parameters besides charset', function (done) {
       const server = createServer({
         type: 'text/plain'
-      }, function (buf, charset) {
-        return buf.toString(charset)
+      }, function (body) {
+        return body
       })
 
       request(server)
@@ -232,8 +354,8 @@ describe('generic()', function () {
       const server = createServer({
         charset: 'utf-8',
         type: 'text/plain'
-      }, function (buf, charset) {
-        return buf.toString(charset)
+      }, function (body) {
+        return body
       })
 
       request(server)
@@ -247,8 +369,8 @@ describe('generic()', function () {
       const server = createServer({
         charset: ['utf-8', 'utf-16'],
         type: 'text/plain'
-      }, function (buf, charset) {
-        return buf.toString(charset)
+      }, function (body) {
+        return body
       })
 
       request(server)
@@ -264,8 +386,8 @@ describe('generic()', function () {
           return charset === 'utf-8'
         },
         type: 'text/plain'
-      }, function (buf, charset) {
-        return buf.toString(charset)
+      }, function (body) {
+        return body
       })
 
       request(server)
@@ -279,7 +401,7 @@ describe('generic()', function () {
       it('should match first type in array', function (done) {
         const server = createServer({
           type: ['application/x-foo', 'application/x-bar']
-        }, _buf => 'multi-type matched')
+        }, _body => 'multi-type matched')
 
         request(server)
           .post('/')
@@ -291,7 +413,7 @@ describe('generic()', function () {
       it('should match second type in array', function (done) {
         const server = createServer({
           type: ['application/x-foo', 'application/x-bar']
-        }, _buf => 'multi-type matched')
+        }, _body => 'multi-type matched')
 
         request(server)
           .post('/')
@@ -310,8 +432,8 @@ describe('generic()', function () {
 
         const server = createServer({
           type: typeCheckFn
-        }, function (buf, charset) {
-          return buf.toString(charset)
+        }, function (body) {
+          return body
         })
 
         request(server)
@@ -329,7 +451,7 @@ describe('generic()', function () {
       it('should support custom matching logic', function (done) {
         const server = createServer({
           type: req => req.headers['content-type']?.includes('custom')
-        }, _buf => 'function match')
+        }, _body => 'function match')
 
         request(server)
           .post('/')

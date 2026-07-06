@@ -236,7 +236,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 Returns middleware that only parses `urlencoded` bodies and only looks at
 requests where the `Content-Type` header matches the `type` option. This
-parser accepts only UTF-8 and ISO-8859-1 encodings of the body and supports 
+parser accepts only UTF-8 and ISO-8859-1 encodings of the body and supports
 automatic inflation of `gzip`, `br` (brotli) and `deflate` encodings.
 
 A new `body` object containing the parsed data is populated on the `request`
@@ -341,27 +341,34 @@ The `generic` function takes an `options` object that may contain any of the fol
 
 ##### parse
 
-**Required.** The `parse` function that converts the raw request body buffer into a JavaScript object. This function receives two arguments:
+**Required.** The `parse` function that converts the request body into a JavaScript object. By default, this function receives a decoded request body string and the detected charset:
 
 ```js
-function parse (buffer, charset) {
-  // Convert Buffer to parsed object
+function parse (body, charset) {
+  // Convert body to parsed object
   return parsedObject
 }
 ```
 
-- `buffer`: A Buffer containing the raw request body
+- `body`: A string containing the decoded request body
 - `charset`: The detected charset from Content-Type header or defaultCharset
 - Return value becomes `req.body`
 - **IMPORTANT**: This function MUST be synchronous and return the parsed result directly
   - It cannot be an `async` function
   - It cannot return a Promise
 
-Your parse function will be called even for empty bodies (with a zero-length buffer), but not for requests with no body concept (like GET requests).
+Your parse function will be called even for empty bodies (with a zero-length buffer or string), but not for requests with no body concept (like GET requests).
 
 For empty bodies, consider following these conventions:
 - For JSON-like parsers: Return `{}` (empty object)
 - For text/raw-like parsers: Return the empty buffer/string as-is
+
+##### parseAs
+
+Controls the body value passed as the first argument to the `parse` function. Defaults to `string`.
+
+- `string`: `parse(body, charset)` receives the request body decoded with the detected charset
+- `buffer`: `parse(body, charset)` receives the raw request body as a `Buffer`
 
 ##### type
 
@@ -369,7 +376,7 @@ For empty bodies, consider following these conventions:
 
 - A string mime type (like `application/xml`)
 - An extension name (like `xml`)
-- A mime type with a wildcard (like `*/xml`) 
+- A mime type with a wildcard (like `*/xml`)
 - An array of any of the above
 - A function that takes a request and returns a boolean
 
@@ -382,7 +389,7 @@ Specify the default character set for the content if the charset is not specifie
 ##### charset
 
 If specified, the charset of the request must match this option. If the request charset doesn't match, a 415 Unsupported Media Type error is returned.
-This option can be: 
+This option can be:
 
 - A string charset (like `utf-8`)
 - An array of string charsets (like `['utf-8', 'utf-16']`)
@@ -602,15 +609,15 @@ const xmlParser = bodyParser.generic({
   // Set limits to prevent abuse
   limit: '500kb',
 
-  // Validate that only 'utf-8' encoded responses are accepted
+  // Validate that only 'utf-8' encoded requests are accepted
   charset: 'utf-8',
 
-  parse: function (buf, charset) {
+  parse: function (body) {
     // Handle empty body case
-    if (buf.length === 0) return {}
+    if (body.length === 0) return {}
 
     try {
-      const result = xmljs.xml2js(buf.toString(charset), {
+      const result = xmljs.xml2js(body, {
         compact: true,
         trim: true,
         nativeType: true
@@ -652,13 +659,12 @@ function csvParser (options) {
     verify: opts.verify,
     charset: 'utf-8',
 
-    parse: function (buf, charset) {
+    parse: function (body) {
       // Handle empty body
-      if (buf.length === 0) return { rows: [] }
+      if (body.length === 0) return { rows: [] }
 
       try {
-        const csvText = buf.toString(charset)
-        const lines = csvText.split(/\r?\n/).filter(line => line.trim())
+        const lines = body.split(/\r?\n/).filter(line => line.trim())
 
         if (lines.length === 0) return { rows: [] }
 
