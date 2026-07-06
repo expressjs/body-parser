@@ -106,32 +106,32 @@ describe('bodyParser.text()', function () {
   })
 
   describe('with limit option', function () {
-    it('should throw an error for an invalid string limit', () => {
-      assert.throws(() => {
+    it('should throw an error for an invalid string limit', function () {
+      assert.throws(function () {
         bodyParser.text({ limit: 'invalid' })
       }, /option limit "invalid" is invalid/)
-      assert.throws(() => {
+      assert.throws(function () {
         bodyParser.text({ limit: '' })
       }, /option limit "" is invalid/)
     })
 
-    it('should throw an error for a NaN limit', () => {
-      assert.throws(() => {
+    it('should throw an error for a NaN limit', function () {
+      assert.throws(function () {
         bodyParser.text({ limit: NaN })
       }, /option limit "NaN" is invalid/)
     })
 
-    it('should throw an error for a boolean limit', () => {
-      assert.throws(() => {
+    it('should throw an error for a boolean limit', function () {
+      assert.throws(function () {
         bodyParser.text({ limit: true })
       }, /option limit "true" is invalid/)
-      assert.throws(() => {
+      assert.throws(function () {
         bodyParser.text({ limit: false })
       }, /option limit "false" is invalid/)
     })
 
-    it('should throw an error for an object limit', () => {
-      assert.throws(() => {
+    it('should throw an error for an object limit', function () {
+      assert.throws(function () {
         bodyParser.text({ limit: { foo: 'bar' } })
       }, /option limit "\[object Object\]" is invalid/)
     })

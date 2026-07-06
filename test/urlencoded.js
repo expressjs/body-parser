@@ -323,32 +323,32 @@ describe('bodyParser.urlencoded()', function () {
   })
 
   describe('with limit option', function () {
-    it('should throw an error for an invalid string limit', () => {
-      assert.throws(() => {
+    it('should throw an error for an invalid string limit', function () {
+      assert.throws(function () {
         bodyParser.urlencoded({ limit: 'invalid' })
       }, /option limit "invalid" is invalid/)
-      assert.throws(() => {
+      assert.throws(function () {
         bodyParser.urlencoded({ limit: '' })
       }, /option limit "" is invalid/)
     })
 
-    it('should throw an error for a NaN limit', () => {
-      assert.throws(() => {
+    it('should throw an error for a NaN limit', function () {
+      assert.throws(function () {
         bodyParser.urlencoded({ limit: NaN })
       }, /option limit "NaN" is invalid/)
     })
 
-    it('should throw an error for a boolean limit', () => {
-      assert.throws(() => {
+    it('should throw an error for a boolean limit', function () {
+      assert.throws(function () {
         bodyParser.urlencoded({ limit: true })
       }, /option limit "true" is invalid/)
-      assert.throws(() => {
+      assert.throws(function () {
         bodyParser.urlencoded({ limit: false })
       }, /option limit "false" is invalid/)
     })
 
-    it('should throw an error for an object limit', () => {
-      assert.throws(() => {
+    it('should throw an error for an object limit', function () {
+      assert.throws(function () {
         bodyParser.urlencoded({ limit: { foo: 'bar' } })
       }, /option limit "\[object Object\]" is invalid/)
     })
