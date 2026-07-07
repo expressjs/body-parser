@@ -1,6 +1,12 @@
+unreleased
+===================
+* fix: improve `limit` option validation (#698)
+  * Invalid `limit` values (e.g. unparseable strings or `NaN`) now throw instead of being silently ignored, which previously disabled size limit enforcement
+  * `null` and `undefined` fall back to the default 100kb limit
+
 1.20.5 / 2026-04-24
 ===================
-* refactor(json): simplify strict mode error string construction 
+* refactor(json): simplify strict mode error string construction
 * fix: extended urlencoded parsing of arrays with >100 elements (#716)
 * deps: qs@~6.15.1
 

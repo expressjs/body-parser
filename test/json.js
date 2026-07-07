@@ -130,6 +130,36 @@ describe('bodyParser.json()', function () {
   })
 
   describe('with limit option', function () {
+    it('should throw an error for an invalid string limit', function () {
+      assert.throws(function () {
+        bodyParser.json({ limit: 'invalid' })
+      }, /option limit "invalid" is invalid/)
+      assert.throws(function () {
+        bodyParser.json({ limit: '' })
+      }, /option limit "" is invalid/)
+    })
+
+    it('should throw an error for a NaN limit', function () {
+      assert.throws(function () {
+        bodyParser.json({ limit: NaN })
+      }, /option limit "NaN" is invalid/)
+    })
+
+    it('should throw an error for a boolean limit', function () {
+      assert.throws(function () {
+        bodyParser.json({ limit: true })
+      }, /option limit "true" is invalid/)
+      assert.throws(function () {
+        bodyParser.json({ limit: false })
+      }, /option limit "false" is invalid/)
+    })
+
+    it('should throw an error for an object limit', function () {
+      assert.throws(function () {
+        bodyParser.json({ limit: { foo: 'bar' } })
+      }, /option limit "\[object Object\]" is invalid/)
+    })
+
     it('should 413 when over limit with Content-Length', function (done) {
       var buf = Buffer.alloc(1024, '.')
       request(createServer({ limit: '1kb' }))
