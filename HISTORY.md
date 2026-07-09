@@ -1,6 +1,7 @@
 2.3.0 / 2026-06-15
 ========================
 
+* Security fix for [GHSA-v422-hmwv-36x6](https://github.com/expressjs/body-parser/security/advisories/GHSA-v422-hmwv-36x6)
 * fix: use static exports instead of lazy getters to improve ESM compatibility
 * feat: add subpath exports for individual parsers
 * fix: improve `limit` option validation (#698)
