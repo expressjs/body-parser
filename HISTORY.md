@@ -1,5 +1,6 @@
 1.20.6 / 2026-07-09
 ===================
+* Security fix for [GHSA-v422-hmwv-36x6](https://github.com/expressjs/body-parser/security/advisories/GHSA-v422-hmwv-36x6)
 * fix: improve `limit` option validation (#698)
   * Invalid `limit` values (e.g. unparseable strings or `NaN`) now throw instead of being silently ignored, which previously disabled size limit enforcement
   * `null` and `undefined` fall back to the default 100kb limit
