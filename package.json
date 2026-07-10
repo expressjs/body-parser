@@ -20,6 +20,7 @@
     "./raw": "./lib/types/raw.js",
     "./text": "./lib/types/text.js",
     "./urlencoded": "./lib/types/urlencoded.js",
+    "./generic": "./lib/generic.js",
     "./lib/*": "./lib/*.js",
     "./lib/*.js": "./lib/*.js",
     "./lib/types/*": "./lib/types/*.js",
