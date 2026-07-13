@@ -108,6 +108,7 @@ This incorporates all changes after 1.19.1 up to 1.20.2.
     - it is left `undefined` unless a body is parsed
   * `urlencoded` parser now defaults `extended` to `false`
   * Use `on-finished` to determine when body read
+
 1.20.6 / 2026-07-09
 ===================
 * Security fix for [GHSA-v422-hmwv-36x6](https://github.com/expressjs/body-parser/security/advisories/GHSA-v422-hmwv-36x6)
