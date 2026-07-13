@@ -1,5 +1,6 @@
 'use strict'
 
+const { describe, it } = require('mocha')
 const assert = require('node:assert')
 const { normalizeOptions } = require('../lib/utils.js')
 
