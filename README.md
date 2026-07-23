@@ -65,6 +65,12 @@ The `bodyParser` object exposes various factories to create middlewares. All
 middlewares will populate the `req.body` property with the parsed body when
 the `Content-Type` request header matches the `type` option.
 
+**Note** As of v2, `req.body` is left `undefined` when no body is parsed (for
+example an empty body or a non-matching `Content-Type`). In v1, `req.body` was
+always initialized to `{}`. Code that assumes `req.body` is always an object
+should use optional chaining (for example `req.body?.username`) or set a
+default.
+
 The various errors returned by this module are described in the
 [errors section](#errors).
 
