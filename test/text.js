@@ -461,6 +461,28 @@ describe('bodyParser.text()', function () {
       test.expect(200, '"name is нет"', done)
     })
 
+    it('should decode windows-1252 C1 controls without replacement characters', function (done) {
+      const test = request(this.server).post('/')
+      test.set('Content-Type', 'text/plain; charset=windows-1252')
+      test.write(Buffer.from('808182838d9e9f', 'hex'))
+      test.expect(200)
+      test.expect(function (res) {
+        assert.strictEqual(JSON.parse(res.text), '€\x81‚ƒ\x8džŸ')
+      })
+      test.end(done)
+    })
+
+    it('should replace invalid utf-16 surrogate pairs', function (done) {
+      const test = request(this.server).post('/')
+      test.set('Content-Type', 'text/plain; charset=utf-16le')
+      test.write(Buffer.from('00d800d8', 'hex'))
+      test.expect(200)
+      test.expect(function (res) {
+        assert.strictEqual(JSON.parse(res.text), '\ufffd\ufffd')
+      })
+      test.end(done)
+    })
+
     it('should parse when content-length != char length', function (done) {
       const test = request(this.server).post('/')
       test.set('Content-Type', 'text/plain; charset=utf-8')
