@@ -1,5 +1,6 @@
 'use strict'
 
+const { describe, it, before } = require('mocha')
 const assert = require('node:assert')
 const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
 const http = require('node:http')

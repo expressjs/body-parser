@@ -1,5 +1,6 @@
 'use strict'
 
+const { describe, it, before } = require('mocha')
 const assert = require('node:assert')
 const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
 const http = require('node:http')
@@ -51,7 +52,7 @@ describe('bodyParser.urlencoded()', function () {
   extendedValues.forEach(function (extended) {
     describe('in ' + (extended ? 'extended' : 'simple') + ' mode', function () {
       it('should parse x-www-form-urlencoded with an explicit iso-8859-1 encoding', function (done) {
-        const server = createServer({ extended: extended })
+        const server = createServer({ extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded; charset=iso-8859-1')
@@ -60,7 +61,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse x-www-form-urlencoded with unspecified iso-8859-1 encoding when the defaultCharset is set to iso-8859-1', function (done) {
-        const server = createServer({ defaultCharset: 'iso-8859-1', extended: extended })
+        const server = createServer({ defaultCharset: 'iso-8859-1', extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -69,7 +70,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse x-www-form-urlencoded with an unspecified iso-8859-1 encoding when the utf8 sentinel has a value of %26%2310003%3B', function (done) {
-        const server = createServer({ charsetSentinel: true, extended: extended })
+        const server = createServer({ charsetSentinel: true, extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -78,7 +79,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should parse x-www-form-urlencoded with an unspecified utf-8 encoding when the utf8 sentinel has a value of %E2%9C%93 and the defaultCharset is iso-8859-1', function (done) {
-        const server = createServer({ charsetSentinel: true, extended: extended })
+        const server = createServer({ charsetSentinel: true, extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -87,7 +88,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not leave an empty string parameter when removing the utf8 sentinel from the start of the string', function (done) {
-        const server = createServer({ charsetSentinel: true, extended: extended })
+        const server = createServer({ charsetSentinel: true, extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -96,7 +97,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not leave an empty string parameter when removing the utf8 sentinel from the middle of the string', function (done) {
-        const server = createServer({ charsetSentinel: true, extended: extended })
+        const server = createServer({ charsetSentinel: true, extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -105,7 +106,7 @@ describe('bodyParser.urlencoded()', function () {
       })
 
       it('should not leave an empty string parameter when removing the utf8 sentinel from the end of the string', function (done) {
-        const server = createServer({ charsetSentinel: true, extended: extended })
+        const server = createServer({ charsetSentinel: true, extended })
         request(server)
           .post('/')
           .set('Content-Type', 'application/x-www-form-urlencoded')

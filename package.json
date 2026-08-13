@@ -37,14 +37,9 @@
     "type-is": "^2.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-markdown": "^3.0.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.6.0",
-    "eslint-plugin-standard": "^4.1.0",
+    "eslint": "^9.39.5",
     "mocha": "^11.7.6",
+    "neostandard": "^0.13.0",
     "nyc": "^17.1.0",
     "supertest": "^7.2.2"
   },
