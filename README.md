@@ -37,6 +37,10 @@ This module provides the following parsers:
   * [Text body parser](#bodyparsertextoptions)
   * [URL-encoded form body parser](#bodyparserurlencodedoptions)
 
+All parsers support automatic inflation of `gzip`, `br` (brotli), `deflate`
+and `zstd` encodings. `zstd` is available in Node.js `^22.15.0` and
+`>=23.8.0`.
+
 Other body parsers you might be interested in:
 
 - [body](https://www.npmjs.com/package/body#readme)
@@ -72,8 +76,7 @@ The various errors returned by this module are described in the
 
 Returns middleware that only parses `json` and only looks at requests where
 the `Content-Type` header matches the `type` option. This parser accepts any
-Unicode encoding of the body and supports automatic inflation of `gzip`,
-`br` (brotli) and `deflate` encodings.
+Unicode encoding of the body.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`).
@@ -133,9 +136,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 ### bodyParser.raw([options])
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
-requests where the `Content-Type` header matches the `type` option. This
-parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate`
-encodings.
+requests where the `Content-Type` header matches the `type` option.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a `Buffer` object
@@ -181,9 +182,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 ### bodyParser.text([options])
 
 Returns middleware that parses all bodies as a string and only looks at
-requests where the `Content-Type` header matches the `type` option. This
-parser supports automatic inflation of `gzip`, `br` (brotli) and `deflate`
-encodings.
+requests where the `Content-Type` header matches the `type` option.
 
 A new `body` string containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This will be a string of the
@@ -234,8 +233,7 @@ encoding of the request. The parsing can be aborted by throwing an error.
 
 Returns middleware that only parses `urlencoded` bodies and only looks at
 requests where the `Content-Type` header matches the `type` option. This
-parser accepts only UTF-8 and ISO-8859-1 encodings of the body and supports 
-automatic inflation of `gzip`, `br` (brotli) and `deflate` encodings.
+parser accepts only UTF-8 and ISO-8859-1 encodings of the body.
 
 A new `body` object containing the parsed data is populated on the `request`
 object after the middleware (i.e. `req.body`). This object will contain
