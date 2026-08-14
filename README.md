@@ -346,7 +346,7 @@ the entity value that failed parsing.
 ### entity verify failed
 
 This error will occur when the request contained an entity that could not be
-failed verification by the defined `verify` option. The `status` property is
+verified by the defined `verify` option. The `status` property is
 set to `403`, the `type` property is set to `'entity.verify.failed'`, and the
 `body` property is set to the entity value that failed verification.
 
