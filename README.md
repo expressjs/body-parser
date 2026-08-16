@@ -113,7 +113,7 @@ argument. You can find more information on this argument
 
 ##### strict
 
-When set to `true`, it will only accept arrays and objects; when `false` it will
+When set to `true`, it will only accept arrays and objects; when `false`, it will
 accept anything `JSON.parse` accepts. Defaults to `true`.
 
 ##### type
