@@ -465,7 +465,7 @@ describe('bodyParser.raw()', function () {
     })
 
     zstandardit('should support zstandard encoding', function (done) {
-      const server = createServer({ experimentalZstd: true, limit: '10kb' })
+      const server = createServer({ limit: '10kb' })
       const test = request(server).post('/')
       test.set('Content-Encoding', 'zstd')
       test.set('Content-Type', 'application/octet-stream')
@@ -474,7 +474,7 @@ describe('bodyParser.raw()', function () {
     })
 
     nozstandardit('should throw 415 if there\'s no zstandard support', function (done) {
-      const server = createServer({ experimentalZstd: true, limit: '10kb' })
+      const server = createServer({ limit: '10kb' })
       const test = request(server).post('/')
       test.set('Content-Encoding', 'zstd')
       test.set('Content-Type', 'application/octet-stream')

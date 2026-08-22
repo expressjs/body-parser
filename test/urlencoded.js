@@ -917,7 +917,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     zstandardit('should support zstandard encoding', function (done) {
-      const server = createServer({ experimentalZstd: true })
+      const server = createServer()
       const test = request(server).post('/')
       test.set('Content-Encoding', 'zstd')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
@@ -926,7 +926,7 @@ describe('bodyParser.urlencoded()', function () {
     })
 
     nozstandardit('should throw 415 if there\'s no zstandard support', function (done) {
-      const server = createServer({ experimentalZstd: true })
+      const server = createServer()
       const test = request(server).post('/')
       test.set('Content-Encoding', 'zstd')
       test.set('Content-Type', 'application/x-www-form-urlencoded')
