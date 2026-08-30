@@ -504,4 +504,4 @@ app.use(bodyParser.text({ type: 'text/html' }))
 [npm-url]: https://npmjs.com/package/body-parser
 [npm-version-image]: https://img.shields.io/npm/v/body-parser
 [ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/expressjs/body-parser/badge
-[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/body-parser
+[ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/expressjs/body-parsereb
