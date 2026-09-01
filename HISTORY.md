@@ -1,3 +1,8 @@
+Unreleased
+===================
+
+* deps: qs@~6.16.0
+
 1.20.6 / 2026-07-09
 ===================
 * Security fix for [GHSA-v422-hmwv-36x6](https://github.com/expressjs/body-parser/security/advisories/GHSA-v422-hmwv-36x6)
