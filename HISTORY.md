@@ -1,3 +1,8 @@
+Unreleased
+========================
+
+* deps: qs@^6.16.0
+
 2.3.0 / 2026-06-15
 ========================
 
@@ -121,7 +126,6 @@ This incorporates all changes after 1.19.1 up to 1.20.2.
 * refactor(json): simplify strict mode error string construction
 * fix: extended urlencoded parsing of arrays with >100 elements (#716)
 * deps: qs@~6.15.1
-* 
 
 1.20.4 / 2025-12-01
 ===================
