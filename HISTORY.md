@@ -1,3 +1,8 @@
+1.20.8
+===================
+
+* Same code base as 1.20.7. This was created to test the new release process.
+
 1.20.7
 ===================
 
