@@ -1,52 +1,52 @@
-Unreleased
+1.20.7
 ===================
 
 * deps: qs@~6.16.0
 
-1.20.6 / 2026-07-09
-===================
+1.20.6
+======
 * Security fix for [GHSA-v422-hmwv-36x6](https://github.com/expressjs/body-parser/security/advisories/GHSA-v422-hmwv-36x6)
 * fix: improve `limit` option validation (#698)
   * Invalid `limit` values (e.g. unparseable strings or `NaN`) now throw instead of being silently ignored, which previously disabled size limit enforcement
   * `null` and `undefined` fall back to the default 100kb limit
 
-1.20.5 / 2026-04-24
-===================
+1.20.5
+======
 * refactor(json): simplify strict mode error string construction
 * fix: extended urlencoded parsing of arrays with >100 elements (#716)
 * deps: qs@~6.15.1
 
-1.20.4 / 2025-12-01
-===================
+1.20.4
+======
 
   * deps: qs@~6.14.0
   * deps: use tilde notation for dependencies
   * deps: http-errors@~2.0.1
   * deps: raw-body@~2.5.3
 
-1.20.3 / 2024-09-10
-===================
+1.20.3
+======
 
   * deps: qs@6.13.0
   * add `depth` option to customize the depth level in the parser
   * IMPORTANT: The default `depth` level for parsing URL-encoded data is now `32` (previously was `Infinity`)
 
-1.20.2 / 2023-02-21
-===================
+1.20.2
+======
 
   * Fix strict json error message on Node.js 19+
   * deps: content-type@~1.0.5
     - perf: skip value escaping when unnecessary
   * deps: raw-body@2.5.2
 
-1.20.1 / 2022-10-06
-===================
+1.20.1
+======
 
   * deps: qs@6.11.0
   * perf: remove unnecessary object clone
 
-1.20.0 / 2022-04-02
-===================
+1.20.0
+======
 
   * Fix error message for json parse whitespace in `strict`
   * Fix internal error when inflated body exceeds limit
@@ -63,8 +63,8 @@ Unreleased
   * deps: raw-body@2.5.1
     - deps: http-errors@2.0.0
 
-1.19.2 / 2022-02-15
-===================
+1.19.2
+======
 
   * deps: bytes@3.1.2
   * deps: qs@6.9.7
@@ -72,8 +72,8 @@ Unreleased
   * deps: raw-body@2.4.3
     - deps: bytes@3.1.2
 
-1.19.1 / 2021-12-10
-===================
+1.19.1
+======
 
   * deps: bytes@3.1.1
   * deps: http-errors@1.8.1
@@ -87,8 +87,8 @@ Unreleased
   * deps: safe-buffer@5.2.1
   * deps: type-is@~1.6.18
 
-1.19.0 / 2019-04-25
-===================
+1.19.0
+======
 
   * deps: bytes@3.1.0
     - Add petabyte (`pb`) support
@@ -108,8 +108,8 @@ Unreleased
     - deps: mime-types@~2.1.24
     - perf: prevent internal `throw` on invalid type
 
-1.18.3 / 2018-05-14
-===================
+1.18.3
+======
 
   * Fix stack trace for strict json parse error
   * deps: depd@~1.1.2
@@ -128,14 +128,14 @@ Unreleased
   * deps: type-is@~1.6.16
     - deps: mime-types@~2.1.18
 
-1.18.2 / 2017-09-22
-===================
+1.18.2
+======
 
   * deps: debug@2.6.9
   * perf: remove argument reassignment
 
-1.18.1 / 2017-09-12
-===================
+1.18.1
+======
 
   * deps: content-type@~1.0.4
     - perf: remove argument reassignment
@@ -148,8 +148,8 @@ Unreleased
   * deps: raw-body@2.3.2
     - deps: iconv-lite@0.4.19
 
-1.18.0 / 2017-09-08
-===================
+1.18.0
+======
 
   * Fix JSON strict violation error to match native parse error
   * Include the `body` property on verify errors
@@ -174,8 +174,8 @@ Unreleased
     - perf: skip buffer decoding on overage chunk
   * perf: prevent internal `throw` when missing charset
 
-1.17.2 / 2017-05-17
-===================
+1.17.2
+======
 
   * deps: debug@2.6.7
     - Fix `DEBUG_MAX_ARRAY_LENGTH`
@@ -183,14 +183,14 @@ Unreleased
   * deps: type-is@~1.6.15
     - deps: mime-types@~2.1.15
 
-1.17.1 / 2017-03-06
-===================
+1.17.1
+======
 
   * deps: qs@6.4.0
     - Fix regression parsing keys starting with `[`
 
-1.17.0 / 2017-03-01
-===================
+1.17.0
+======
 
   * deps: http-errors@~1.6.1
     - Make `message` property enumerable for `HttpError`s
@@ -198,15 +198,15 @@ Unreleased
   * deps: qs@6.3.1
     - Fix compacting nested arrays
 
-1.16.1 / 2017-02-10
-===================
+1.16.1
+======
 
   * deps: debug@2.6.1
     - Fix deprecation messages in WebStorm and other editors
     - Undeprecate `DEBUG_FD` set to `1` or `2`
 
-1.16.0 / 2017-01-17
-===================
+1.16.0
+======
 
   * deps: debug@2.6.0
     - Allow colors in workers
@@ -232,8 +232,8 @@ Unreleased
   * deps: type-is@~1.6.14
     - deps: mime-types@~2.1.13
 
-1.15.2 / 2016-06-19
-===================
+1.15.2
+======
 
   * deps: bytes@2.4.0
   * deps: content-type@~1.0.2
@@ -249,8 +249,8 @@ Unreleased
   * deps: type-is@~1.6.13
     - deps: mime-types@~2.1.11
 
-1.15.1 / 2016-05-05
-===================
+1.15.1
+======
 
   * deps: bytes@2.3.0
     - Drop partial bytes on all parsed units
@@ -260,8 +260,8 @@ Unreleased
   * deps: type-is@~1.6.12
     - deps: mime-types@~2.1.10
 
-1.15.0 / 2016-02-10
-===================
+1.15.0
+======
 
   * deps: http-errors@~1.4.0
     - Add `HttpError` export, for `err instanceof createError.HttpError`
@@ -271,8 +271,8 @@ Unreleased
   * deps: type-is@~1.6.11
     - deps: mime-types@~2.1.9
 
-1.14.2 / 2015-12-16
-===================
+1.14.2
+======
 
   * deps: bytes@2.2.0
   * deps: iconv-lite@0.4.13
@@ -283,8 +283,8 @@ Unreleased
   * deps: type-is@~1.6.10
     - deps: mime-types@~2.1.8
 
-1.14.1 / 2015-09-27
-===================
+1.14.1
+======
 
   * Fix issue where invalid charset results in 400 when `verify` used
   * deps: iconv-lite@0.4.12
@@ -295,8 +295,8 @@ Unreleased
   * deps: type-is@~1.6.9
     - deps: mime-types@~2.1.7
 
-1.14.0 / 2015-09-16
-===================
+1.14.0
+======
 
   * Fix JSON strict parse error to match syntax errors
   * Provide static `require` analysis in `urlencoded` parser
@@ -309,14 +309,14 @@ Unreleased
     - Fix type error when given invalid type to match against
     - deps: mime-types@~2.1.6
 
-1.13.3 / 2015-07-31
-===================
+1.13.3
+======
 
   * deps: type-is@~1.6.6
     - deps: mime-types@~2.1.4
 
-1.13.2 / 2015-07-05
-===================
+1.13.2
+======
 
   * deps: iconv-lite@0.4.11
   * deps: qs@4.0.0
@@ -331,14 +331,14 @@ Unreleased
     - perf: enable strict mode
     - perf: remove argument reassignment
 
-1.13.1 / 2015-06-16
-===================
+1.13.1
+======
 
   * deps: qs@2.4.2
     - Downgraded from 3.1.0 because of user-visible incompatibilities
 
-1.13.0 / 2015-06-14
-===================
+1.13.0
+======
 
   * Add `statusCode` property on `Error`s, in addition to `status`
   * Change `type` default to `application/json` for JSON parser
@@ -369,8 +369,8 @@ Unreleased
   * perf: remove argument reassignment
   * perf: remove delete call
 
-1.12.4 / 2015-05-10
-===================
+1.12.4
+======
 
   * deps: debug@~2.2.0
   * deps: qs@2.4.2
@@ -382,8 +382,8 @@ Unreleased
   * deps: type-is@~1.6.2
     - deps: mime-types@~2.0.11
 
-1.12.3 / 2015-04-15
-===================
+1.12.3
+======
 
   * Slight efficiency improvement when not debugging
   * deps: depd@~1.0.1
@@ -393,14 +393,14 @@ Unreleased
     - Fix hanging callback if request aborts during read
     - deps: iconv-lite@0.4.8
 
-1.12.2 / 2015-03-16
-===================
+1.12.2
+======
 
   * deps: qs@2.4.1
     - Fix error when parameter `hasOwnProperty` is present
 
-1.12.1 / 2015-03-15
-===================
+1.12.1
+======
 
   * deps: debug@~2.1.3
     - Fix high intensity foreground color for bold
@@ -408,8 +408,8 @@ Unreleased
   * deps: type-is@~1.6.1
     - deps: mime-types@~2.0.10
 
-1.12.0 / 2015-02-13
-===================
+1.12.0
+======
 
   * add `debug` messages
   * accept a function for the `type` option
@@ -424,35 +424,35 @@ Unreleased
     - support wildcard for both type and subtype (`*/*`)
     - deps: mime-types@~2.0.9
 
-1.11.0 / 2015-01-30
-===================
+1.11.0
+======
 
   * make internal `extended: true` depth limit infinity
   * deps: type-is@~1.5.6
     - deps: mime-types@~2.0.8
 
-1.10.2 / 2015-01-20
-===================
+1.10.2
+======
 
   * deps: iconv-lite@0.4.6
     - Fix rare aliases of single-byte encodings
   * deps: raw-body@1.3.2
     - deps: iconv-lite@0.4.6
 
-1.10.1 / 2015-01-01
-===================
+1.10.1
+======
 
   * deps: on-finished@~2.2.0
   * deps: type-is@~1.5.5
     - deps: mime-types@~2.0.7
 
-1.10.0 / 2014-12-02
-===================
+1.10.0
+======
 
   * make internal `extended: true` array limit dynamic
 
-1.9.3 / 2014-11-21
-==================
+1.9.3
+=====
 
   * deps: iconv-lite@0.4.5
     - Fix Windows-31J and X-SJIS encoding support
@@ -463,14 +463,14 @@ Unreleased
   * deps: type-is@~1.5.3
     - deps: mime-types@~2.0.3
 
-1.9.2 / 2014-10-27
-==================
+1.9.2
+=====
 
   * deps: qs@2.3.2
     - Fix parsing of mixed objects and values
 
-1.9.1 / 2014-10-22
-==================
+1.9.1
+=====
 
   * deps: on-finished@~2.1.1
     - Fix handling of pipelined requests
@@ -479,37 +479,37 @@ Unreleased
   * deps: type-is@~1.5.2
     - deps: mime-types@~2.0.2
 
-1.9.0 / 2014-09-24
-==================
+1.9.0
+=====
 
   * include the charset in "unsupported charset" error message
   * include the encoding in "unsupported content encoding" error message
   * deps: depd@~1.0.0
 
-1.8.4 / 2014-09-23
-==================
+1.8.4
+=====
 
   * fix content encoding to be case-insensitive
 
-1.8.3 / 2014-09-19
-==================
+1.8.3
+=====
 
   * deps: qs@2.2.4
     - Fix issue with object keys starting with numbers truncated
 
-1.8.2 / 2014-09-15
-==================
+1.8.2
+=====
 
   * deps: depd@0.4.5
 
-1.8.1 / 2014-09-07
-==================
+1.8.1
+=====
 
   * deps: media-typer@0.3.0
   * deps: type-is@~1.5.1
 
-1.8.0 / 2014-09-05
-==================
+1.8.0
+=====
 
   * make empty-body-handling consistent between chunked requests
     - empty `json` produces `{}`
@@ -521,56 +521,56 @@ Unreleased
   * deps: type-is@~1.5.0
     - fix `hasbody` to be true for `content-length: 0`
 
-1.7.0 / 2014-09-01
-==================
+1.7.0
+=====
 
   * add `parameterLimit` option to `urlencoded` parser
   * change `urlencoded` extended array limit to 100
   * respond with 413 when over `parameterLimit` in `urlencoded`
 
-1.6.7 / 2014-08-29
-==================
+1.6.7
+=====
 
   * deps: qs@2.2.2
     - Remove unnecessary cloning
 
-1.6.6 / 2014-08-27
-==================
+1.6.6
+=====
 
   * deps: qs@2.2.0
     - Array parsing fix
     - Performance improvements
 
-1.6.5 / 2014-08-16
-==================
+1.6.5
+=====
 
   * deps: on-finished@2.1.0
 
-1.6.4 / 2014-08-14
-==================
+1.6.4
+=====
 
   * deps: qs@1.2.2
 
-1.6.3 / 2014-08-10
-==================
+1.6.3
+=====
 
   * deps: qs@1.2.1
 
-1.6.2 / 2014-08-07
-==================
+1.6.2
+=====
 
   * deps: qs@1.2.0
     - Fix parsing array of objects
 
-1.6.1 / 2014-08-06
-==================
+1.6.1
+=====
 
   * deps: qs@1.1.0
     - Accept urlencoded square brackets
     - Accept empty values in implicit array notation
 
-1.6.0 / 2014-08-05
-==================
+1.6.0
+=====
 
   * deps: qs@1.0.2
     - Complete rewrite
@@ -578,20 +578,20 @@ Unreleased
     - Limits object depth to 5
     - Limits parameters to 1,000
 
-1.5.2 / 2014-07-27
-==================
+1.5.2
+=====
 
   * deps: depd@0.4.4
     - Work-around v8 generating empty stack traces
 
-1.5.1 / 2014-07-26
-==================
+1.5.1
+=====
 
   * deps: depd@0.4.3
     - Fix exception when global `Error.stackTraceLimit` is too low
 
-1.5.0 / 2014-07-20
-==================
+1.5.0
+=====
 
   * deps: depd@0.4.2
     - Add `TRACE_DEPRECATION` environment variable
@@ -606,25 +606,25 @@ Unreleased
     - Fix `Cannot switch to old mode now` error on Node.js 0.10+
   * deps: type-is@~1.3.2
 
-1.4.3 / 2014-06-19
-==================
+1.4.3
+=====
 
   * deps: type-is@1.3.1
     - fix global variable leak
 
-1.4.2 / 2014-06-19
-==================
+1.4.2
+=====
 
   * deps: type-is@1.3.0
     - improve type parsing
 
-1.4.1 / 2014-06-19
-==================
+1.4.1
+=====
 
   * fix urlencoded extended deprecation message
 
-1.4.0 / 2014-06-19
-==================
+1.4.0
+=====
 
   * add `text` parser
   * add `raw` parser
@@ -639,60 +639,60 @@ Unreleased
   * deps: raw-body@1.2.2
     - Support all encodings from `iconv-lite`
 
-1.3.1 / 2014-06-11
-==================
+1.3.1
+=====
 
   * deps: type-is@1.2.1
     - Switch dependency from mime to mime-types@1.0.0
 
-1.3.0 / 2014-05-31
-==================
+1.3.0
+=====
 
   * add `extended` option to urlencoded parser
 
-1.2.2 / 2014-05-27
-==================
+1.2.2
+=====
 
   * deps: raw-body@1.1.6
     - assert stream encoding on node.js 0.8
     - assert stream encoding on node.js < 0.10.6
     - deps: bytes@1
 
-1.2.1 / 2014-05-26
-==================
+1.2.1
+=====
 
   * invoke `next(err)` after request fully read
     - prevents hung responses and socket hang ups
 
-1.2.0 / 2014-05-11
-==================
+1.2.0
+=====
 
   * add `verify` option
   * deps: type-is@1.2.0
     - support suffix matching
 
-1.1.2 / 2014-05-11
-==================
+1.1.2
+=====
 
   * improve json parser speed
 
-1.1.1 / 2014-05-11
-==================
+1.1.1
+=====
 
   * fix repeated limit parsing with every request
 
-1.1.0 / 2014-05-10
-==================
+1.1.0
+=====
 
   * add `type` option
   * deps: pin for safety and consistency
 
-1.0.2 / 2014-04-14
-==================
+1.0.2
+=====
 
   * use `type-is` module
 
-1.0.1 / 2014-03-20
-==================
+1.0.1
+=====
 
   * lower default limits to 100kb
