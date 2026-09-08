@@ -9,6 +9,7 @@
 /**
  * @typedef {Object} Parsers
  * @property {Function} json JSON parser
+ * @property {Function} multipart Multipart/form-data parser
  * @property {Function} raw Raw parser
  * @property {Function} text Text parser
  * @property {Function} urlencoded URL-encoded parser
@@ -43,6 +44,17 @@ exports.text = require('./lib/types/text')
  * @public
  */
 exports.urlencoded = require('./lib/types/urlencoded')
+
+/**
+ * Multipart/form-data parser.
+ * Only extracts text fields and drops file fields.
+ * @public
+ */
+Object.defineProperty(exports, 'multipart', {
+  configurable: true,
+  enumerable: true,
+  get: () => require('./lib/types/multipart')
+})
 
 /**
  * Create a middleware to parse json and urlencoded bodies.
