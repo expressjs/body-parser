@@ -19,11 +19,7 @@
     "./json": "./lib/types/json.js",
     "./raw": "./lib/types/raw.js",
     "./text": "./lib/types/text.js",
-    "./urlencoded": "./lib/types/urlencoded.js",
-    "./lib/*": "./lib/*.js",
-    "./lib/*.js": "./lib/*.js",
-    "./lib/types/*": "./lib/types/*.js",
-    "./lib/types/*.js": "./lib/types/*.js"
+    "./urlencoded": "./lib/types/urlencoded.js"
   },
   "dependencies": {
     "bytes": "^3.1.2",
