@@ -170,6 +170,11 @@ describe('normalizeOptions(options, defaultType)', () => {
         const result = normalizeOptions({ defaultCharset: 'iso-8859-1' }, 'application/json')
         assert.strictEqual(result.defaultCharset, 'iso-8859-1')
       })
+
+      it('should lower-case a defaultCharset', () => {
+        const result = normalizeOptions({ defaultCharset: 'UTF-8' }, 'application/json')
+        assert.strictEqual(result.defaultCharset, 'utf-8')
+      })
     })
   })
 
