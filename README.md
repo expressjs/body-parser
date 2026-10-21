@@ -411,7 +411,7 @@ property is set to the encoding that is unsupported.
 
 ### The input exceeded the depth
 
-This error occurs when using `bodyParser.urlencoded` with the `extended` property set to `true` and the input exceeds the configured `depth` option. The `status` property is set to `400`. It is recommended to review the `depth` option and evaluate if it requires a higher value. When the `depth` option is set to `32` (default value), the error will not be thrown.
+This error occurs when using `bodyParser.urlencoded` with the `extended` property set to `true` and the input exceeds the configured `depth` option. The `status` property is set to `400`. It is recommended to review the `depth` option and evaluate if it requires a higher value. With the default `depth` of `32`, an input with 33 or more levels of nesting gets this error.
 
 ## Examples
 
