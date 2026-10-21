@@ -6,7 +6,10 @@
   * Requires Node.js `^22.15.0` or `>=23.8.0`; older versions keep returning `415` for `zstd` encoded bodies
 * fix: avoid mutating the parser options and the request object while reading the body (#742, #750)
 * perf(json): avoid first-char regex for direct JSON bodies (#744)
-* deps: qs@^6.16.0
+* deps:
+  * content-type@^2.1.0
+  * iconv-lite^0.7.3
+  * qs@^6.16.1
 
 2.3.0
 =====
