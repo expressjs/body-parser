@@ -1,10 +1,15 @@
+1.20.9
+======
+
+* Security fix for [GHSA-27r3-jxmh-p828](https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828) (CVE-2026-111181)
+
 1.20.8
-===================
+======
 
 * Same code base as 1.20.7. This was created to test the new release process.
 
 1.20.7
-===================
+======
 
 * deps: qs@~6.16.0
 
