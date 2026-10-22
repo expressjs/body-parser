@@ -2,7 +2,9 @@
 var assert = require('assert')
 var asyncHooks = tryRequire('async_hooks')
 var Buffer = require('safe-buffer').Buffer
+var crypto = require('crypto')
 var http = require('http')
+var onFinished = require('on-finished')
 var request = require('supertest')
 
 var bodyParser = require('..')
@@ -10,6 +12,18 @@ var bodyParser = require('..')
 var describeAsyncHooks = typeof asyncHooks.AsyncLocalStorage === 'function'
   ? describe
   : describe.skip
+
+// Since Node.js 11 zlib ends the readable side of a decompression stream as
+// soon as the compressed frame is complete (Z_STREAM_END). Older versions keep
+// the decoder open until the request ends, so the parser can never finish
+// before the request does and trailing bytes are reported as a decode error.
+var zlibEndsAtStreamEnd = parseInt(process.versions.node.split('.')[0], 10) >= 11
+var itZlibEndsAtStreamEnd = zlibEndsAtStreamEnd ? it : it.skip
+
+// zlib.deflateSync('{"a":1}') and zlib.gzipSync('{"a":1}'), precomputed because
+// the sync zlib API only exists since Node.js 0.12
+var DEFLATED_JSON = Buffer.from('789cab564a54b232ac0500082a0209', 'hex')
+var GZIPPED_JSON = Buffer.from('1f8b0800000000000003ab564a54b232ac0500afac1b5607000000', 'hex')
 
 describe('bodyParser.json()', function () {
   it('should parse JSON', function (done) {
@@ -231,6 +245,193 @@ describe('bodyParser.json()', function () {
       test.set('Content-Type', 'application/json')
       test.write(Buffer.from('1f8b080000000000000aab562a2e2952b252d21b05a360148c58a0540b0066f7ce1e0a0400', 'hex'))
       test.expect(413, done)
+    })
+  })
+
+  // @see https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828
+  // Uses a raw socket (not supertest) so the trailing bytes reach the decoder
+  // after it has finished the valid frame, which is what triggers the crash.
+  describe('with trailing bytes after a compressed body', function () {
+    itZlibEndsAtStreamEnd('should finish the request when the decompressor finishes early', function (done) {
+      var jsonParser = bodyParser.json()
+      var client
+      var server = createServer(function (req, res, next) {
+        jsonParser(req, res, function (err) {
+          if (err) return next(err)
+          // downstream middleware waits for the entire HTTP request to finish
+          onFinished(req, next)
+          // ensure the last bytes arrive after the decompressor has finished
+          client.end(trailing)
+        })
+      })
+      var first = Buffer.concat([
+        DEFLATED_JSON,
+        Buffer.from([0x00])
+      ])
+      var trailing = Buffer.alloc(1024)
+
+      server.listen(0, '127.0.0.1', function () {
+        client = http.request({
+          host: '127.0.0.1',
+          port: server.address().port,
+          method: 'POST',
+          path: '/',
+          agent: false,
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Encoding': 'deflate',
+            'Content-Length': first.length + trailing.length
+          }
+        }, function (res) {
+          var data = ''
+          res.setEncoding('utf8')
+          res.on('data', function (c) { data += c })
+          res.on('end', function () {
+            server.close()
+            assert.strictEqual(res.statusCode, 200)
+            assert.strictEqual(data, '{"a":1}')
+            done()
+          })
+        })
+        client.on('error', done)
+        client.setTimeout(1000, function () {
+          client.destroy(new Error('Timed out waiting for the HTTP request to finish'))
+        })
+        client.write(first)
+      })
+    })
+
+    itZlibEndsAtStreamEnd('should preserve other consumers of the request body', function (done) {
+      var jsonParser = bodyParser.json()
+      var client
+      var server = createServer(function (req, res, next) {
+        // a second consumer hashes the raw request body, e.g. for an audit log
+        var hash = crypto.createHash('sha256')
+        req.pipe(hash)
+
+        jsonParser(req, res, function (err) {
+          if (err) return next(err)
+          hash.once('finish', function () {
+            res.setHeader('X-Body-SHA256', hash.read().toString('hex'))
+            next()
+          })
+          // ensure the last bytes arrive after the decompressor has finished
+          client.end(trailing)
+        })
+      })
+      var first = Buffer.concat([
+        DEFLATED_JSON,
+        Buffer.from([0x00])
+      ])
+      var trailing = Buffer.alloc(1024)
+      var expectedHash = crypto.createHash('sha256').update(first).update(trailing).digest('hex')
+
+      server.listen(0, '127.0.0.1', function () {
+        client = http.request({
+          host: '127.0.0.1',
+          port: server.address().port,
+          method: 'POST',
+          path: '/',
+          agent: false,
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Encoding': 'deflate',
+            'Content-Length': first.length + trailing.length
+          }
+        }, function (res) {
+          var data = ''
+          res.setEncoding('utf8')
+          res.on('data', function (c) { data += c })
+          res.on('end', function () {
+            server.close()
+            assert.strictEqual(res.statusCode, 200)
+            assert.strictEqual(data, '{"a":1}')
+            assert.strictEqual(res.headers['x-body-sha256'], expectedHash)
+            done()
+          })
+        })
+        client.on('error', done)
+        client.setTimeout(1000, function () {
+          client.destroy(new Error('Timed out waiting for the request body hash'))
+        })
+        client.write(first)
+      })
+    })
+
+    it('should not crash on trailing bytes after a gzip body', function (done) {
+      var server = createServer()
+      server.listen(0, '127.0.0.1', function () {
+        var port = server.address().port
+        var body = Buffer.concat([
+          GZIPPED_JSON,
+          Buffer.from([0x00]),
+          Buffer.alloc(100 * 1024, 0x58)
+        ])
+        var req = http.request({
+          host: '127.0.0.1',
+          port: port,
+          method: 'POST',
+          path: '/',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Encoding': 'gzip',
+            'Content-Length': body.length
+          }
+        }, function (res) {
+          var data = ''
+          res.on('data', function (c) { data += c })
+          res.on('end', function () {
+            setTimeout(function () {
+              server.close()
+              if (zlibEndsAtStreamEnd) {
+                assert.strictEqual(res.statusCode, 200)
+                assert.strictEqual(data, '{"a":1}')
+              } else {
+                // older zlib keeps decoding the trailing bytes: depending on the
+                // version they are ignored (200) or reported as invalid (400)
+                assert.ok(res.statusCode === 200 || res.statusCode === 400, 'unexpected status ' + res.statusCode)
+              }
+              done()
+            }, 200)
+          })
+        })
+        req.on('error', done)
+        req.end(body)
+      })
+    })
+
+    it('should not crash when an unsupported charset rejects a compressed body', function (done) {
+      var server = createServer({ verify: function () {} })
+      server.listen(0, '127.0.0.1', function () {
+        var port = server.address().port
+        var body = Buffer.concat([
+          GZIPPED_JSON,
+          Buffer.from([0x00]),
+          Buffer.alloc(100 * 1024, 0x58)
+        ])
+        var req = http.request({
+          host: '127.0.0.1',
+          port: port,
+          method: 'POST',
+          path: '/',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-999',
+            'Content-Encoding': 'gzip',
+            'Content-Length': body.length
+          }
+        }, function (res) {
+          res.on('data', function () {})
+          res.on('end', function () {
+            setTimeout(function () {
+              server.close()
+              assert.strictEqual(res.statusCode, 415)
+              done()
+            }, 200)
+          })
+        })
+        req.on('error', done)
+        req.end(body)
+      })
     })
   })
 
