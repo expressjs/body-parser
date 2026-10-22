@@ -3,11 +3,15 @@
 const { describe, it, before } = require('mocha')
 const assert = require('node:assert')
 const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
+const { createHash } = require('node:crypto')
+const { once } = require('node:events')
 const http = require('node:http')
 const zlib = require('node:zlib')
+const onFinished = require('on-finished')
 const request = require('supertest')
 
 const bodyParser = require('..')
+const json = require('body-parser/json')
 
 const hasZstandardSupport = 'createZstdDecompress' in zlib
 const zstandardit = hasZstandardSupport ? it : it.skip
@@ -203,6 +207,203 @@ describe('bodyParser.json()', function () {
       test.set('Content-Type', 'application/json')
       test.write(Buffer.from('1f8b080000000000000aab562a2e2952b252d21b05a360148c58a0540b0066f7ce1e0a0400', 'hex'))
       test.expect(413, done)
+    })
+  })
+
+  // @see https://github.com/expressjs/body-parser/security/advisories/GHSA-27r3-jxmh-p828
+  // Uses a raw socket (not supertest) so the trailing bytes reach the decoder
+  // after it has already finished the valid frame, which is what triggers the
+  // crash. A valid frame alone decodes and responds; the trailing bytes then
+  // error on the finished decoder and, without the fix, that error is uncaught.
+  describe('with trailing bytes after a compressed body', function () {
+    it('should finish the request when the decompressor finishes early', async function () {
+      const jsonParser = json()
+      const first = Buffer.concat([
+        zlib.deflateSync(Buffer.from('{"a":1}')),
+        Buffer.from([0x00])
+      ])
+      const trailing = Buffer.alloc(1024)
+      let client
+
+      const server = createServer(function (req, res, next) {
+        jsonParser(req, res, function (err) {
+          if (err) return next(err)
+          // Downstream middleware waits for the entire HTTP request to finish.
+          onFinished(req, next)
+          client.end(trailing)
+        })
+      })
+
+      try {
+        server.listen(0, '127.0.0.1')
+        await once(server, 'listening')
+
+        const response = await new Promise(function (resolve, reject) {
+          client = http.request({
+            host: '127.0.0.1',
+            port: server.address().port,
+            method: 'POST',
+            agent: false,
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Encoding': 'deflate',
+              'Content-Length': first.length + trailing.length
+            }
+          }, function (res) {
+            let body = ''
+            res.setEncoding('utf8')
+            res.on('data', function (chunk) { body += chunk })
+            res.on('error', reject)
+            res.on('end', function () { resolve({ res, body }) })
+          })
+          client.on('error', reject)
+          client.setTimeout(1000, function () {
+            client.destroy(new Error('Timed out waiting for the HTTP request to finish'))
+          })
+          client.write(first)
+        })
+
+        assert.strictEqual(response.res.statusCode, 200)
+        assert.strictEqual(response.body, '{"a":1}')
+      } finally {
+        if (client) client.destroy()
+        await new Promise(function (resolve) { server.close(resolve) })
+      }
+    })
+
+    it('should preserve other consumers of the request body', async function () {
+      const jsonParser = json()
+      const first = Buffer.concat([
+        zlib.deflateSync(Buffer.from('{"a":1}')),
+        Buffer.from([0x00])
+      ])
+      const trailing = Buffer.alloc(1024)
+      const expectedHash = createHash('sha256').update(first).update(trailing).digest('hex')
+      let client
+
+      const server = createServer(function (req, res, next) {
+        // A second middleware hashes the raw request for an audit log.
+        const hash = createHash('sha256')
+        req.pipe(hash)
+
+        jsonParser(req, res, function (err) {
+          if (err) return next(err)
+          hash.once('finish', function () {
+            res.setHeader('X-Body-SHA256', hash.digest('hex'))
+            next()
+          })
+          // Ensure the last bytes arrive after the decompressor has finished.
+          client.end(trailing)
+        })
+      })
+
+      try {
+        server.listen(0, '127.0.0.1')
+        await once(server, 'listening')
+
+        const response = await new Promise(function (resolve, reject) {
+          client = http.request({
+            host: '127.0.0.1',
+            port: server.address().port,
+            method: 'POST',
+            agent: false,
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Encoding': 'deflate',
+              'Content-Length': first.length + trailing.length
+            }
+          }, function (res) {
+            let body = ''
+            res.setEncoding('utf8')
+            res.on('data', function (chunk) { body += chunk })
+            res.on('error', reject)
+            res.on('end', function () { resolve({ res, body }) })
+          })
+          client.on('error', reject)
+          client.setTimeout(1000, function () {
+            client.destroy(new Error('Timed out waiting for the request body hash'))
+          })
+          client.write(first)
+        })
+
+        assert.strictEqual(response.res.statusCode, 200)
+        assert.strictEqual(response.body, '{"a":1}')
+        assert.strictEqual(response.res.headers['x-body-sha256'], expectedHash)
+      } finally {
+        if (client) client.destroy()
+        await new Promise(function (resolve) { server.close(resolve) })
+      }
+    })
+
+    it('should not crash on trailing bytes after a gzip body', function (done) {
+      const server = createServer()
+      server.listen(0, '127.0.0.1', function () {
+        const port = server.address().port
+        const body = Buffer.concat([
+          zlib.gzipSync(Buffer.from('{"a":1}')),
+          Buffer.from([0x00]),
+          Buffer.alloc(100 * 1024, 0x58)
+        ])
+        const req = http.request({
+          host: '127.0.0.1',
+          port,
+          method: 'POST',
+          path: '/',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Encoding': 'gzip',
+            'Content-Length': body.length
+          }
+        }, function (res) {
+          let data = ''
+          res.on('data', function (c) { data += c })
+          res.on('end', function () {
+            // let the trailing bytes reach the finished decoder before asserting
+            setTimeout(function () {
+              server.close()
+              assert.strictEqual(res.statusCode, 200)
+              assert.strictEqual(data, '{"a":1}')
+              done()
+            }, 200)
+          })
+        })
+        req.on('error', done)
+        req.end(body)
+      })
+    })
+
+    it('should not crash when an unsupported charset rejects a compressed body', function (done) {
+      const server = createServer({ verify: function () {} })
+      server.listen(0, '127.0.0.1', function () {
+        const port = server.address().port
+        const body = Buffer.concat([
+          zlib.gzipSync(Buffer.from('{"a":1}')),
+          Buffer.from([0x00]),
+          Buffer.alloc(100 * 1024, 0x58)
+        ])
+        const req = http.request({
+          host: '127.0.0.1',
+          port,
+          method: 'POST',
+          path: '/',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-999',
+            'Content-Encoding': 'gzip',
+            'Content-Length': body.length
+          }
+        }, function (res) {
+          res.on('data', function () {})
+          res.on('end', function () {
+            setTimeout(function () {
+              server.close()
+              assert.strictEqual(res.statusCode, 415)
+              done()
+            }, 200)
+          })
+        })
+        req.on('error', done)
+        req.end(body)
+      })
     })
   })
 
