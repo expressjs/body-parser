@@ -517,6 +517,14 @@ describe('bodyParser.urlencoded()', function () {
           .expect(200, done)
       })
 
+      it('should work with limit greater than 32-bit signed integer', function (done) {
+        request(createServer({ extended: false, parameterLimit: 3000000000 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user=tobi')
+          .expect(200, '{"user":"tobi"}', done)
+      })
+
       it('should work with Infinity limit', function (done) {
         request(createServer({ extended: false, parameterLimit: Infinity }))
           .post('/')
@@ -570,6 +578,14 @@ describe('bodyParser.urlencoded()', function () {
           .send(createManyParams(5000))
           .expect(expectKeyCount(5000))
           .expect(200, done)
+      })
+
+      it('should work with limit greater than 32-bit signed integer', function (done) {
+        request(createServer({ extended: true, parameterLimit: 3000000000 }))
+          .post('/')
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send('user=tobi')
+          .expect(200, '{"user":"tobi"}', done)
       })
 
       it('should work with Infinity limit', function (done) {
