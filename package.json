@@ -39,7 +39,7 @@
   "devDependencies": {
     "eslint": "^9.39.5",
     "mocha": "^11.7.6",
-    "neostandard": "^0.13.0",
+    "neostandard": "^0.14.1",
     "nyc": "^17.1.0",
     "supertest": "7.3.0"
   },
