@@ -3,6 +3,7 @@
 const { describe, it, before } = require('mocha')
 const assert = require('node:assert')
 const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage
+const { once } = require('node:events')
 const http = require('node:http')
 const zlib = require('node:zlib')
 const request = require('supertest')
@@ -898,6 +899,278 @@ describe('bodyParser.urlencoded()', function () {
       test.set('Content-Type', 'application/x-www-form-urlencoded')
       test.write(Buffer.from('1f8b080000000000000bcb4bcc4db57db16e170099a4bad608000000', 'hex'))
       test.expect(200, '{"name":"论"}', done)
+    })
+
+    it('should handle an aborted compressed request', async function () {
+      const urlencodedParser = bodyParser.urlencoded()
+      let calls = 0
+      let incoming
+      let listenersBeforeRead
+      let error
+      let closed = false
+      let client
+      let timer
+      let complete
+      const completed = new Promise(function (resolve, reject) {
+        complete = resolve
+        timer = setTimeout(function () {
+          reject(new Error('Timed out waiting for middleware after request abort'))
+        }, 1000)
+      })
+      const server = createServer(function (req, res) {
+        incoming = req
+        listenersBeforeRead = req.listeners('close')
+        req.once('close', function () {
+          closed = true
+          if (calls) complete()
+        })
+        // Wait for the server to receive an incomplete compressed frame.
+        req.once('data', function () { client.destroy() })
+        urlencodedParser(req, res, function (err) {
+          calls++
+          error = err
+          if (closed) complete()
+        })
+      })
+
+      try {
+        server.listen(0, '127.0.0.1')
+        await once(server, 'listening')
+
+        const body = zlib.gzipSync(Buffer.from('user=tobi'))
+        client = http.request({
+          host: '127.0.0.1',
+          port: server.address().port,
+          method: 'POST',
+          agent: false,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Encoding': 'gzip',
+            'Content-Length': body.length
+          }
+        })
+        // Closing before a response produces an expected ECONNRESET.
+        client.on('error', function () {})
+        client.write(body.subarray(0, Math.floor(body.length / 2)))
+
+        await completed
+        await new Promise(function (resolve) { setImmediate(resolve) })
+
+        assert.strictEqual(calls, 1)
+        assert.strictEqual(error.status, 400)
+        assert.strictEqual(error.type, 'request.aborted')
+        assert.strictEqual(error.code, 'ECONNABORTED')
+        assert.strictEqual(incoming.destroyed, true)
+        assert.strictEqual(incoming.complete, false)
+        assert.strictEqual(incoming.body, undefined)
+        assert.deepStrictEqual(incoming.listeners('close'), listenersBeforeRead)
+      } finally {
+        clearTimeout(timer)
+        if (client) client.destroy()
+        await new Promise(function (resolve) { server.close(resolve) })
+      }
+    })
+
+    it('should handle an aborted compressed request with verify', async function () {
+      let verified = false
+      const urlencodedParser = bodyParser.urlencoded({
+        verify: function () { verified = true }
+      })
+      let calls = 0
+      let incoming
+      let listenersBeforeRead
+      let error
+      let closed = false
+      let client
+      let timer
+      let complete
+      const completed = new Promise(function (resolve, reject) {
+        complete = resolve
+        timer = setTimeout(function () {
+          reject(new Error('Timed out waiting for middleware after request abort'))
+        }, 1000)
+      })
+      const server = createServer(function (req, res) {
+        incoming = req
+        listenersBeforeRead = req.listeners('close')
+        req.once('close', function () {
+          closed = true
+          if (calls) complete()
+        })
+        // Wait for the server to receive an incomplete compressed frame.
+        req.once('data', function () { client.destroy() })
+        urlencodedParser(req, res, function (err) {
+          calls++
+          error = err
+          if (closed) complete()
+        })
+      })
+
+      try {
+        server.listen(0, '127.0.0.1')
+        await once(server, 'listening')
+
+        const body = zlib.gzipSync(Buffer.from('user=tobi'))
+        client = http.request({
+          host: '127.0.0.1',
+          port: server.address().port,
+          method: 'POST',
+          agent: false,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Encoding': 'gzip',
+            'Content-Length': body.length
+          }
+        })
+        // Closing before a response produces an expected ECONNRESET.
+        client.on('error', function () {})
+        client.write(body.subarray(0, Math.floor(body.length / 2)))
+
+        await completed
+        await new Promise(function (resolve) { setImmediate(resolve) })
+
+        assert.strictEqual(verified, false)
+        assert.strictEqual(calls, 1)
+        assert.strictEqual(error.status, 400)
+        assert.strictEqual(error.type, 'request.aborted')
+        assert.strictEqual(error.code, 'ECONNABORTED')
+        assert.strictEqual(incoming.destroyed, true)
+        assert.strictEqual(incoming.complete, false)
+        assert.strictEqual(incoming.body, undefined)
+        assert.deepStrictEqual(incoming.listeners('close'), listenersBeforeRead)
+      } finally {
+        clearTimeout(timer)
+        if (client) client.destroy()
+        await new Promise(function (resolve) { server.close(resolve) })
+      }
+    })
+
+    it('should remove the close listener after successful decompression', async function () {
+      const urlencodedParser = bodyParser.urlencoded()
+      let incoming
+      let listenersBeforeRead
+      let calls = 0
+      const server = createServer(function (req, res, next) {
+        incoming = req
+        listenersBeforeRead = req.listeners('close')
+        urlencodedParser(req, res, function (err) {
+          calls++
+          next(err)
+        })
+      })
+
+      const test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.set('Content-Encoding', 'gzip')
+      test.write(zlib.gzipSync(Buffer.from('user=tobi')))
+      await test.expect(200, '{"user":"tobi"}')
+      await new Promise(function (resolve) { setImmediate(resolve) })
+
+      assert.deepStrictEqual(incoming.listeners('close'), listenersBeforeRead)
+      assert.strictEqual(incoming.complete, true)
+      assert.strictEqual(calls, 1)
+    })
+
+    it('should preserve existing close listeners after decompression', async function () {
+      const urlencodedParser = bodyParser.urlencoded()
+      let incoming
+      let listenersBeforeRead
+      let calls = 0
+      let closes = 0
+      function onClose () { closes++ }
+      const server = createServer(function (req, res, next) {
+        incoming = req
+        req.on('close', onClose)
+        listenersBeforeRead = req.listeners('close')
+        urlencodedParser(req, res, function (err) {
+          calls++
+          next(err)
+        })
+      })
+
+      const test = request(server).post('/')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.set('Content-Encoding', 'gzip')
+      test.write(zlib.gzipSync(Buffer.from('user=tobi')))
+      await test.expect(200, '{"user":"tobi"}')
+      await new Promise(function (resolve) { setImmediate(resolve) })
+
+      assert.deepStrictEqual(incoming.listeners('close'), listenersBeforeRead)
+      assert.strictEqual(closes, 1)
+      assert.strictEqual(calls, 1)
+    })
+
+    it('should not call back again when the request closes early after decoding', async function () {
+      const urlencodedParser = bodyParser.urlencoded()
+      const body = Buffer.concat([
+        zlib.deflateSync(Buffer.from('user=tobi')),
+        Buffer.from([0x00])
+      ])
+      let incoming
+      let listenersBeforeRead
+      let completeAtParse
+      let error
+      let calls = 0
+      let closes = 0
+      let client
+      let timer
+      let complete
+      function onClose () { closes++ }
+      const completed = new Promise(function (resolve, reject) {
+        complete = resolve
+        timer = setTimeout(function () {
+          reject(new Error('Timed out waiting for request abort after decoding'))
+        }, 1000)
+      })
+      const server = createServer(function (req, res) {
+        incoming = req
+        req.on('close', onClose)
+        listenersBeforeRead = req.listeners('close')
+        req.once('close', function () { complete() })
+        urlencodedParser(req, res, function (err) {
+          calls++
+          error = err
+          completeAtParse = req.complete
+          // Disconnect after decoding, leaving the HTTP body incomplete.
+          if (calls === 1) client.destroy()
+        })
+      })
+
+      try {
+        server.listen(0, '127.0.0.1')
+        await once(server, 'listening')
+
+        client = http.request({
+          host: '127.0.0.1',
+          port: server.address().port,
+          method: 'POST',
+          agent: false,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Encoding': 'deflate',
+            'Content-Length': body.length + 1024
+          }
+        })
+        // Closing before a response produces an expected ECONNRESET.
+        client.on('error', function () {})
+        client.write(body)
+
+        await completed
+        await new Promise(function (resolve) { setImmediate(resolve) })
+
+        assert.strictEqual(calls, 1)
+        assert.strictEqual(error, undefined)
+        assert.strictEqual(completeAtParse, false)
+        assert.strictEqual(incoming.destroyed, true)
+        assert.strictEqual(incoming.complete, false)
+        assert.deepStrictEqual(incoming.body, { user: 'tobi' })
+        assert.strictEqual(closes, 1)
+        assert.deepStrictEqual(incoming.listeners('close'), listenersBeforeRead)
+      } finally {
+        clearTimeout(timer)
+        if (client) client.destroy()
+        await new Promise(function (resolve) { server.close(resolve) })
+      }
     })
 
     it('should support deflate encoding', function (done) {
