@@ -337,7 +337,7 @@ for various reasons.
 This error will occur when the request had a `Content-Encoding` header that
 contained an encoding but the "inflation" option was set to `false`. The
 `status` property is set to `415`, the `type` property is set to
-`'encoding.unsupported'`, and the `charset` property will be set to the
+`'encoding.unsupported'`, and the `encoding` property will be set to the
 encoding that is unsupported.
 
 ### entity parse failed
@@ -417,7 +417,7 @@ property is set to the encoding that is unsupported.
 
 ### The input exceeded the depth
 
-This error occurs when using `bodyParser.urlencoded` with the `extended` property set to `true` and the input exceeds the configured `depth` option. The `status` property is set to `400`. It is recommended to review the `depth` option and evaluate if it requires a higher value. With the default `depth` of `32`, an input with 33 or more levels of nesting gets this error.
+This error occurs when using `bodyParser.urlencoded` with the `extended` property set to `true` and the input exceeds the configured `depth` option. The `status` property is set to `400` and the `type` property is set to `'querystring.parse.rangeError'`. It is recommended to review the `depth` option and evaluate if it requires a higher value. With the default `depth` of `32`, an input with 33 or more levels of nesting gets this error.
 
 ## Examples
 
