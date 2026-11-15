@@ -1,3 +1,8 @@
+Unreleased
+========================
+
+* fix: tolerate raw-body being resolved as an ES module (raw-body 4) and keep decoding with iconv-lite
+
 2.4.0
 =====
 
