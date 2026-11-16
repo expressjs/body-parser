@@ -12,7 +12,9 @@ describe('read', function () {
       // raw-body >= 4 is ESM-only. On Node.js >= 22 require() of an ESM
       // package returns the module namespace object, not the function.
       var rawBodyPath = require.resolve('raw-body')
-      var realGetRawBody = require(rawBodyPath)
+      var rawBody = require(rawBodyPath)
+      // if the installed raw-body is already an ES module, use its default export
+      var realGetRawBody = typeof rawBody === 'function' ? rawBody : rawBody.default
       require.cache[rawBodyPath].exports = {
         __esModule: true,
         default: realGetRawBody,
