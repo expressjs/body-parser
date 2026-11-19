@@ -280,6 +280,11 @@ The `parameterLimit` option controls the maximum number of parameters that
 are allowed in the URL-encoded data. If a request contains more parameters
 than this value, a 413 will be returned to the client. Defaults to `1000`.
 
+Setting a very large limit (or `Infinity`) effectively disables this guard.
+Be aware that parsing cost grows quadratically with the number of parameters
+for indexed-array inputs, so a high limit can expose the application to a
+denial-of-service vector. Keep the limit as low as your application allows.
+
 ##### type
 
 The `type` option is used to determine what media type the middleware will
