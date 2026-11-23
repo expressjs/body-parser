@@ -25,8 +25,7 @@ modules:
 
   * [busboy](https://www.npmjs.com/package/busboy#readme) and
     [connect-busboy](https://www.npmjs.com/package/connect-busboy#readme)
-  * [multiparty](https://www.npmjs.com/package/multiparty#readme) and
-    [connect-multiparty](https://www.npmjs.com/package/connect-multiparty#readme)
+  * [multiparty](https://www.npmjs.com/package/multiparty#readme)
   * [formidable](https://www.npmjs.com/package/formidable#readme)
   * [multer](https://www.npmjs.com/package/multer#readme)
 
