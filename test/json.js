@@ -962,6 +962,97 @@ describe('bodyParser.json()', function () {
       test.expect(413, done)
     })
   })
+
+  describe('with errorInterceptor option', function () {
+    // https://github.com/expressjs/body-parser/issues/658
+    it('should transform parser errors through the interceptor', function (done) {
+      request(createServer({
+        errorInterceptor: (err, req, res) => {
+          assert.strictEqual(req.method, 'POST')
+          assert.ok(res && typeof res.setHeader === 'function')
+          assert.strictEqual(err.type, 'entity.parse.failed')
+          assert.strictEqual(err.status, 400)
+          err.cd = 42001
+          err.logLevel = 'warn'
+          return err
+        }
+      }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .set('X-Error-Property', 'cd')
+        .send('{:')
+        .expect(400, '42001', done)
+    })
+
+    it('should allow replacing the error before the error handler', function (done) {
+      request(createServer({
+        errorInterceptor: (err) => {
+          assert.strictEqual(err.type, 'entity.parse.failed')
+          const error = new Error('malformed JSON payload')
+          error.status = 422
+          error.type = 'app.json_parse_failed'
+          return error
+        }
+      }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":')
+        .expect(422, '[app.json_parse_failed] malformed JSON payload', done)
+    })
+
+    it('should forward the original error when the interceptor returns undefined', function (done) {
+      request(createServer({ errorInterceptor: () => {} }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{:')
+        .expect(400, '[entity.parse.failed] ' + parseError('{:'), done)
+    })
+
+    it('should attach an interceptor throw to the original error and keep forwarding', function (done) {
+      request(createServer({
+        errorInterceptor: () => { throw new Error('interceptor boom') }
+      }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .set('X-Error-Property', 'errorInterceptorError')
+        .send('{:')
+        .expect(400, /Error: interceptor boom/, done)
+    })
+
+    it('should reject a non-Error return value from the interceptor', function (done) {
+      request(createServer({ errorInterceptor: () => 'not an error' }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{:')
+        .expect(500, /^\[error\.interceptor\.invalidResult\] errorInterceptor must return an Error or undefined, got string/, done)
+    })
+
+    it('should not intercept successful requests', function (done) {
+      let called = false
+      request(createServer({
+        errorInterceptor: (err, req, res) => {
+          called = true
+          return err
+        }
+      }))
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send('{"user":"tobi"}')
+        .expect(200, '{"user":"tobi"}')
+        .end(function (err) {
+          if (err) return done(err)
+
+          assert.strictEqual(called, false)
+          done()
+        })
+    })
+
+    it('should reject a non-function errorInterceptor at middleware creation', function () {
+      assert.throws(() => {
+        json({ errorInterceptor: 'not a function' })
+      }, /option errorInterceptor must be a function/)
+    })
+  })
 })
 
 function createServer (opts) {
@@ -974,7 +1065,7 @@ function createServer (opts) {
       if (err) {
         res.statusCode = err.status || 500
         res.end(req.headers['x-error-property']
-          ? err[req.headers['x-error-property']]
+          ? String(err[req.headers['x-error-property']])
           : ('[' + err.type + '] ' + err.message))
       } else {
         res.statusCode = 200

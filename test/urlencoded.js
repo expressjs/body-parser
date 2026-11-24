@@ -950,6 +950,31 @@ describe('bodyParser.urlencoded()', function () {
       test.expect(415, '[encoding.unsupported] unsupported content encoding "nulls"', done)
     })
   })
+
+  describe('with errorInterceptor option', function () {
+    it('should intercept errors through the shared read pipeline', function (done) {
+      // https://github.com/expressjs/body-parser/issues/658 - every parser type
+      // funnels its errors through lib/read.js, so urlencoded errors must be
+      // interceptable exactly like the json parser errors.
+      const parser = bodyParser.urlencoded({
+        inflate: false,
+        errorInterceptor: (err, req) => {
+          assert.strictEqual(req.url, '/')
+          assert.strictEqual(err.type, 'encoding.unsupported')
+          const error = new Error('intercepted: ' + err.type)
+          error.status = 422
+          error.type = 'app.body_parser_error'
+          return error
+        }
+      })
+
+      const test = request(createServer(parser)).post('/')
+      test.set('Content-Encoding', 'gzip')
+      test.set('Content-Type', 'application/x-www-form-urlencoded')
+      test.write(Buffer.from('foo=bar'))
+      test.expect(422, '[app.body_parser_error] intercepted: encoding.unsupported', done)
+    })
+  })
 })
 
 function createManyParams (count) {
