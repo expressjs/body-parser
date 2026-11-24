@@ -66,6 +66,29 @@ describe('normalizeOptions(options, defaultType)', () => {
       })
     })
 
+    describe('errorInterceptor', () => {
+      it('should default to false when not provided', () => {
+        assert.strictEqual(normalizeOptions({}, 'application/json').errorInterceptor, false)
+        assert.strictEqual(normalizeOptions({ errorInterceptor: undefined }, 'application/json').errorInterceptor, false)
+        assert.strictEqual(normalizeOptions({ errorInterceptor: null }, 'application/json').errorInterceptor, false)
+      })
+
+      it('should pass through an errorInterceptor function', () => {
+        const errorInterceptor = () => {}
+        const result = normalizeOptions({ errorInterceptor }, 'application/json')
+        assert.strictEqual(result.errorInterceptor, errorInterceptor)
+      })
+
+      it('should reject non-function values while allowing undefined/null', () => {
+        for (const bad of ['nope', 1, {}, [], true]) {
+          assert.throws(() => normalizeOptions({ errorInterceptor: bad }, 'application/json'),
+            /option errorInterceptor must be a function/)
+        }
+        assert.doesNotThrow(() => normalizeOptions({ errorInterceptor: null }, 'application/json'))
+        assert.doesNotThrow(() => normalizeOptions({ errorInterceptor: undefined }, 'application/json'))
+      })
+    })
+
     describe('limit', () => {
       it('should return the default limit if limit is not provided', () => {
         const result = normalizeOptions({}, 'application/json')

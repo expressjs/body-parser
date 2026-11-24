@@ -139,6 +139,25 @@ The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
 
+##### errorInterceptor
+
+The `errorInterceptor` option, if supplied, is called as
+`errorInterceptor(err, req, res)` whenever the middleware is about to pass one
+of its own errors to the downstream `next(err)` callback (for example the
+`entity.parse.failed` error produced for a malformed body, but also the
+character-set/content-encoding, body size, `verify` and `parameterLimit` errors
+described in the [errors section](#errors)). This allows the error to be
+modified or replaced before it reaches the Express error-handling middleware
+without wrapping the body-parser middleware yourself.
+
+The interceptor must be synchronous. When it returns an `Error`, that error is
+passed on to the error handler instead of the original parsing error; returning
+`undefined` (or `null`) forwards the original error unchanged, so the request
+pipeline can never silently hang. If the interceptor throws, the original parser
+error is still forwarded and the thrown error is attached as its
+`errorInterceptorError` property. Successful requests are not intercepted.
+Omitting this option leaves the default behavior unchanged.
+
 ### bodyParser.raw([options])
 
 Returns middleware that parses all bodies as a `Buffer` and only looks at
@@ -184,6 +203,25 @@ and the request is parsed if it returns a truthy value. Defaults to
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
+
+##### errorInterceptor
+
+The `errorInterceptor` option, if supplied, is called as
+`errorInterceptor(err, req, res)` whenever the middleware is about to pass one
+of its own errors to the downstream `next(err)` callback (for example the
+`entity.parse.failed` error produced for a malformed body, but also the
+character-set/content-encoding, body size, `verify` and `parameterLimit` errors
+described in the [errors section](#errors)). This allows the error to be
+modified or replaced before it reaches the Express error-handling middleware
+without wrapping the body-parser middleware yourself.
+
+The interceptor must be synchronous. When it returns an `Error`, that error is
+passed on to the error handler instead of the original parsing error; returning
+`undefined` (or `null`) forwards the original error unchanged, so the request
+pipeline can never silently hang. If the interceptor throws, the original parser
+error is still forwarded and the thrown error is attached as its
+`errorInterceptorError` property. Successful requests are not intercepted.
+Omitting this option leaves the default behavior unchanged.
 
 ### bodyParser.text([options])
 
@@ -234,6 +272,25 @@ truthy value. Defaults to `text/plain`.
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
+
+##### errorInterceptor
+
+The `errorInterceptor` option, if supplied, is called as
+`errorInterceptor(err, req, res)` whenever the middleware is about to pass one
+of its own errors to the downstream `next(err)` callback (for example the
+`entity.parse.failed` error produced for a malformed body, but also the
+character-set/content-encoding, body size, `verify` and `parameterLimit` errors
+described in the [errors section](#errors)). This allows the error to be
+modified or replaced before it reaches the Express error-handling middleware
+without wrapping the body-parser middleware yourself.
+
+The interceptor must be synchronous. When it returns an `Error`, that error is
+passed on to the error handler instead of the original parsing error; returning
+`undefined` (or `null`) forwards the original error unchanged, so the request
+pipeline can never silently hang. If the interceptor throws, the original parser
+error is still forwarded and the thrown error is attached as its
+`errorInterceptorError` property. Successful requests are not intercepted.
+Omitting this option leaves the default behavior unchanged.
 
 ### bodyParser.urlencoded([options])
 
@@ -297,6 +354,25 @@ to `application/x-www-form-urlencoded`.
 The `verify` option, if supplied, is called as `verify(req, res, buf, encoding)`,
 where `buf` is a `Buffer` of the raw request body and `encoding` is the
 encoding of the request. The parsing can be aborted by throwing an error.
+
+##### errorInterceptor
+
+The `errorInterceptor` option, if supplied, is called as
+`errorInterceptor(err, req, res)` whenever the middleware is about to pass one
+of its own errors to the downstream `next(err)` callback (for example the
+`entity.parse.failed` error produced for a malformed body, but also the
+character-set/content-encoding, body size, `verify` and `parameterLimit` errors
+described in the [errors section](#errors)). This allows the error to be
+modified or replaced before it reaches the Express error-handling middleware
+without wrapping the body-parser middleware yourself.
+
+The interceptor must be synchronous. When it returns an `Error`, that error is
+passed on to the error handler instead of the original parsing error; returning
+`undefined` (or `null`) forwards the original error unchanged, so the request
+pipeline can never silently hang. If the interceptor throws, the original parser
+error is still forwarded and the thrown error is attached as its
+`errorInterceptorError` property. Successful requests are not intercepted.
+Omitting this option leaves the default behavior unchanged.
 
 ##### defaultCharset
 
